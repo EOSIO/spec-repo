@@ -29,7 +29,8 @@ EOSIO blockchains have a flexible and powerful account structure, but we see som
 What if contracts could define their own account structures? What if these contracts could authenticate 
 transactions from those accounts? What if they could do their own resource billing? What if these 
 contracts didn’t have to be privileged? This proposal, which builds on
-[Contract Pays](eep-draft_contract_pays.md), gives contracts this capability.
+the [Subjective Data](eep-draft_subjective_data.md) and [Contract Pays](eep-draft_contract_pays.md)
+proposals, grants contracts this capability.
 
 ## Overview
 
@@ -50,7 +51,7 @@ There are 3 consensus upgrades in this proposal:
 * The user pushes the transaction
 * gamecontract calls `accept_charges` before leeway expires
 * gamecontract uses `require_key` to authenticate the user
-* gamecontract verifies that no other actions are present in the transaction to protect itself from paying for other contracts
+* gamecontract verifies that no other actions are present in the transaction. This prevents it from paying for other contracts.
 * gamecontract executes the game logic
 
 ## Example Use Case: Authorization Manager
@@ -65,10 +66,10 @@ There are 3 consensus upgrades in this proposal:
 * The user pushes the transaction
 * myauthmgr calls `accept_charges` before leeway expires
 * myauthmgr checks the claimed authorizations using `require_key`
-* myauthmgr verifies that no other native actions are present in the transaction
+* myauthmgr verifies that no other native actions are present in the transaction. This allows it to accurately track resource consumption.
 * myauthmgr updates `accept_charges` using the user’s available resources
 * myauthmgr executes inline actions specified by the user. It includes an authorization attestation in each inline action. The contracts receiving these actions rely on the attestation.
-* myauthmgr uses an inline action to check resource usage and updates the user’s resource consumption after the user’s actions have executed.
+* Inside an inline action, myauthmgr checks `get_resource_usage` and updates the user’s resource consumption. This inline action executes last.
 
 ## Specification
 <!--The technical specification should describe the syntax and semantics of any new feature. The specification should be detailed enough to allow competing, interoperable implementations for any of the current EOSIO platforms.-->

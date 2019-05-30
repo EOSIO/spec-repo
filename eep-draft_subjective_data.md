@@ -1,6 +1,6 @@
 ---
 eep: <to be assigned>
-title: Contracts Paying Transaction Costs
+title: Contract Access To Subjective Data
 author: <a list of the author's or authors' name(s) and/or username(s), or name(s) and email(s), e.g. (use with the parentheses or triangular brackets): FirstName LastName (@GitHubUsername), FirstName LastName <foo@bar.com>, FirstName (@GitHubUsername) and GitHubUsername (@GitHubUsername)>
 discussions-to: <URL>
 status: Draft
@@ -16,34 +16,30 @@ replaces (*optional): <EEP number(s)>
 ## Simple Summary
 <!--"If you can't explain it simply, you don't understand it well enough." Provide a simplified and layman-accessible explanation of the EEP.-->
 
-Contracts can pay transaction costs (NET and CPU). This allows users with little or no resources to use
-applications without requiring those applications to cosign the original transaction.
+Give contracts access to subjective data. This includes NET and CPU charges for the current
+transaction, wall-clock time, and a random number generator.
 
 ## Abstract
 <!--A short (~200 word) description of the technical issue being addressed.-->
 
-EOSIO blockchains charge users NET and CPU costs on transactions. These costs
-are temporary; CPU and NET replenish over a 24-hour period. A user can spend
-all their resources on a set of transactions, then 24 hours later do it again.
-Even though these costs are low on a per-user basis, they can add up quickly
-for application providers. e.g. if a provider wants to sponsor 1000 accounts
-which need Xpeek CPU and Ypeek NET, then the provider needs to stake
-1000 * Xpeek CPU and 1000 * Ypeek NET. Most of this will go unused.
+Contracts don't have access to subjective data. e.g. they can't examine NET and CPU costs. They
+don't have access to wall-clock time. They don't have access to an unpredictable entropy
+source. They could, if the BP recorded all subjective data it passed to the contracts.
 
-[ONLY_BILL_FIRST_AUTHORIZER](https://github.com/EOSIO/eos/issues/6332)
-partially addresses this by charging only the first authorizer of a transaction.
-This allows application
-providers to cover costs from a common pool by cosigning each user
-transaction. There is a downside: providers need to maintain
-automated transaction cosigning services online. This has potential cost
-issues and security issues.
+This proposal defines a mechanism for BPs to record the subjective data they provide to
+contracts. It also defines a set of intrinsics for accessing this data.
 
-This proposal adds a new capability: contracts can cover transaction
-costs without cosigning. They can also limit resource consumption to 
-prevent abuse. Thanks to the [Subjective Data](eep-draft_subjective_data.md)
-proposal, contracts also can track resource consumption on transactions.
-This proposal has the advantages of ONLY_BILL_FIRST_AUTHORIZER without
-the hassle of cosigning.
+## Overview
+
+There is 1 consensus upgrade in this proposal, which adds the following:
+* A block extension which records subjective data provided to contracts
+* A new intrinsic `get_resource_usage` that returns the current NET and CPU charges for the transaction
+* A new intrinsic `get_wall_time` that returns the wall-clock time with millisecond accuracy
+* A new intrinsic `get_random` that returns a random number
+
+There are some constraints on these functions (e.g. `get_wall_time` is non-decreasing during a single
+transaction), but this doesn't propose a way to prevent BPs from manipulating this data to their advantage
+(e.g. `get_random`).
 
 ## Specification
 <!--The technical specification should describe the syntax and semantics of any new feature. The specification should be detailed enough to allow competing, interoperable implementations for any of the current EOSIO platforms.-->
