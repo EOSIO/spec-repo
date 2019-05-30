@@ -25,7 +25,6 @@ applications without requiring those applications to cosign the original transac
 EOSIO blockchains charge users NET and CPU costs on transactions. These costs
 are temporary; CPU and NET replenish over a 24-hour period. A user can spend
 all their resources on a set of transactions, then 24 hours later do it again.
-
 Even though these costs are low on a per-user basis, they can add up quickly
 for application providers. e.g. if a provider wants to sponsor 1000 accounts
 which need Xpeek CPU and Ypeek NET, then the provider needs to stake

@@ -28,15 +28,15 @@ EOSIO blockchains have a flexible and powerful account structure, but we see som
 
 What if contracts could define their own account structures? What if these contracts could authenticate 
 transactions from those accounts? What if they could do their own resource billing? What if these 
-contracts didn’t have to be privileged? This proposal, when combined with
+contracts didn’t have to be privileged? This proposal, which builds on
 [Contract Pays](eep-draft_contract_pays.md), gives contracts this capability.
 
 ## Overview
 
 There are 3 consensus upgrades in this proposal:
 * A new intrinsic `require_key` that asserts that a given public key was recovered from transaction signatures.
-* Allow unused signatures. Nodeos will no longer reject transactions with signatures not used by the legacy authorizations.
-* Allow a transaction without legacy authorizations, if a contract claims responsibility for it. This builds on the [Contract Pays](eep-draft_contract_pays.md) proposal.
+* Allow unused signatures. Nodeos will no longer reject transactions with signatures not used by the native authorizations.
+* Allow transactions to omit native authorizations, if a contract accepts the charges using `accept_charges`. This builds on the [Contract Pays](eep-draft_contract_pays.md) proposal.
 
 ## Example Use Case: Basic
 * A user without a native account creates a transaction with this action:
