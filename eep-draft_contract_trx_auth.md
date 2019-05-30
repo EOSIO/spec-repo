@@ -28,14 +28,15 @@ EOSIO blockchains have a flexible and powerful account structure, but we see som
 
 What if contracts could define their own account structures? What if these contracts could authenticate 
 transactions from those accounts? What if they could do their own resource billing? What if these 
-contracts didn’t have to be privileged? This proposal gives contracts this capability.
+contracts didn’t have to be privileged? This proposal, when combined with
+[Contract Pays](eep-draft_contract_pays.md), gives contracts this capability.
 
 ## Overview
 
 There are 3 consensus upgrades in this proposal:
 * A new intrinsic `require_key` that asserts that a given public key was recovered from transaction signatures.
 * Allow unused signatures. Nodeos will no longer reject transactions with signatures not used by the legacy authorizations.
-* Allow a transaction without legacy authorizations, if a contract claims responsibility for it. This builds on the **** proposal.
+* Allow a transaction without legacy authorizations, if a contract claims responsibility for it. This builds on the [Contract Pays](eep-draft_contract_pays.md) proposal.
 
 ## Example Use Case: Basic
 * A user without a native account creates a transaction with this action:
@@ -63,17 +64,16 @@ There are 3 consensus upgrades in this proposal:
 * The user signs the transaction with a key that myauthmgr knows about
 * The user pushes the transaction
 * myauthmgr calls `accept_charges` before leeway expires
-* myauthmgr checks the claimed authorizations and uses `require_key`
+* myauthmgr checks the claimed authorizations using `require_key`
 * myauthmgr verifies that no other native actions are present in the transaction
 * myauthmgr updates `accept_charges` using the user’s available resources
 * myauthmgr executes inline actions specified by the user. It includes an authorization attestation in each inline action. The contracts receiving these actions rely on the attestation.
 * myauthmgr uses an inline action to check resource usage and updates the user’s resource consumption after the user’s actions have executed.
 
-
-
-
 ## Specification
 <!--The technical specification should describe the syntax and semantics of any new feature. The specification should be detailed enough to allow competing, interoperable implementations for any of the current EOSIO platforms.-->
+
+
 
 ## Rationale
 <!--The rationale fleshes out the specification by describing what motivated the design and why particular design decisions were made. It should describe alternate designs that were considered and related work, e.g. how the feature is supported in other languages. The rationale may also provide evidence of consensus within the community, and should discuss important objections or concerns raised during discussion.-->
