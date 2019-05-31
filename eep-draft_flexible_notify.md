@@ -43,7 +43,7 @@ and has these properties:
 
 ### CDT Support: Sender
 
-To define a notification, create a struct with an `eosio::notify2` attribute. Also instantiate a notification wrapper. e.g.:
+To define a notification, create a struct with an `eosio::notification` attribute. Also instantiate a notification wrapper. e.g.:
 
 ```c++
 struct [[eosio::notification]] gamestatus {
@@ -71,7 +71,9 @@ gamestatus_notification.send_event(game_name, current_scores);
 ### CDT Support: Receiver
 
 To receive a notification, define a member function on a contract with the `eosio::notify_handler` attribute. The first argument is the
-sender. The remaining arguments contain the notification data. e.g.  As `eosio::on_notify` is currently used to demarcate the old style notification
+sender. The remaining arguments contain the notification data.
+
+Note: Since `eosio::on_notify` is currently used to demarcate the old style notification
 scheme, a new attribute `eosio::on_notify_compat` will be created and `eosio::on_notify` will be deprecated, this will allow for reuse of the attribute
 after a sufficient amount time for deprecation.
 

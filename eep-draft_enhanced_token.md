@@ -37,7 +37,7 @@ This proposal does not recommend any particular table structures; we expect to c
 using account = std::variant<eosio::name, eosio::subaccount>;
 
 void create(eosio::name issuer, eosio::asset maximum_supply);                       notifies
-void create2(account issuer, eosio::extended_asset maximum_supply);
+void create2(account issuer, eosio::extended_asset maximum_supply);                 extended? some other way to init foreign?
 
 void issue(eosio::name to, eosio::asset quantity, std::string memo);                to==issuer
 void issue2(eosio::extended_asset quantity, std::string memo);
