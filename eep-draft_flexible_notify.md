@@ -110,9 +110,9 @@ the transaction. The receiving contract must pay for any RAM it uses.
 Contracts send notifications via the `eosio.notify` action. Contracts shouldn't send this manually;
 they should let the CDT handle this task (above). The typical implementation:
 
-* For notifications to contracts, sends an inline action `eosio.notify` to the receiver.
+* For notifications to accounts, sends an inline action `eosio.notify` to the receiver.
 * For events, sends a context-free inline action `eosio.notify` to `eosio.null`.
-* Doesn't include any authorizations. This prevents the receiver from charging RAM to the receiver.
+* Doesn't include any authorizations. This prevents the receiver from charging RAM to the sender.
 
 ### ABI Support
 
