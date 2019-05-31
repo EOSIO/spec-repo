@@ -40,6 +40,57 @@ and has these properties:
 ## Specification
 <!--The technical specification should describe the syntax and semantics of any new feature. The specification should be detailed enough to allow competing, interoperable implementations for any of the current EOSIO platforms.-->
 
+### CDT Support: Sender
+
+To define a notification, define a struct with an `eosio::notify2` attribute. e.g.:
+
+```c++
+struct [[eosio::notify2]] gamestatus {
+    std::string                             game_name;
+    std::map<eosio::name, std::uint32_t>    current_scores;
+};
+```
+
+The struct name must follow the rules for eosio names. To send a notification, use the `send_notification` function. This function
+has the following signature:
+
+```c++
+template<typename NotificationType>
+void send_notification(
+    eosio::name notification_name,
+    eosio::name receiver,
+    arguments...
+);
+```
+
+This example sends a `gamestatus` notification to the `player1` account:
+
+```c++
+send_notification<gamestatus>("gamestatus"_n, "player1"_n, game_name, current_scores);
+```
+
+### CDT Support: Receiver
+
+To receive a notification, define a member function on a contract with the `eosio::notify2` attribute. The first argument is the
+sender. The remaining arguments contain the notification data. e.g.
+
+```c++
+class [[eosio::contract]] player: public eosio::contract {
+  public:
+    void [[eosio::notify2]] gamestatus(
+        eosio::name                                 sender,
+        const std::string&                          game_name,
+        const std::map<eosio::name, std::uint32_t>& current_scores
+    ) {
+        // Handle the notification here
+    }
+};
+```
+
+### Protocol
+
+### ABI Support
+
 ## Rationale
 <!--The rationale fleshes out the specification by describing what motivated the design and why particular design decisions were made. It should describe alternate designs that were considered and related work, e.g. how the feature is supported in other languages. The rationale may also provide evidence of consensus within the community, and should discuss important objections or concerns raised during discussion.-->
 ## Backwards Compatibility
