@@ -46,7 +46,7 @@ and has these properties:
 To define a notification, create a struct with an `eosio::notify2` attribute. Also instantiate a notification wrapper. e.g.:
 
 ```c++
-struct [[eosio::notify2]] gamestatus {
+struct [[eosio::notification]] gamestatus {
     std::string                             game_name;
     std::map<eosio::name, std::uint32_t>    current_scores;
 };
@@ -70,13 +70,15 @@ gamestatus_notification.send_event(game_name, current_scores);
 
 ### CDT Support: Receiver
 
-To receive a notification, define a member function on a contract with the `eosio::notify2` attribute. The first argument is the
-sender. The remaining arguments contain the notification data. e.g.
+To receive a notification, define a member function on a contract with the `eosio::notify_handler` attribute. The first argument is the
+sender. The remaining arguments contain the notification data. e.g.  As `eosio::on_notify` is currently used to demarcate the old style notification
+scheme, a new attribute `eosio::on_nofity_compat` will be created and `eosio::on_notify` will be deprecated, this will allow for reuse of the attribute
+after a sufficient amount time for deprecation.
 
 ```c++
 class [[eosio::contract]] player: public eosio::contract {
   public:
-    void [[eosio::notify2]] gamestatus(
+    void [[eosio::notify_handler]] gamestatus(
         eosio::name                                 sender,
         const std::string&                          game_name,
         const std::map<eosio::name, std::uint32_t>& current_scores
