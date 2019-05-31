@@ -29,7 +29,7 @@ The `require_recipient` notification protocol has these limitations:
 This complicates contracts which embed other contract code (e.g. eosio.token) but need to listen 
 for notifications from the embedded contract.
 
-This new notification notification protocol builds on [get_sender](https://github.com/EOSIO/eos/issues/7028)
+This new notification protocol builds on [get_sender](https://github.com/EOSIO/eos/issues/7028)
 and has these properties:
 * Contracts may send a variety of notifications in response to a single action. These may contain any data that inline actions can handle.
 * A contract may send notifications to any contract or non-contract account, including itself. 
