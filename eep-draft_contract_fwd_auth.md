@@ -31,6 +31,16 @@ to simplify implementation.
 
 ### CDT Support
 
+todo
+
+```c++
+namespace eosio {
+    struct subaccount {
+        name        contract;
+        checksum256 hash_ident;
+    };
+}
+```
 
 ### Protocol (receiver)
 

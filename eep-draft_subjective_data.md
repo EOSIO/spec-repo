@@ -16,13 +16,13 @@ replaces (*optional): <EEP number(s)>
 ## Simple Summary
 <!--"If you can't explain it simply, you don't understand it well enough." Provide a simplified and layman-accessible explanation of the EEP.-->
 
-Give contracts access to subjective data. This includes NET and CPU charges for the current
+Give contracts access to subjective data. This includes CPU charges for the current
 transaction, wall-clock time, and a random number generator.
 
 ## Abstract
 <!--A short (~200 word) description of the technical issue being addressed.-->
 
-Contracts don't have access to subjective data. e.g. they can't examine NET and CPU costs. They
+Contracts don't have access to subjective data. e.g. they can't examine CPU costs. They
 don't have access to wall-clock time. They don't have access to an unpredictable entropy
 source. They could, if the BP recorded all subjective data it passed to the contracts.
 
@@ -33,7 +33,7 @@ contracts. It also defines a set of intrinsics for accessing this data.
 
 There is 1 consensus upgrade in this proposal, which adds the following:
 * A block extension which records subjective data provided to contracts
-* A new intrinsic `get_resource_usage` that returns the current NET and CPU charges for the transaction
+* A new intrinsic `get_trx_cpu_bill` that returns the current CPU charges for the transaction
 * A new intrinsic `get_wall_time` that returns the wall-clock time with millisecond accuracy
 * A new intrinsic `get_random` that returns a random number
 
@@ -43,6 +43,10 @@ transaction), but this doesn't propose a way to prevent BPs from manipulating th
 
 ## Specification
 <!--The technical specification should describe the syntax and semantics of any new feature. The specification should be detailed enough to allow competing, interoperable implementations for any of the current EOSIO platforms.-->
+
+todo
+
+These calls will charge net
 
 ## Rationale
 <!--The rationale fleshes out the specification by describing what motivated the design and why particular design decisions were made. It should describe alternate designs that were considered and related work, e.g. how the feature is supported in other languages. The rationale may also provide evidence of consensus within the community, and should discuss important objections or concerns raised during discussion.-->
