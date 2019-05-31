@@ -5,3 +5,6 @@ In dependency order:
 * [Contract Pays](eep-draft_contract_pays.md)
 * [Contract Authentication](eep-draft_contract_trx_auth.md)
 * [Forwarding Authorizations](eep-draft_contract_fwd_auth.md)
+
+Unrelated to above:
+* [Flexible Notifications](eep-draft_flexible_notify.md)
