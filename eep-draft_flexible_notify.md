@@ -72,7 +72,7 @@ gamestatus_notification.send_event(game_name, current_scores);
 
 To receive a notification, define a member function on a contract with the `eosio::notify_handler` attribute. The first argument is the
 sender. The remaining arguments contain the notification data. e.g.  As `eosio::on_notify` is currently used to demarcate the old style notification
-scheme, a new attribute `eosio::on_nofity_compat` will be created and `eosio::on_notify` will be deprecated, this will allow for reuse of the attribute
+scheme, a new attribute `eosio::on_notify_compat` will be created and `eosio::on_notify` will be deprecated, this will allow for reuse of the attribute
 after a sufficient amount time for deprecation.
 
 ```c++
