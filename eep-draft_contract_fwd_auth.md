@@ -34,19 +34,20 @@ to simplify implementation.
 
 ### Protocol (receiver)
 
-```
-eosio.act(
+```c++
+eosio.action(
     eosio::name                     action,         // action name
     std::vector<eosio::checksum256> hash_idents,    // hashed identities
     eosio::bytes                    payload         // action payload
 );
 ```
 
-Contracts opt-in to supporting subaccounts by implementing the above action. Contracts shouldn't implement 
+Contracts opt-in to supporting subaccounts by implementing the above action. Contracts shouldn't implement
 this action manually; they should let the CDT handle this task (above). The typical implementation:
 
 * Uses `get_sender` to determine which contract is attesting to the identities and stores this value 
   somewhere for later use.
+* Asserts that `get_sender` returned non-0.
 * Stores `hash_idents` somewhere for later use.
 * Dispatches `payload` to the appropriate function chosen by `action`.
 
@@ -56,12 +57,12 @@ Actions may check whether a particular subaccount `(x, y)` authorized the action
 matches the value returned by `get_sender` and `y` is in `hash_idents`. This check replaces 
 `require_auth` and `has_auth`.
 
-Since this system replaces the native authentication system, the contract shouldn't use `require_auth` and
-`has_auth` when processing `eosio.act`. The receiving contract must pay for any RAM it uses.
+The contract shouldn't use `require_auth` and `has_auth` when processing `eosio.action`; these would abort
+the transaction. The receiving contract must pay for any RAM it uses.
 
 ### Protocol (sender)
 
-The sender should send an inline action `eosio.act` with:
+The sender should send an inline action `eosio.action` with:
 * The appropriate `action` and `payload`
 * `hash_idents` attesting to the authenticated account(s)
 
