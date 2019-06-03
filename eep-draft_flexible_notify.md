@@ -16,7 +16,8 @@ replaces (*optional): <EEP number(s)>
 ## Simple Summary
 <!--"If you can't explain it simply, you don't understand it well enough." Provide a simplified and layman-accessible explanation of the EEP.-->
 
-This inline-action-based notification protocol is more flexible than `require_recipient`. It also supports events.
+This notification protocol is more flexible than `require_recipient`. It supports both
+contract-to-contract signals and contract-to-outside events.
 
 ## Abstract
 <!--A short (~200 word) description of the technical issue being addressed.-->
@@ -31,92 +32,123 @@ The `require_recipient` notification protocol has these limitations:
 
 This new notification protocol builds on [get_sender](https://github.com/EOSIO/eos/issues/7028)
 and has these properties:
-* Contracts may send a variety of notifications in response to a single action. These may contain any data that inline actions can handle.
-* A contract may send notifications to any contract or non-contract account, including itself. 
-* A contract may send cheap context-free notifications (events) to off-chain systems.
+* Contracts may send a variety of signals and events in response to a single action. These may contain any data that inline actions can handle.
+* A contract may send signals to any contract or non-contract account, including itself. 
+* A contract may send cheap context-free events to off-chain systems.
 * Receivers may not charge RAM to the sender.
-* Receiving contracts may authenticate these notifications using `get_sender`.
-* Off-chain processes may authenticate these notifications by looking at `creator_action_ordinal` in the notification's action trace.
+* Receiving contracts may authenticate signals using `get_sender`.
+* Off-chain processes may authenticate signals and events by looking at `creator_action_ordinal` in the notification's action trace.
+
+This EEP is a variation on signals and slots, similar to boost::signal2 or Qt. A major difference is that both sides must opt in to a pairing.
+The sending contract chooses which contracts may opt into receiving, and the receiving contracts opt in to which contracts they listen to.
+Once this system is implemented, `required_recipient` will be deprecated.
 
 ## Specification
 <!--The technical specification should describe the syntax and semantics of any new feature. The specification should be detailed enough to allow competing, interoperable implementations for any of the current EOSIO platforms.-->
 
 ### CDT Support: Sender
 
-To define a notification, create a struct with an `eosio::notification` attribute. Also instantiate a notification wrapper. e.g.:
+To define a signal, declare a function with an `eosio::signal` attribute. The first argument is the receiver.
+The CDT will generate the function's body. e.g.:
 
 ```c++
-struct [[eosio::notification]] gamestatus {
-    string              game_name;
-    map<name, uint32_t> current_scores;
+// These are examples only. A future EEP will define a new token standard which differs
+// from this.
+
+[[eosio::signal]] void transferout(
+    name receiver, name from, name to, asset amount, string memo);
+
+[[eosio::signal]] void transferin(
+    name receiver, name from, name to, asset amount, string memo);
+```
+
+The signal name must follow the rules for eosio names. To send a signal, call its function.
+
+```c++
+// This is an example only. A future EEP will define a new token standard which differs
+// from this.
+
+class token: public contract {
+    ...
+    [[eosio::action]] void transfer( 
+        name from, name to, asset quantity, string memo) {
+        ...
+        transferout("alice"_n, "alice"_n, "bob"_n, asset("1.0000 SYS"), "A transfer");
+        transferin("bob"_n, "alice"_n, "bob"_n, asset("1.0000 SYS"), "A transfer");
+    }
 };
-inline constexpr eosio::notification<gamestatus, "gamestatus"_n> gamestatus_notification;
 ```
 
-The struct name must follow the rules for eosio names. To send a notification, use the wrapper's
-`send` function. This example sends a `gamestatus` notification to the `player1` account:
+To define an event, declare a function with an `eosio::event` attribute. There is no receiver argument;
+events always go to `eosio.null`. The CDT will generate the function's body. e.g.:
 
 ```c++
-gamestatus_notification.send("player1"_n, game_name, current_scores);
+[[eosio::event]] void gamestatus(name game, map<name, uint32_t> current_positions);
 ```
 
-To send a context-free notification (event) to off-chain systems, use the wrapper's
-`send_event` function. There is no account name argument; all events go to the
-`eosio.null` account. This example sends a `gamestatus` notification:
-
 ```c++
-gamestatus_notification.send_event(game_name, current_scores);
+class game: public contract {
+    ...
+    [[eosio::action]] void moveto(name game, name player, uint32_t position) {
+        ...
+        gamestatus(game, current_positions);
+    }
+};
 ```
 
 ### CDT Support: Receiver
 
-To receive a notification, define a member function on a contract with the `eosio::notify_handler` attribute. The first argument is the
-sender. The remaining arguments contain the notification data.
-
-Note: Since `eosio::on_notify` is currently used to demarcate the old style notification
-scheme, a new attribute `eosio::on_notify_compat` will be created and `eosio::on_notify` will be deprecated, this will allow for reuse of the attribute
-after a sufficient amount time for deprecation.
+To receive a signal, define a member function on a contract with the `eosio::slot` attribute.
+The slot attribute has a string argument which specifies the sender and slot.
+e.g. `"eosio.token::transferin"`. It can use a wildcard for the sender: `"*::transferin"`.
 
 ```c++
-class [[eosio::contract]] player: public contract {
+// This is an example only. A future EEP will define a new token standard which differs
+// from this.
+
+class [[eosio::contract]] exchange: public contract {
   public:
-    void [[eosio::notify_handler]] gamestatus(
-        name                        sender,
-        const string&               game_name,
-        const map<name, uint32_t>&  current_scores
+    void [[eosio::slot("eosio.token::transferin"]] transferin(
+        name receiver, name from, name to, asset amount, string memo)
     ) {
         // Handle the notification here
     }
 };
 ```
 
-### Protocol: Receiver
+### Protocol: Sender
 
 ```c++
-eosio.notify(
-    name  notification, // notification name
-    bytes payload       // notification payload
+eosio.signal(
+    name  signal,   // signal name
+    bytes payload   // signal payload
+);
+
+eosio.event(
+    name  event,    // event name
+    bytes payload   // event payload
 );
 ```
 
-Contracts opt-in to receiving notifications by implementing the above action. Contracts shouldn't implement
-this action manually; they should let the CDT handle this task (above). The typical implementation:
+Contracts send signals and events via the above actions. Contracts shouldn't send these manually;
+they should let the CDT handle this task (above). The typical implementation:
+
+* For signals, sends an inline action `eosio.signal` to the receiver.
+* For events, sends a context-free inline action `eosio.event` to `eosio.null`.
+* Doesn't include any authorizations. This prevents the receiver from charging RAM to the sender.
+
+### Protocol: Receiver
+
+Contracts opt-in to receiving signals by implementing the `eosio.signal` action. Contracts
+shouldn't implement this action manually; they should let the CDT handle this task (above).
+The typical implementation:
 
 * Uses `get_sender` to determine which contract is sending the notification.
 * Asserts that `get_sender` returned non-0.
-* Dispatches `sender` and `payload` to the appropriate function chosen by `notification`.
+* Dispatches `payload` to the appropriate function chosen by `notification`.
 
 The contract shouldn't use `require_auth` and `has_auth` when processing `eosio.notify`; these would abort
 the transaction. The receiving contract must pay for any RAM it uses.
-
-### Protocol: Sender
-
-Contracts send notifications via the `eosio.notify` action. Contracts shouldn't send this manually;
-they should let the CDT handle this task (above). The typical implementation:
-
-* For notifications to accounts, sends an inline action `eosio.notify` to the receiver.
-* For events, sends a context-free inline action `eosio.notify` to `eosio.null`.
-* Doesn't include any authorizations. This prevents the receiver from charging RAM to the sender.
 
 ### ABI Support
 
