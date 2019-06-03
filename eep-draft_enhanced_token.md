@@ -45,7 +45,7 @@ void issue2(eosio::extended_asset quantity, std::string memo);
 void retire(eosio::asset quantity, std::string memo);
 void retire2(eosio::extended_asset quantity, std::string memo);
 
-void transfer(eosio::name from, eosio::name to, eosio::asset quantity, std::string memo);       is_account
+void transfer(eosio::name from, eosio::name to, eosio::asset quantity, std::string memo);       is_account; should move check to open
 void transfer2(account from, account to, eosio::extended_asset quantity, std::string memo);
 
 void open(eosio::name owner, eosio::symbol symbol, eosio::name ram_payer);                      should probably check is_account

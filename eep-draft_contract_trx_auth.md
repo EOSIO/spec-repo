@@ -36,7 +36,7 @@ proposals, grants contracts this capability.
 
 There are 3 consensus upgrades in this proposal:
 * A new intrinsic `require_key` that asserts that a given public key was recovered from transaction signatures.
-* Allow unused signatures. Nodeos will no longer reject transactions with signatures not used by the native authorizations.
+* Nodeos will no longer reject transactions with signatures not used by the native authorizations, if those keys are checked by `require_key`.
 * Allow transactions to omit native authorizations, if a contract accepts the charges using `accept_charges`. This builds on the [Contract Pays](eep-draft_contract_pays.md) proposal.
 
 ## Example Use Case: Basic
@@ -55,6 +55,7 @@ There are 3 consensus upgrades in this proposal:
 * gamecontract executes the game logic
 
 ## Example Use Case: Authorization Manager
+
 * A user with an account managed by "myauthmgr" creates a transaction with this action:
 ```
     account:        "myauthmgr"
@@ -68,7 +69,9 @@ There are 3 consensus upgrades in this proposal:
 * myauthmgr checks the claimed authorizations using `require_key`
 * myauthmgr verifies that no other native actions are present in the transaction. This allows it to accurately track resource consumption.
 * myauthmgr updates `accept_charges` using the user’s available resources
-* myauthmgr executes inline actions specified by the user. It includes an authorization attestation in each inline action. The contracts receiving these actions rely on the attestation.
+* myauthmgr executes inline actions specified by the user. It includes an authorization attestation in each inline action.
+  The contracts receiving these actions rely on the attestation. See [Forwarding Authentication](eep-draft_contract_fwd_auth.md)
+  for details on this step.
 * Inside an inline action, myauthmgr checks `get_resource_usage` and updates the user’s resource consumption. This inline action executes last.
 
 ## Specification

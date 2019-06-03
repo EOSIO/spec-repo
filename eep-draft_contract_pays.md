@@ -23,12 +23,13 @@ applications without requiring those applications to cosign the original transac
 <!--A short (~200 word) description of the technical issue being addressed.-->
 
 EOSIO blockchains charge users NET and CPU costs on transactions. These costs
-are temporary; CPU and NET replenish over a 24-hour period. A user can spend
+are transient; CPU and NET replenish over a 24-hour period. A user can spend
 all their resources on a set of transactions, then 24 hours later do it again.
 Even though these costs are low on a per-user basis, they can add up quickly
 for application providers. e.g. if a provider wants to sponsor 1000 accounts
 which need Xpeek CPU and Ypeek NET, then the provider needs to stake
-1000 * Xpeek CPU and 1000 * Ypeek NET. Most of this will go unused.
+1000 * Xpeek CPU and 1000 * Ypeek NET. Under this model, users can use these
+resources for other apps, not just yours. In addition, most of this will go unused.
 
 [ONLY_BILL_FIRST_AUTHORIZER](https://github.com/EOSIO/eos/issues/6332)
 partially addresses this by charging only the first authorizer of a transaction.

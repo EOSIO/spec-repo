@@ -34,8 +34,8 @@ contracts. It also defines a set of intrinsics for accessing this data.
 There is 1 consensus upgrade in this proposal, which adds the following:
 * A block extension which records subjective data provided to contracts
 * A new intrinsic `get_trx_cpu_bill` that returns the current CPU charges for the transaction
-* A new intrinsic `get_wall_time` that returns the wall-clock time with millisecond accuracy
-* A new intrinsic `get_random` that returns a random number
+* A new intrinsic `get_wall_time` that returns the wall-clock time with microsecond accuracy
+* A new intrinsic `get_random` that returns a random number, assuming you trust the producers
 
 There are some constraints on these functions (e.g. `get_wall_time` is non-decreasing during a single
 transaction), but this doesn't propose a way to prevent BPs from manipulating this data to their advantage
