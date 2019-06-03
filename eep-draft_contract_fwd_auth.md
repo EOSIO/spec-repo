@@ -46,9 +46,9 @@ namespace eosio {
 
 ```c++
 eosio.action(
-    eosio::name                     action,         // action name
-    std::vector<eosio::checksum256> hash_idents,    // hashed identities
-    eosio::bytes                    payload         // action payload
+    name                action,         // action name
+    vector<checksum256> hash_idents,    // hashed identities
+    bytes               payload         // action payload
 );
 ```
 
@@ -77,7 +77,7 @@ The sender should send an inline action `eosio.action` with:
 * `hash_idents` attesting to the authenticated account(s)
 
 Each `hash_ident` should be a sha256 of the account's identity. This allows the contract to have any identity
-structure it chooses, whether it's an `eosio::name`, an `std::string`, or something else. It's expected that
+structure it chooses, whether it's a `name`, a `string`, or something else. It's expected that
 sha256 will be a requirement for an upcoming extension to Ricardian Contracts to support contract-defined
 accounts.
 

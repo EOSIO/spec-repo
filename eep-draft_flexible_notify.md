@@ -47,8 +47,8 @@ To define a notification, create a struct with an `eosio::notification` attribut
 
 ```c++
 struct [[eosio::notification]] gamestatus {
-    std::string                             game_name;
-    std::map<eosio::name, std::uint32_t>    current_scores;
+    string              game_name;
+    map<name, uint32_t> current_scores;
 };
 inline constexpr eosio::notification<gamestatus, "gamestatus"_n> gamestatus_notification;
 ```
@@ -78,12 +78,12 @@ scheme, a new attribute `eosio::on_notify_compat` will be created and `eosio::on
 after a sufficient amount time for deprecation.
 
 ```c++
-class [[eosio::contract]] player: public eosio::contract {
+class [[eosio::contract]] player: public contract {
   public:
     void [[eosio::notify_handler]] gamestatus(
-        eosio::name                                 sender,
-        const std::string&                          game_name,
-        const std::map<eosio::name, std::uint32_t>& current_scores
+        name                        sender,
+        const string&               game_name,
+        const map<name, uint32_t>&  current_scores
     ) {
         // Handle the notification here
     }
@@ -94,8 +94,8 @@ class [[eosio::contract]] player: public eosio::contract {
 
 ```c++
 eosio.notify(
-    eosio::name     notification,   // notification name
-    eosio::bytes    payload         // notification payload
+    name  notification, // notification name
+    bytes payload       // notification payload
 );
 ```
 
