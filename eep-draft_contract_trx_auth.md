@@ -77,9 +77,32 @@ There are 3 consensus upgrades in this proposal:
 ## Specification
 <!--The technical specification should describe the syntax and semantics of any new feature. The specification should be detailed enough to allow competing, interoperable implementations for any of the current EOSIO platforms.-->
 
-todo
+### require_key
 
-`accept_charges` has no effect and always returns false during deferred transactions.
+```c++
+void require_key(char* pub, size_t publen);
+```
+
+This intrinsic verifies that a given public key was recovered from transaction signatures. It aborts the
+transaction if either the key wasn't recovered, or if it's called from a deferred transaction.
+
+Nodeos normally rejects transactions which have recovered keys not needed by the native authorizations. Nodeos
+will no longer reject these transactions, if all the extra keys were referenced by `require_key`.
+
+### Enhancement to accept_charges
+
+[Contract Pays](eep-draft_contract_pays.md) adds this intrinsic:
+
+```c++
+bool accept_charges(
+    uint32_t max_net_usage_words,   // Maximum NET usage to charge
+    uint32_t max_cpu_usage_ms       // Maximum CPU usage to charge
+);
+```
+
+Nodeos normally rejects transactions which have no authorizations. After this consensus upgrade, nodeos
+will no longer reject these transactions if a contract accepts the charges during the leeway. No contract
+may accept charges during a deferred transaction.
 
 ## Rationale
 <!--The rationale fleshes out the specification by describing what motivated the design and why particular design decisions were made. It should describe alternate designs that were considered and related work, e.g. how the feature is supported in other languages. The rationale may also provide evidence of consensus within the community, and should discuss important objections or concerns raised during discussion.-->
