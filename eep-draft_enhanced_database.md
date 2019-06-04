@@ -46,6 +46,8 @@ Nodeos offers contracts a flexible database structure, but we see some areas for
 * The current RAM billing model is based on an implementation detail: well-behaved nodes use physical RAM to back
   contracts' database rows. This partly explains the current RAM prices.
 * Contracts can freely read other contracts' rows, creating compatibility headaches during upgrades.
+* Contract developers struggle to write code which wipes tables correctly when schemas change, especially when secondary
+  indexes are present or when scope values aren't fixed.
 
 ## Ideas
 <!--The technical specification should describe the syntax and semantics of any new feature. The specification should be detailed enough to allow competing, interoperable implementations for any of the current EOSIO platforms.-->
@@ -86,7 +88,7 @@ Some potential ideas we could apply to the above:
 * Prevent contracts from reading other contracts' data
 * No scopes or tables at this level of abstraction
 
-This model gives contracts the ability to build higher-level abstractions on top (see below):
+This model gives contracts the ability to build higher-level abstractions on top:
 * A table model which supports
   * any-size or even variable-size primary keys
   * any-size or even variable-size secondary keys
@@ -94,15 +96,19 @@ This model gives contracts the ability to build higher-level abstractions on top
 * A multi_index compatibility layer
 * A file-system like abstraction
 
-### Contract-level abstractions
+### Table abstraction
 
 Contracts can build abstractions on top of a key-value store by partitioning the key space. e.g. suppose a
-contract wants a table model on top. The key could contain, in order:
+contract wants a table model. The key could contain, in order:
 
 * 0x01 to indicate a table
 * 8 bytes to indicate table name (big-endian)
 * 8 bytes to indicate index name (big-endian). 0 for primary index
 * transformed key (below)
+
+In the primary index, the value could contain the table data. In secondary indexes, the value could contain the
+primary key. If there's multiple secondary indexes, then it's probably in the contract's interest to choose a
+small (e.g. uint32_t or uint64_t) primary key.
 
 ### Key transformations
 
