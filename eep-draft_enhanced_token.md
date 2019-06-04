@@ -34,24 +34,95 @@ This proposal does not recommend any particular table structures; we expect to c
 <!--The technical specification should describe the syntax and semantics of any new feature. The specification should be detailed enough to allow competing, interoperable implementations for any of the current EOSIO platforms.-->
 
 ```c++
-using account = std::variant<eosio::name, eosio::subaccount>;
+using account = extendable_variant<name, subaccount>;
 
-void create(eosio::name issuer, eosio::asset maximum_supply);                       notifies
-void create2(account issuer, eosio::extended_asset maximum_supply);                 extended? some other way to init foreign?
+struct create_data {
+    string  memo;
+};
 
-void issue(eosio::name to, eosio::asset quantity, std::string memo);                to==issuer
-void issue2(eosio::extended_asset quantity, std::string memo);
+struct issue_data {
+};
 
-void retire(eosio::asset quantity, std::string memo);
-void retire2(eosio::extended_asset quantity, std::string memo);
+struct transfer_data {
+    account from;
+    account to;
+    string  memo;
+};
 
-void transfer(eosio::name from, eosio::name to, eosio::asset quantity, std::string memo);       is_account; should move check to open
-void transfer2(account from, account to, eosio::extended_asset quantity, std::string memo);
+template<auto eep, name::raw reason>
+struct eep_reason {
+    // returns array<char, ?>
+    static constexpr auto abi_name() {
+    }
 
-void open(eosio::name owner, eosio::symbol symbol, eosio::name ram_payer);                      should probably check is_account
-void open2(account owner, extended_symbol symbol, eosio::name ram_payer);                       require owner's auth if subaccount, else is_account; prevents accidental token burn.
+    static constexpr int get_eep() {return eep;}
+    static constexpr name get_reason() {return reason;}
+};
 
-void close(eosio::name owner, eosio::symbol symbol);
+
+[[eosio::include_in_abi]]
+struct not_icky: eep_reason<34, "foo"_n> {
+    // static constexpr int eep = 34;
+    // static constexpr name reason = "foo";
+    // static constexpr auto abi_name = f(epp, reason);
+
+
+    name from;
+    name to;
+};
+
+...
+T::get_eep()
+
+struct custom_data {
+    unsigned_int    eep_number;
+    name            reason;         // identifies struct in sender ABI: data_<eep>_<reason>
+    bytes           payload;
+};
+
+
+struct transfer_in_data: transfer_data {};
+struct transfer_out_data: transfer_data {};
+
+// using balchg_data = extendable_variant<
+//     create_data,
+//     transfer_in_data,
+//     transfer_out_data,
+//     issue_data,
+//     custom_data,
+//     >;
+
+using balchg_data = eep_variant<
+    create_data,
+    transfer_in_data,
+    issue_data,
+>;
+
+[[eosio::signal]] void eosio.balchg(
+    name receiver,
+    account acc, extended_asset delta, int64_t new_bal, balchg_data data);
+
+
+
+
+
+
+void create(name issuer, asset maximum_supply);                                 notifies
+void create2(account issuer, extended_asset maximum_supply);                    extended? some other way to init foreign?
+
+void issue(name to, asset quantity, string memo);                               to==issuer
+void issue2(extended_asset quantity, string memo);
+
+void retire(asset quantity, string memo);
+void retire2(extended_asset quantity, string memo);
+
+void transfer(name from, name to, asset quantity, string memo);                 is_account; should move check to open
+void transfer2(account from, account to, extended_asset quantity, string memo);
+
+void open(name owner, eosio::symbol symbol, name ram_payer);                    should probably check is_account
+void open2(account owner, extended_symbol symbol, name ram_payer);              require owner's auth if subaccount, else is_account; prevents accidental token burn.
+
+void close(name owner, eosio::symbol symbol);
 void close2(account owner, eosio::extended_symbol symbol);
 ```
 

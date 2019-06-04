@@ -31,7 +31,7 @@ The `require_recipient` notification protocol has these limitations:
   for notifications from the embedded contract.
 
 This new notification protocol builds on [get_sender](https://github.com/EOSIO/eos/issues/7028)
-and has these properties:
+(Nodeos 1.8) and has these properties:
 * Contracts may send a variety of signals and events in response to a single action. These may contain any data that inline actions can handle.
 * A contract may send signals to any contract or non-contract account, including itself. 
 * A contract may send cheap context-free events to off-chain systems.
