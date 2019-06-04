@@ -98,7 +98,7 @@ This model gives contracts the ability to build higher-level abstractions on top
 
 ### Table abstraction
 
-Contracts can build abstractions on top of a key-value store by partitioning the key space. e.g. suppose a
+Contracts can build abstractions on top of a key-value store by partitioning the key space. Suppose a
 contract wants a table model. The key could contain, in order:
 
 * 0x01 to indicate a table
@@ -112,7 +112,7 @@ small (e.g. uint32_t or uint64_t) primary key.
 
 ### Key transformations
 
-The set of primitives could provide a lexicographical ordering of uint8_t on the keys. The contract can
+The key-value store could provide a lexicographical ordering of uint8_t on the keys. The contract can
 create an ordering on top by transforming its keys. Example transforms:
 
 * uint?_t: Convert to big-endian
