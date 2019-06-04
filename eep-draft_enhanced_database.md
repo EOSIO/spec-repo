@@ -60,6 +60,9 @@ than the functions below imply; we can consider that later.
 // Add (key,value) to database. Overwrites existing entry, if any.
 void db_set_kv(bytes key, bytes value);
 
+// Remove key from database, if it exists
+void db_remove(bytes key);
+
 // Get value for a specific key, if it exists
 optional<bytes> db_get_v(bytes key);
 
@@ -93,6 +96,29 @@ This model gives contracts the ability to build higher-level abstractions on top
 
 ### Contract-level abstractions
 
+Contracts can build abstractions on top of a key-value store by partitioning the key space. e.g. suppose a
+contract wants a table model on top. The key could contain, in order:
+
+* 0x01 to indicate a table
+* 8 bytes to indicate table name (big-endian)
+* 8 bytes to indicate index name (big-endian). 0 for primary index
+* transformed key (below)
+
+### Key transformations
+
+The set of primitives could provide a lexicographical ordering of uint8_t on the keys. The contract can
+create an ordering on top by transforming its keys. Example transforms:
+
+* uint?_t: Convert to big-endian
+* int?_t: Invert the MSB then convert to big-endian
+* strings: Convert 0x00 to (0x00, 0x01). Append (0x00, 0x00) to the end. This transform allows arbitrary-length strings.
+* case-insensitive strings: Convert to upper-case, then apply the above transform. Assumes ASCII.
+* floating-point:
+  * There's some bit manipulations, followed by an endian conversion
+  * limitations:
+    * Positive 0 and Negative 0 map to the same value
+    * NaN's and inf's end up with an unusual ordering
+* struct or tuple: transform each field in order. Concatenate results.
 
 ## Rationale
 <!--The rationale fleshes out the specification by describing what motivated the design and why particular design decisions were made. It should describe alternate designs that were considered and related work, e.g. how the feature is supported in other languages. The rationale may also provide evidence of consensus within the community, and should discuss important objections or concerns raised during discussion.-->
