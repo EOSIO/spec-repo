@@ -9,9 +9,16 @@ In dependency order:
 * [Forwarding Authorizations](eep-draft_contract_fwd_auth.md)
 * [Enhanced Token](eep-draft_enhanced_token.md)
 
+Discussion pieces:
+* [Enhanced Database](eep-draft_enhanced_database.md)
+
 Todo:
+* Read-only queries: contracts calling other contracts
+  * Consistency issue:
+    * ? Allow either caller or callee to force fresh VM
+    * Potential issue with multi_index caching rows
 * RAM market issues with subaccounts
-  * Contracts need a callback from system contract for RAM market ops. Need delta_currency,
+  * Contracts need a signal from system contract for RAM market ops. Need delta_currency,
     delta_ram, request_id. CDT enhancements to aid tracking requests.
   * subaccounts may need a way to move their RAM between contracts without excessive fees.
     * alternative: contracts have their own RAM submarkets.

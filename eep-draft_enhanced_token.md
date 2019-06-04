@@ -33,6 +33,8 @@ This proposal does not recommend any particular table structures; we expect to c
 ## Specification
 <!--The technical specification should describe the syntax and semantics of any new feature. The specification should be detailed enough to allow competing, interoperable implementations for any of the current EOSIO platforms.-->
 
+Consider having accounts opt-in to receiving notifications to save resources
+
 ```c++
 using account = extendable_variant<name, subaccount>;
 
