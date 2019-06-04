@@ -29,9 +29,10 @@ Even though these costs are low on a per-user basis, they can add up quickly
 for application providers. e.g. if a provider wants to sponsor 1000 accounts
 which need Xpeek CPU and Ypeek NET, then the provider needs to stake
 1000 * Xpeek CPU and 1000 * Ypeek NET. Under this model, users can use these
-resources for other apps, not just yours. In addition, most of this will go unused.
+resources for other apps, not just yours. In addition, most of this will
+likely go unused.
 
-[ONLY_BILL_FIRST_AUTHORIZER](https://github.com/EOSIO/eos/issues/6332)
+[ONLY_BILL_FIRST_AUTHORIZER](https://github.com/EOSIO/eos/issues/6332) (Nodeos 1.8)
 partially addresses this by charging only the first authorizer of a transaction.
 This allows application
 providers to cover costs from a common pool by cosigning each user
@@ -48,6 +49,30 @@ the hassle of cosigning.
 
 ## Specification
 <!--The technical specification should describe the syntax and semantics of any new feature. The specification should be detailed enough to allow competing, interoperable implementations for any of the current EOSIO platforms.-->
+
+This consensus upgrade adds a new intrinsic:
+
+```c++
+bool accept_charges(
+    uint32_t max_net_usage_words,   // Maximum NET usage to charge
+    uint32_t max_cpu_usage_ms       // Maximum CPU usage to charge
+);
+```
+
+If a contract is the first one to call this during a transaction, then that contract's account will be billed
+for the transaction, up to the limits specified. If the transaction exceeds these limits, then it will abort.
+The contract may call this intrinsic multiple times, within a single action or across multiple actions; this
+enables the contract to adjust the limits. The original NET and CPU limits in the transaction have no effect
+once a contract accepts the charges.
+
+If multiple contracts call this, then the first one is the one charged. `accept_charges` returns true to that
+contract, but false to the others. If the first one calls it multiple times, within the same action or across
+multiple actions, it will return true each time.
+
+This intrinsic has no effect and always returns false during deferred transactions.
+
+[Contract Authentication](eep-draft_contract_trx_auth.md) builds on this proposal to add an additional
+capability to `accept_charges`.
 
 ## Rationale
 <!--The rationale fleshes out the specification by describing what motivated the design and why particular design decisions were made. It should describe alternate designs that were considered and related work, e.g. how the feature is supported in other languages. The rationale may also provide evidence of consensus within the community, and should discuss important objections or concerns raised during discussion.-->
