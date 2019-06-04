@@ -2,6 +2,7 @@ Proposals for eventual inclusion in [EEPs](https://github.com/eoscanada/EEPs)
 
 In dependency order:
 * [Flexible Notifications](eep-draft_flexible_notify.md)
+* [Query Consumption](eep-draft_query_consumption.md)
 * [Subjective Data](eep-draft_subjective_data.md)
 * [Contract Pays](eep-draft_contract_pays.md)
 * [Contract Authentication](eep-draft_contract_trx_auth.md)
@@ -9,9 +10,6 @@ In dependency order:
 * [Enhanced Token](eep-draft_enhanced_token.md)
 
 Todo:
-* A new intrinsic `get_ram_usage` that returns the amount of RAM used by the receiver
-* A new intrinsic `get_trx_net_bill` that returns the current NET charges for the transaction
-    Need to record a commitment to the initial NET
 * RAM market issues with subaccounts
   * Contracts need a callback from system contract for RAM market ops. Need delta_currency,
     delta_ram, request_id. CDT enhancements to aid tracking requests.
@@ -19,3 +17,4 @@ Todo:
     * alternative: contracts have their own RAM submarkets.
   * Contracts can use `get_ram_usage` to track subaccount RAM usage, but there's a really
     tricky part to account for: table charges.
+* Undecided addition. CDT: `sized_content<T>`, `extendable_variant`. ABI: '#'.

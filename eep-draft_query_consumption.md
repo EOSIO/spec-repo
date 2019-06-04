@@ -1,6 +1,6 @@
 ---
 eep: <to be assigned>
-title: Contract Access To Subjective Data
+title: Query Resource Consumption
 author: <a list of the author's or authors' name(s) and/or username(s), or name(s) and email(s), e.g. (use with the parentheses or triangular brackets): FirstName LastName (@GitHubUsername), FirstName LastName <foo@bar.com>, FirstName (@GitHubUsername) and GitHubUsername (@GitHubUsername)>
 discussions-to: <URL>
 status: Draft
@@ -16,39 +16,36 @@ replaces (*optional): <EEP number(s)>
 ## Simple Summary
 <!--"If you can't explain it simply, you don't understand it well enough." Provide a simplified and layman-accessible explanation of the EEP.-->
 
-Give contracts access to subjective data. This includes CPU charges for the current
-transaction, wall-clock time, and a random number generator.
+Allow contracts to query non-subjective resource consumption (NET and RAM).
 
 ## Abstract
 <!--A short (~200 word) description of the technical issue being addressed.-->
 
-Contracts don't have access to subjective data. e.g. they can't examine CPU costs. They
-don't have access to wall-clock time. They don't have access to an unpredictable entropy
-source. They could, if BPs recorded all subjective data they passed to the contracts.
+Contracts don't have access to resource consumption data. e.g. they can't examine
+transaction NET and CPU costs and they can't easily track their own RAM consumption.
+This prevents them from accurately billing users for this resource usage, something
+they may need to do if they decide to
+[Pay Transaction Costs](eep-draft_contract_pays.md).
 
-This proposal defines a mechanism for BPs to record the subjective data they provide to
-contracts. It also defines a set of intrinsics for accessing this data.
+This proposal defines a set of intrinsics for accessing non-subjective resource
+consumption. A follow-up proposal, [Subjective Data](eep-draft_subjective_data.md)
+adds intrinsics for accessing subjective resource consumption.
 
-## Overview
-
-There is 1 consensus upgrade in this proposal, which adds the following:
-* A block extension which records subjective data provided to contracts
-* A new intrinsic `get_trx_cpu_bill` that returns the current CPU charges for the transaction
-* A new intrinsic `get_wall_time` that returns the wall-clock time with microsecond accuracy
-* A new intrinsic `get_random` that returns a random number, assuming you trust the producers
-
-There are some constraints on these functions (e.g. `get_wall_time` is non-decreasing during a single
-transaction), but this doesn't propose a way to prevent BPs from manipulating this data to their advantage
-(e.g. `get_random`).
+This consensus upgrade adds the following intrinsics:
+* `get_ram_usage` returns the amount of RAM used by the receiver
+* `get_trx_net_bill` returns the current NET charges for the transaction
 
 ## Specification
 <!--The technical specification should describe the syntax and semantics of any new feature. The specification should be detailed enough to allow competing, interoperable implementations for any of the current EOSIO platforms.-->
 
-todo
+```c++
+uint32_t get_ram_usage();
+uint32_t get_trx_net_bill();
+```
 
-These calls will charge net
+`get_ram_usage` returns the sender's current RAM usage, in bytes. It aborts the transaction if it's deferred.
 
-Assert if deferred
+`get_trx_net_bill` returns the transaction's current NET usage, in words. It aborts the transaction if it's deferred.
 
 ## Rationale
 <!--The rationale fleshes out the specification by describing what motivated the design and why particular design decisions were made. It should describe alternate designs that were considered and related work, e.g. how the feature is supported in other languages. The rationale may also provide evidence of consensus within the community, and should discuss important objections or concerns raised during discussion.-->

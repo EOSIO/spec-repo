@@ -42,8 +42,9 @@ issues and security issues.
 
 This proposal adds a new capability: contracts can cover transaction
 costs without cosigning. They can also limit resource consumption to 
-prevent abuse. Thanks to the [Subjective Data](eep-draft_subjective_data.md)
-proposal, contracts also can track resource consumption on transactions.
+prevent abuse. Thanks to the [Query Consumption](eep-draft_query_consumption.md)
+and [Subjective Data](eep-draft_subjective_data.md)
+proposals, contracts also can track resource consumption on transactions.
 This proposal has the advantages of ONLY_BILL_FIRST_AUTHORIZER without
 the hassle of cosigning.
 

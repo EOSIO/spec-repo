@@ -29,15 +29,16 @@ EOSIO blockchains have a flexible and powerful account structure, but we see som
 What if contracts could define their own account structures? What if these contracts could authenticate 
 transactions from those accounts? What if they could do their own resource billing? What if these 
 contracts didn’t have to be privileged? This proposal, which builds on
-the [Subjective Data](eep-draft_subjective_data.md) and [Contract Pays](eep-draft_contract_pays.md)
-proposals, grants contracts this capability.
+the [Query Consumption](eep-draft_query_consumption.md), [Subjective Data](eep-draft_subjective_data.md),
+and [Contract Pays](eep-draft_contract_pays.md) proposals, grants contracts this capability.
 
 ## Overview
 
-There are 3 consensus upgrades in this proposal:
-* A new intrinsic `require_key` that asserts that a given public key was recovered from transaction signatures.
+There are 3 changes in this consensus upgrade:
+* A new intrinsic `require_key` asserts that a given public key was recovered from transaction signatures.
 * Nodeos will no longer reject transactions with signatures not used by the native authorizations, if those keys are checked by `require_key`.
-* Allow transactions to omit native authorizations, if a contract accepts the charges using `accept_charges`. This builds on the [Contract Pays](eep-draft_contract_pays.md) proposal.
+* Nodeos will allow transactions to omit native authorizations, if a contract accepts the charges using `accept_charges`.
+  This builds on the [Contract Pays](eep-draft_contract_pays.md) proposal.
 
 ## Example Use Case: Basic
 * A user without a native account creates a transaction with this action:
@@ -72,7 +73,8 @@ There are 3 consensus upgrades in this proposal:
 * myauthmgr executes inline actions specified by the user. It includes an authorization attestation in each inline action.
   The contracts receiving these actions rely on the attestation. See [Forwarding Authentication](eep-draft_contract_fwd_auth.md)
   for details on this step.
-* Inside an inline action, myauthmgr checks `get_resource_usage` and updates the user’s resource consumption. This inline action executes last.
+* Inside an inline action, myauthmgr checks ``get_trx_net_bill` and `get_trx_cpu_bill` then updates the user’s
+  resource consumption. This inline action executes last.
 
 ## Specification
 <!--The technical specification should describe the syntax and semantics of any new feature. The specification should be detailed enough to allow competing, interoperable implementations for any of the current EOSIO platforms.-->
