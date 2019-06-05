@@ -71,7 +71,7 @@ verifies the following:
 * The result is >= (the block time of the current block - 0.5s)
 * The result is <= (the block time of the current block + 0.5s)
 
-`get_random` fills randomly-generated data into a buffer. There are no guarantees about the
+`get_random` fills a buffer with arbitrary BP-produced data. There are no guarantees about the
 actual randomness of this data.
 
 ## Copyright
