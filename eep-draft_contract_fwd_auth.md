@@ -29,22 +29,31 @@ to simplify implementation.
 ## Specification
 <!--The technical specification should describe the syntax and semantics of any new feature. The specification should be detailed enough to allow competing, interoperable implementations for any of the current EOSIO platforms.-->
 
-### CDT Support
+### CDT Support (receiver)
 
-todo
-
-serializer support for streaming into checksum256
+The CDT will add these new methods to the `contract` base class that allows contracts to check subaccount authorization:
 
 ```c++
-namespace eosio {
-    struct subaccount {
-        name        contract;
-        checksum256 ident;
-    };
-}
+struct subaccount {
+    name        contract;
+    checksum256 ident;
+};
+
+class contract {
+    bool has_subaccount_auth(subaccount sub);
+    void require_subaccount_auth(subaccount sub);
+};
 ```
 
+Contracts may use `has_subaccount_auth` and `require_subaccount_auth` to verify a subaccount's authority
+is present similar to the way they currently use `has_auth` and `require_auth`.
+
+The CDT will automatically dispatch actions which use the new authority system without any changes to the
+contract source, assuming the contract is using the CDT's automatic dispatcher.
+
 ### Protocol (receiver)
+
+This pseudo-function describes the action in this protocol:
 
 ```c++
 eosio.action(
@@ -80,24 +89,14 @@ The sender should send an inline action `eosio.action` with:
 * `idents` attesting to the authenticated account(s)
 
 It's up to the sender to define how it encodes identities into checksum256. It could use the CDT's
-serialization facilities to pack the sender's internal identity format (e.g. `name`, struct, etc.)
+new `pack256` function to pack the sender's internal identity format (e.g. `name`, struct, etc.)
 into 256 bits. It could also hash the identities if they are larger than 256 bits.
 
+```c++
+checksum256 ident = pack256(username);
+```
+
 We recommend that senders avoid providing any native authorities to the inline action, even their own.
-This will prevent the receiver from charging RAM to the sender. 
-
-### ABI Support
-
-## Rationale
-<!--The rationale fleshes out the specification by describing what motivated the design and why particular design decisions were made. It should describe alternate designs that were considered and related work, e.g. how the feature is supported in other languages. The rationale may also provide evidence of consensus within the community, and should discuss important objections or concerns raised during discussion.-->
-
-## Backwards Compatibility
-<!--All EEPs that introduce backwards incompatibilities must include a section describing these incompatibilities and their severity. The EEP must explain how the author proposes to deal with these incompatibilities. EEP submissions without a sufficient backwards compatibility treatise may be rejected outright.-->
-
-## Test Cases
-<!--Test cases for an implementation are mandatory for EEPs that are affecting consensus changes. Other EEPs can choose to include links to test cases if applicable.-->
-
-## Implementation
-<!--The implementations must be completed before any EEP is given status "Final", but it need not be completed before the EEP is accepted. While there is merit to the approach of reaching consensus on the specification and rationale before writing code, the principle of "rough consensus and running code" is still useful when it comes to resolving many discussions of API details.-->
+This will prevent the receiver from charging RAM to the sender.
 
 ## Copyright
