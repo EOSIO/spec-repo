@@ -70,10 +70,11 @@ enhancements. Here are some of the issues:
   services could use the [Contract Authentication](eep-draft_contract_trx_auth.md) and
   [Forwarding Authorizations](eep-draft_contract_fwd_auth.md) proposals to implement their
   own authorization requirements.
-* Contracts which use deferred transactions to resume long-running calculations, or to do
-  regularly-scheduled maintenance tasks already need a backup mechanism since deferred
-  transactions are unreliable. e.g. eosio.system's `refund` action. Their backup solutions
-  could become their primary solutions.
+* Contracts sometimes use deferred transactions to resume long-running calculations, to do
+  regularly-scheduled maintenance tasks, or to add a delay to an action. These contracts
+  already need a backup mechanism since deferred transactions are unreliable. e.g. 
+  eosio.system allows users to use `refund` action if a deferred transaction fails.
+  Contracts' backup solutions could become their primary solutions.
 
 The `eosio.msig` and `eosio.wrap` changes require increasing the `max_inline_action_size`
 and `max_inline_action_depth` consensus parameters. These need to be large enough to allow
