@@ -4,7 +4,7 @@ Proposals for eventual inclusion in [EEPs](https://github.com/eoscanada/EEPs)
 * `R` = Ready for review
 
 In dependency order:
-* `.` [Flexible Notifications](eep-draft_flexible_notify.md)
+* `R` [Flexible Notifications](eep-draft_flexible_notify.md)
 * `R` [Query Consumption](eep-draft_query_consumption.md)
 * `.` [Subjective Data](eep-draft_subjective_data.md)
 * `R` [Contract Pays](eep-draft_contract_pays.md)
@@ -14,6 +14,10 @@ In dependency order:
 
 Discussion pieces:
 * `.` [Enhanced Database](eep-draft_enhanced_database.md)
+
+Deprecations:
+* `require_recipient`: [Flexible Notifications](eep-draft_flexible_notify.md)
+* Deferred Transactions: <link>
 
 Todo:
 * Read-only queries: contracts calling other contracts

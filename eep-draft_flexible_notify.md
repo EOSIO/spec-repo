@@ -37,7 +37,8 @@ This new notification protocol builds on [get_sender](https://github.com/EOSIO/e
 * A contract may send cheap context-free events to off-chain systems.
 * Receivers may not charge RAM to the sender.
 * Receiving contracts may authenticate signals using `get_sender`.
-* Off-chain processes may authenticate signals and events by looking at `creator_action_ordinal` in the notification's action trace.
+* Off-chain processes may get the sender by looking at receiver of the action referred to by `creator_action_ordinal` in the
+  notification's action trace.
 
 This EEP is a variation on signals and slots, similar to boost::signal2 or Qt. A major difference is that both sides must opt in to a pairing.
 The sending contract chooses which contracts may opt into receiving, and the receiving contracts opt in to which contracts they listen to.
@@ -52,21 +53,24 @@ To define a signal, declare a function with an `eosio::signal` attribute. The fi
 The CDT will generate the function's body. e.g.:
 
 ```c++
-// These are examples only. A future EEP will define a new token standard which differs
-// from this.
+// These are examples only. A future EEP will define a new token
+// standard which differs from this.
 
 [[eosio::signal]] void transferout(
     name receiver, name from, name to, asset amount, string memo);
 
-[[eosio::signal]] void transferin(
+[[eosio::signal("transferin")]] void transfer_in_long_name(
     name receiver, name from, name to, asset amount, string memo);
 ```
 
-The signal name must follow the rules for eosio names. To send a signal, call its function.
+The signal name must follow the rules for eosio names. It the function has a non-compliant
+name, then pass a corrected name to the signal attribute's argument.
+
+To send a signal, call its function.
 
 ```c++
-// This is an example only. A future EEP will define a new token standard which differs
-// from this.
+// This is an example only. A future EEP will define a new token
+// standard which differs from this.
 
 class token: public contract {
     ...
@@ -74,7 +78,7 @@ class token: public contract {
         name from, name to, asset quantity, string memo) {
         ...
         transferout("alice"_n, "alice"_n, "bob"_n, asset("1.0000 SYS"), "A transfer");
-        transferin("bob"_n, "alice"_n, "bob"_n, asset("1.0000 SYS"), "A transfer");
+        transfer_in_long_name("bob"_n, "alice"_n, "bob"_n, asset("1.0000 SYS"), "A transfer");
     }
 };
 ```
@@ -99,17 +103,17 @@ class game: public contract {
 ### CDT Support: Receiver
 
 To receive a signal, define a member function on a contract with the `eosio::slot` attribute.
-The slot attribute has a string argument which specifies the sender and slot.
+The slot attribute has a string argument which specifies the sender and the sender's signal.
 e.g. `"eosio.token::transferin"`. It can use a wildcard for the sender: `"*::transferin"`.
 
 ```c++
-// This is an example only. A future EEP will define a new token standard which differs
-// from this.
+// This is an example only. A future EEP will define a new token
+// standard which differs from this.
 
 class [[eosio::contract]] exchange: public contract {
   public:
     void [[eosio::slot("eosio.token::transferin"]] transferin(
-        name receiver, name from, name to, asset amount, string memo)
+        name sender, name from, name to, asset amount, string memo)
     ) {
         // Handle the notification here
     }
@@ -117,6 +121,8 @@ class [[eosio::contract]] exchange: public contract {
 ```
 
 ### Protocol: Sender
+
+These pseudo-functions describe the actions in this protocol:
 
 ```c++
 eosio.signal(
@@ -155,20 +161,11 @@ the transaction. The receiving contract must pay for any RAM it uses.
 The ABI of the sender includes a struct definition for each notification. The struct name is
 `eosio.notify.name`, where `name` is the name of the notification.
 
-## Rationale
-<!--The rationale fleshes out the specification by describing what motivated the design and why particular design decisions were made. It should describe alternate designs that were considered and related work, e.g. how the feature is supported in other languages. The rationale may also provide evidence of consensus within the community, and should discuss important objections or concerns raised during discussion.-->
-
 ## Backwards Compatibility
 <!--All EEPs that introduce backwards incompatibilities must include a section describing these incompatibilities and their severity. The EEP must explain how the author proposes to deal with these incompatibilities. EEP submissions without a sufficient backwards compatibility treatise may be rejected outright.-->
 
 CDT versions 1.7 - yyy produce automatic dispatchers which assert on unknown actions, including `eosio.notify`.
 If a contract sends a notification to a receiver built with those CDT versions, and that receiver uses the
 automatic dispatcher, the whole transaction will abort.
-
-## Test Cases
-<!--Test cases for an implementation are mandatory for EEPs that are affecting consensus changes. Other EEPs can choose to include links to test cases if applicable.-->
-
-## Implementation
-<!--The implementations must be completed before any EEP is given status "Final", but it need not be completed before the EEP is accepted. While there is merit to the approach of reaching consensus on the specification and rationale before writing code, the principle of "rough consensus and running code" is still useful when it comes to resolving many discussions of API details.-->
 
 ## Copyright
