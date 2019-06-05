@@ -73,13 +73,13 @@ There are 3 changes in this consensus upgrade:
 * myauthmgr executes inline actions specified by the user. It includes an authorization attestation in each inline action.
   The contracts receiving these actions rely on the attestation. See [Forwarding Authentication](eep-draft_contract_fwd_auth.md)
   for details on this step.
-* Inside an inline action, myauthmgr checks ``get_trx_net_bill` and `get_trx_cpu_bill` then updates the user’s
+* Inside an inline action, myauthmgr calls `sync_context_free`, checks `get_trx_net_bill` and `get_trx_cpu_bill`, then updates the user’s
   resource consumption. This inline action executes last.
 
 ## Specification
 <!--The technical specification should describe the syntax and semantics of any new feature. The specification should be detailed enough to allow competing, interoperable implementations for any of the current EOSIO platforms.-->
 
-### require_key
+### New Intrinsic
 
 ```c++
 void require_key(char* pub, size_t publen);
@@ -105,17 +105,5 @@ bool accept_charges(
 Nodeos normally rejects transactions which have no authorizations. After this consensus upgrade, nodeos
 will no longer reject these transactions if a contract accepts the charges during the leeway. No contract
 may accept charges during a deferred transaction.
-
-## Rationale
-<!--The rationale fleshes out the specification by describing what motivated the design and why particular design decisions were made. It should describe alternate designs that were considered and related work, e.g. how the feature is supported in other languages. The rationale may also provide evidence of consensus within the community, and should discuss important objections or concerns raised during discussion.-->
-
-## Backwards Compatibility
-<!--All EEPs that introduce backwards incompatibilities must include a section describing these incompatibilities and their severity. The EEP must explain how the author proposes to deal with these incompatibilities. EEP submissions without a sufficient backwards compatibility treatise may be rejected outright.-->
-
-## Test Cases
-<!--Test cases for an implementation are mandatory for EEPs that are affecting consensus changes. Other EEPs can choose to include links to test cases if applicable.-->
-
-## Implementation
-<!--The implementations must be completed before any EEP is given status "Final", but it need not be completed before the EEP is accepted. While there is merit to the approach of reaching consensus on the specification and rationale before writing code, the principle of "rough consensus and running code" is still useful when it comes to resolving many discussions of API details.-->
 
 ## Copyright
