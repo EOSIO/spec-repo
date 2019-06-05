@@ -12,12 +12,13 @@ In dependency order:
 * `.` [Forwarding Authorizations](eep-draft_contract_fwd_auth.md)
 * `.` [Enhanced Token](eep-draft_enhanced_token.md)
 
-Discussion pieces:
+No dependencies:
 * `.` [Enhanced Database](eep-draft_enhanced_database.md)
+* `.` [Deprecate Deferred](eep-draft_deprecate_deferred.md)
 
 Deprecations:
 * `require_recipient`: [Flexible Notifications](eep-draft_flexible_notify.md)
-* Deferred Transactions: <link>
+* Deferred Transactions: [Deprecate Deferred](eep-draft_deprecate_deferred.md)
 
 Todo:
 * Read-only queries: contracts calling other contracts
@@ -32,10 +33,6 @@ Todo:
   * Contracts can use `get_ram_usage` to track subaccount RAM usage, but there's a really
     tricky part to account for: table charges.
 * Undecided addition. CDT: `sized_content<T>`, `extendable_variant`. ABI: '#'.
-* Deprecation of deferred transactions and potential replacements
-  * Inline transactions
-  * Deprecate wait weights (chestnut-like replacements based on subaccounts)
-  * Discuss problems with deferred transactions
 * Named shards / regions
   * Alternatives for communication. Identify pros and cons of each:
     * Communication protocol (e.g. maybe a message queue)
