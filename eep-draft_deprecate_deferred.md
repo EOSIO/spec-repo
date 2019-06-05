@@ -57,24 +57,26 @@ enhancements. Here are some of the issues:
   date. This can execute after they sell the account to someone else, or, if the account was
   stolen, the account was restored to the legitimate owner.
 
-## Potential replacements
+## Alternatives
 
-* eosio.wrap
-* wait weights
+* `eosio.msig` currently uses deferred transactions. It could switch to inline actions instead.
+   This has some advantages:
+  * If `exec` fails, the status of the failure will be in the receipt of the transaction
+    which used `exec`, simplifying diagnosis.
+  * If `exec` fails, it can be retried after fixing the problem. e.g. by increasing resources.
+* `eosio.wrap` also uses deferred transactions. It could switch to inline actions instead.
+* Some users use wait weights in combination with deferred transactions to protect their accounts.
+  They could switch to contract-based protection instead. Contracts which provide protection
+  services could use the [Contract Authentication](eep-draft_contract_trx_auth.md) and
+  [Forwarding Authorizations](eep-draft_contract_fwd_auth.md) proposals to implement their
+  own authorization requirements.
+* Contracts which use deferred transactions to resume long-running calculations, or to do
+  regularly-scheduled maintenance tasks already need a backup mechanism since deferred
+  transactions are unreliable. e.g. eosio.system's `refund` action. Their backup solutions
+  could become their primary solutions.
 
-## Specification
-<!--The technical specification should describe the syntax and semantics of any new feature. The specification should be detailed enough to allow competing, interoperable implementations for any of the current EOSIO platforms.-->
-
-## Rationale
-<!--The rationale fleshes out the specification by describing what motivated the design and why particular design decisions were made. It should describe alternate designs that were considered and related work, e.g. how the feature is supported in other languages. The rationale may also provide evidence of consensus within the community, and should discuss important objections or concerns raised during discussion.-->
-
-## Backwards Compatibility
-<!--All EEPs that introduce backwards incompatibilities must include a section describing these incompatibilities and their severity. The EEP must explain how the author proposes to deal with these incompatibilities. EEP submissions without a sufficient backwards compatibility treatise may be rejected outright.-->
-
-## Test Cases
-<!--Test cases for an implementation are mandatory for EEPs that are affecting consensus changes. Other EEPs can choose to include links to test cases if applicable.-->
-
-## Implementation
-<!--The implementations must be completed before any EEP is given status "Final", but it need not be completed before the EEP is accepted. While there is merit to the approach of reaching consensus on the specification and rationale before writing code, the principle of "rough consensus and running code" is still useful when it comes to resolving many discussions of API details.-->
+The `eosio.msig` and `eosio.wrap` changes require increasing the `max_inline_action_size`
+and `max_inline_action_depth` consensus parameters. These need to be large enough to allow
+`setcode` and `setabi` inline actions.
 
 ## Copyright
