@@ -44,22 +44,34 @@ transaction), but this doesn't propose a way to prevent BPs from manipulating th
 ## Specification
 <!--The technical specification should describe the syntax and semantics of any new feature. The specification should be detailed enough to allow competing, interoperable implementations for any of the current EOSIO platforms.-->
 
-todo
+### Block extension
 
-These calls will charge net
+When it's producing a block, nodeos will record subjective data that it provides to contracts into
+a block extension. This allows other nodes to provide this data to the contracts while applying
+blocks.
 
-Assert if deferred
+### Primitives
 
-## Rationale
-<!--The rationale fleshes out the specification by describing what motivated the design and why particular design decisions were made. It should describe alternate designs that were considered and related work, e.g. how the feature is supported in other languages. The rationale may also provide evidence of consensus within the community, and should discuss important objections or concerns raised during discussion.-->
+All of these primitives abort the transaction when used inside a deferred transaction. They charge NET
+since they increase block size.
 
-## Backwards Compatibility
-<!--All EEPs that introduce backwards incompatibilities must include a section describing these incompatibilities and their severity. The EEP must explain how the author proposes to deal with these incompatibilities. EEP submissions without a sufficient backwards compatibility treatise may be rejected outright.-->
+```c++
+uint32_t get_trx_cpu_bill();
+uint32_t get_wall_time();
+void get_random(char* dest, size_t size);
+```
+`get_trx_cpu_bill` returns the current CPU charges for the transaction. During validation, nodeos
+verifies the following:
+* The result is non-decreasing across a transaction.
+* The result is <= the final billed amount.
 
-## Test Cases
-<!--Test cases for an implementation are mandatory for EEPs that are affecting consensus changes. Other EEPs can choose to include links to test cases if applicable.-->
+`get_wall_time` returns the wall-clock time with microsecond accuracy. During validation, nodeos
+verifies the following:
+* The result is non-decreasing across a block.
+* The result is >= (the block time of the current block - 0.5s)
+* The result is <= (the block time of the current block + 0.5s)
 
-## Implementation
-<!--The implementations must be completed before any EEP is given status "Final", but it need not be completed before the EEP is accepted. While there is merit to the approach of reaching consensus on the specification and rationale before writing code, the principle of "rough consensus and running code" is still useful when it comes to resolving many discussions of API details.-->
+`get_random` fills randomly-generated data into a buffer. There are no guarantees about the
+actual randomness of this data.
 
 ## Copyright
