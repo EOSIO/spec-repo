@@ -41,32 +41,59 @@ Some of the potential approaches to parallel scaling include:
   * Oracle-based IBC. Contracts may opt in to trusting oracles which attest to events on other
     chains.
 * Named Shards. This EEP uses the term "shards" to mean side chains which share a common block
-  log with a main chain. The block log keeps the shards synchronized with each other and may
-  help form the communication channel between them.
+  log. The block log keeps the shards synchronized with each other and may help form the
+  communication channel between them.
 
 This EEP discusses named shards.
 
-## Description
+## Discussion
 
-* Named shards / regions
-  * Alternatives for communication. Identify pros and cons of each:
-    * Communication protocol (e.g. maybe a message queue)
-    * Ability to prove an inline action in another shard
-  * BPs don't have to process every shard every block. only if there's a transaction.
+### Base Properties
 
-fork together; don't need to wait for irreversible
-can replay just a subset of shards
+Suppose we have a system with these properties:
 
-## Rationale
-<!--The rationale fleshes out the specification by describing what motivated the design and why particular design decisions were made. It should describe alternate designs that were considered and related work, e.g. how the feature is supported in other languages. The rationale may also provide evidence of consensus within the community, and should discuss important objections or concerns raised during discussion.-->
+* A single block holds the transactions for a set of named shards. This allows the
+  shards to operate in lock-step, even during forks.
+* Shards can't access each others' state; this allows them to execute in parallel.
 
-## Backwards Compatibility
-<!--All EEPs that introduce backwards incompatibilities must include a section describing these incompatibilities and their severity. The EEP must explain how the author proposes to deal with these incompatibilities. EEP submissions without a sufficient backwards compatibility treatise may be rejected outright.-->
+To limit load on validating nodes, and to limit network needs for these nodes, let's
+add these properties:
 
-## Test Cases
-<!--Test cases for an implementation are mandatory for EEPs that are affecting consensus changes. Other EEPs can choose to include links to test cases if applicable.-->
+* A node can choose to validate a particular subset of the shards and ignore the rest.
+* Subsets of shards can be extracted from blocks.
+* If a shard doesn't have any transactions for a particular block, then that shard
+  doesn't have to execute. We could exempt a main shard from this to enable bookkeeping
+  activities, such as onblock.
 
-## Implementation
-<!--The implementations must be completed before any EEP is given status "Final", but it need not be completed before the EEP is accepted. While there is merit to the approach of reaching consensus on the specification and rationale before writing code, the principle of "rough consensus and running code" is still useful when it comes to resolving many discussions of API details.-->
+This system would create, in effect, a system of sister chains under the control of a
+common set of producers. Each shard could have its own system contract for managing
+resources. To simplify implementation, each shard could also have its own set of
+base-level accounts. Contracts could provide account portability using the
+[Contract Authentication](eep-draft_contract_trx_auth.md) and
+[Forwarding Authorizations](eep-draft_contract_fwd_auth.md) proposals, combined
+with Inter-Shard Communication.
+
+### Inter-Shard Communication (ISC)
+
+IBC protocols need to deal with forking issues. A chain that's listening for the events
+of another chain needs to either wait for that event to become irreversible, or deal
+with it being undone by a fork change. Since shards share a common block history,
+they don't have to deal with this issue when communicating with each other. Instead,
+a shard can assume that if an event happened on a prior block, it won't be undone.
+It can assume this because a fork change which undoes that event also undoes
+the effects it had on the receiving shard.
+
+Here are some potential ISC approaches:
+
+* Trusted off-chain oracles forward events between shards. They use TaPoS to keep
+  an event from one fork affecting another. Contracts need to be careful which
+  oracles they trust. If an oracle is compromised, then any contracts that depend
+  on it can also be compromised.
+* Untrusted off-chain oracles forward events, along with Merkle proofs. Contracts
+  would have to consume resources verifying these proofs.
+* The system could provide message queues. If a contract on shard A posts a message
+  to a contract on shard B, that message would become available to B on the next block.
+  This isn't a form of deferred transactions. Instead, B would have to poll for messages.
+  Messages would be recorded in blocks to enable nodes to validate subsets of shards.
 
 ## Copyright
