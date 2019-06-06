@@ -42,7 +42,7 @@ This new notification protocol builds on [get_sender](https://github.com/EOSIO/e
 
 This EEP is a variation on signals and slots, similar to boost::signal2 or Qt. A major difference is that both sides must opt in to a pairing.
 The sending contract chooses which contracts may opt into receiving, and the receiving contracts opt in to which contracts they listen to.
-Once this system is implemented, `required_recipient` will be deprecated.
+Once this system is implemented, `require_recipient` will be deprecated.
 
 ## Specification
 <!--The technical specification should describe the syntax and semantics of any new feature. The specification should be detailed enough to allow competing, interoperable implementations for any of the current EOSIO platforms.-->

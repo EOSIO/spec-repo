@@ -51,26 +51,36 @@ the hassle of cosigning.
 ## Specification
 <!--The technical specification should describe the syntax and semantics of any new feature. The specification should be detailed enough to allow competing, interoperable implementations for any of the current EOSIO platforms.-->
 
-This consensus upgrade adds a new intrinsic:
+This consensus upgrade adds these intrinsics:
 
 ```c++
 bool accept_charges(
     uint32_t max_net_usage_words,   // Maximum NET usage to charge
     uint32_t max_cpu_usage_ms       // Maximum CPU usage to charge
 );
+
+void get_accept_charges(
+    name*     contract,
+    uint32_t* max_net_usage_words,
+    uint32_t* max_cpu_usage_ms,
+);    
 ```
 
-If a contract is the first one to call this during a transaction, then that contract's account will be billed
+If a contract is the first one to call `accept_charges` during a transaction, then that contract's account will be billed
 for the transaction, up to the limits specified. If the transaction exceeds these limits, then it will abort.
 The contract may call this intrinsic multiple times, within a single action or across multiple actions; this
 enables the contract to adjust the limits. The original NET and CPU limits in the transaction have no effect
 once a contract accepts the charges.
 
-If multiple contracts call this, then the first one is the one charged. `accept_charges` returns true to that
+If multiple contracts call `accept_charges`, then the first one is the one charged. `accept_charges` returns true to that
 contract, but false to the others. If the first one calls it multiple times, within the same action or across
 multiple actions, it will return true each time.
 
-This intrinsic has no effect and always returns false during deferred transactions.
+`get_accept_charges` queries whether any contracts have accepted charges. If a contract has accepted charges,
+then this fills the arguments with the details. If no contract has accepted charges, then it fills the arguments
+with 0.
+
+`accept_charges` has no effect and always returns false during deferred transactions.
 
 [Contract Authentication](eep-draft_contract_trx_auth.md) builds on this proposal to add an additional
 capability to `accept_charges`.
