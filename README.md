@@ -16,6 +16,7 @@ In dependency order:
 Not in dependency order:
 * `.` [Enhanced Database](eep-draft_enhanced_database.md)
 * `.` [Deprecate Deferred](eep-draft_deprecate_deferred.md)
+* `.` [Shards](eep-draft_shards.md)
 
 Deprecations:
 * `require_recipient`: [Flexible Notifications](eep-draft_flexible_notify.md)
@@ -34,8 +35,3 @@ Todo:
   * Contracts can use `get_ram_usage` to track subaccount RAM usage, but there's a really
     tricky part to account for: table charges.
 * Undecided addition. CDT: `sized_content<T>`, `extendable_variant`. ABI: '#'.
-* Named shards / regions
-  * Alternatives for communication. Identify pros and cons of each:
-    * Communication protocol (e.g. maybe a message queue)
-    * Ability to prove an inline action in another shard
-  * BPs don't have to process every shard every block
