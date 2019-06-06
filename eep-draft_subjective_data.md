@@ -24,9 +24,9 @@ transaction, wall-clock time, and a random number generator.
 
 Contracts don't have access to subjective data. e.g. they can't examine CPU costs. They
 don't have access to wall-clock time. They don't have access to an unpredictable entropy
-source. They could, if BPs recorded all subjective data they passed to the contracts.
+source. They could, if producers recorded all subjective data they passed to the contracts.
 
-This proposal defines a mechanism for BPs to record the subjective data they provide to
+This proposal defines a mechanism for producers to record the subjective data they provide to
 contracts. It also defines a set of intrinsics for accessing this data.
 
 ## Overview
@@ -38,8 +38,8 @@ There is 1 consensus upgrade in this proposal, which adds the following:
 * A new intrinsic `get_random` that returns a random number, assuming you trust the producers
 
 There are some constraints on these functions (e.g. `get_wall_time` is non-decreasing during a single
-transaction), but this doesn't propose a way to prevent BPs from manipulating this data to their advantage
-(e.g. `get_random`).
+transaction), but this doesn't propose a way to prevent producers from manipulating this data to their
+advantage (e.g. `get_random`).
 
 ## Specification
 <!--The technical specification should describe the syntax and semantics of any new feature. The specification should be detailed enough to allow competing, interoperable implementations for any of the current EOSIO platforms.-->
@@ -72,8 +72,8 @@ verifies the following:
 * The result is <= (the block time of the current block + 0.5s)
 
 `get_random` fills a buffer with random data. Even though the reference implementation of nodeos
-fills this with random data, there are no guarantees that individual BPs can not change this.
-[Get BP](eep-draft_get_bp.md) proposes a potential counter-measure against BPs manipulating
+fills this with random data, there are no guarantees that individual producers can not change this.
+[Get Producer](eep-draft_get_producer.md) proposes a potential counter-measure against producers manipulating
 subjective data.
 
 ## Copyright
