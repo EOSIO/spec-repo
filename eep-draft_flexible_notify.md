@@ -63,7 +63,7 @@ The CDT will generate the function's body. e.g.:
     name receiver, name from, name to, asset amount, string memo);
 ```
 
-The signal name must follow the rules for eosio names. It the function has a non-compliant
+The signal name must follow the rules for eosio names. If the function has a non-compliant
 name, then pass a corrected name to the signal attribute's argument.
 
 To send a signal, call its function.

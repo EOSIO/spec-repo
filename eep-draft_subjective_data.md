@@ -71,7 +71,7 @@ verifies the following:
 * The result is >= (the block time of the current block - 0.5s)
 * The result is <= (the block time of the current block + 0.5s)
 
-`get_random` fills a buffer with arbitrary BP-produced data. There are no guarantees about the
-actual randomness of this data.
+`get_random` fills a buffer with random data. Even though the reference implementation of nodeos
+fills this with random data, there are no guarantees that individual BPs can not change this.
 
 ## Copyright
