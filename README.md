@@ -7,6 +7,7 @@ In dependency order:
 * `R` [Flexible Notifications](eep-draft_flexible_notify.md)
 * `R` [Query Consumption](eep-draft_query_consumption.md)
 * `R` [Subjective Data](eep-draft_subjective_data.md)
+* `R` [Get BP](eep-draft_get_bp.md)
 * `R` [Contract Pays](eep-draft_contract_pays.md)
 * `R` [Contract Authentication](eep-draft_contract_trx_auth.md)
 * `R` [Forwarding Authorizations](eep-draft_contract_fwd_auth.md)

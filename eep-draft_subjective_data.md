@@ -73,5 +73,6 @@ verifies the following:
 
 `get_random` fills a buffer with random data. Even though the reference implementation of nodeos
 fills this with random data, there are no guarantees that individual BPs can not change this.
+[Get BP](eep-draft_get_bp.md) proposes a counter measure to BPs manipulating subjective data.
 
 ## Copyright
