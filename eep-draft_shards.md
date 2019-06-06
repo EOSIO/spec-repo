@@ -56,7 +56,7 @@ Suppose we have a system with these properties:
   shards to operate in lock-step, even during forks.
 * Shards can't access each others' state; this allows them to execute in parallel.
 
-To limit load on validating nodes, and to limit network needs for these nodes, let's
+To reduce load on validating nodes, and to limit network needs for these nodes, let's
 add these properties:
 
 * A node can choose to validate a particular subset of the shards and ignore the rest.
