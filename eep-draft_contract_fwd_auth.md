@@ -75,8 +75,8 @@ struct subaccount {
 };
 
 class contract {
-    bool has_subaccount_auth(subaccount sub);
-    void require_subaccount_auth(subaccount sub);
+    bool has_subaccount_auth(subaccount sub) const;
+    void require_subaccount_auth(subaccount sub) const;
 };
 ```
 

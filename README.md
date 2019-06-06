@@ -9,7 +9,7 @@ In dependency order:
 * `R` [Subjective Data](eep-draft_subjective_data.md)
 * `R` [Contract Pays](eep-draft_contract_pays.md)
 * `R` [Contract Authentication](eep-draft_contract_trx_auth.md)
-* `.` [Forwarding Authorizations](eep-draft_contract_fwd_auth.md)
+* `R` [Forwarding Authorizations](eep-draft_contract_fwd_auth.md)
 * `.` [Enhanced Token](eep-draft_enhanced_token.md)
 
 No dependencies:
