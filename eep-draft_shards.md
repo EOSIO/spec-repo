@@ -32,7 +32,7 @@ covers one of the ideas we're considering.
 
 Some of the potential approaches to parallel scaling include:
 
-* Execute transactions from a single chain in parallel after checking for conflicts (e.g.
+* Execute transactions from a single chain in parallel while checking for conflicts (e.g.
   accessing the same data)
 * Side chains and sister chains. Applications which deal with multiple chains need some way
   of coordinating between the chains.
@@ -61,11 +61,12 @@ add these properties:
 
 * A node can choose to validate a particular subset of the shards and ignore the rest.
 * Subsets of shards can be extracted from blocks.
-* If a shard doesn't have any transactions for a particular block, then that shard
-  doesn't have to execute. We could exempt a main shard from this to enable bookkeeping
-  activities, such as onblock.
+* If a shard doesn't have any transactions for a particular block and it doesn't have
+  any incoming messages to queue (see ISC), then that shard doesn't have to execute.
+  We could exempt a main shard from this to enable bookkeeping activities, such as
+  onblock.
 
-This system would create, in effect, a system of sister chains under the control of a
+This system would create, in effect, a system of side chains under the control of a
 common set of producers. Each shard could have its own system contract for managing
 resources. To simplify implementation, each shard could also have its own set of
 base-level accounts. Contracts could provide account portability using the
