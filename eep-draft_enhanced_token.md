@@ -16,16 +16,32 @@ replaces (*optional): <EEP number(s)>
 ## Simple Summary
 <!--"If you can't explain it simply, you don't understand it well enough." Provide a simplified and layman-accessible explanation of the EEP.-->
 
+This discussion piece covers some of the ideas we have for a new token standard.
+This idea may or may not be implemented.
+
 ## Abstract
 <!--A short (~200 word) description of the technical issue being addressed.-->
 
-subaccounts
-extended asset
-notifications
-a memo replacement?
-cover RAM charging issues for subaccounts?
+`eosio.token` is the defacto token standard on eosio blockchains. There are many deployments of this contract on
+different accounts handling a variety of tokens. There are also customized versions of this contract, and
+alternative implementations of its interface.
 
-This proposal does not recommend any particular table structures; we expect to cover balance query issues in a future EEP.
+We would like an updated token standard to include support for the following:
+
+* [Subaccounts](eep-draft_contract_fwd_auth.md). This will aid cross-chain and [named-region](eep-draft_regions.md) use of
+  tokens. It will also allow low-overhead contract-defined accounts to hold tokens.
+* Support for `extended_asset` in the interface. Contracts sometimes hold tokens issued by other contracts on behalf of
+  their users. If the token interface uses `extended_asset` instead of `asset`, then these contracts can expose the same
+  interface.
+* A replacement for `memo` which supports ABI-defined binary data. This will allow users to attach structured data to transfers
+  that contracts can process in a standard way. It provides an alternative to the deposit-and-spend pattern without the downsides
+  of parsing that existing contracts which avoid deposit-and-spend currently use.
+* Ability for non-standard actions to adjust balances without causing wallets and block explorers to break. They will be able
+  to notify affected accounts via [Flexible Notifications](eep-draft_flexible_notify.md).
+* No requirements on table structures. This will improve flexibility in developing custom token contracts. It will also allow
+  token contracts to freely move to [Enhanced Database Support](eep-draft_enhanced_database.md) in the future.
+
+We expect to cover balance query issues in a future EEP.
 
 ## Motivation
 <!--The motivation is critical for EEPs that want to change the EOSIO protocol. It should clearly explain why the existing protocol specification is inadequate to address the problem that the eep solves. EEP submissions without sufficient motivation may be rejected outright.-->
@@ -35,8 +51,12 @@ This proposal does not recommend any particular table structures; we expect to c
 
 Consider having accounts opt-in to receiving notifications to save resources
 
+Reserve variant additions
+
+Reserve binary_extensions of actions and signals
+
 ```c++
-using account = extendable_variant<name, subaccount>;
+using account = variant<name, subaccount>;
 
 struct create_data {
     string  memo;
