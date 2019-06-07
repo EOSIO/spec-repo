@@ -16,7 +16,7 @@ replaces (*optional): <EEP number(s)>
 ## Simple Summary
 <!--"If you can't explain it simply, you don't understand it well enough." Provide a simplified and layman-accessible explanation of the EEP.-->
 
-This discussion piece covers some of the ideas we have for potential database enhancements. These may
+This discussion piece covers one of the ideas we have for potential database enhancements. This may
 or may not be implemented.
 
 ## Abstract
@@ -110,6 +110,9 @@ In the primary index, the value could contain the table data. In secondary index
 primary key. If there's multiple secondary indexes, then it's probably in the contract's interest to choose a
 small (e.g. uint32_t or uint64_t) primary key.
 
+The CDT could provide this table abstraction layer to prevent contract authors from having to implement it.
+It could provide both a full table model and a simplified STL-like container which only supports a single key.
+
 ### Key transformations
 
 The key-value store could provide a lexicographical ordering of uint8_t on the keys. The contract can
@@ -125,6 +128,8 @@ create an ordering on top by transforming its keys. Example transforms:
     * Positive 0 and Negative 0 map to the same value
     * NaN's and inf's end up with an unusual ordering
 * struct or tuple: transform each field in order. Concatenate results.
+
+The CDT would provide functions to handle this conversion.
 
 ## Rationale
 <!--The rationale fleshes out the specification by describing what motivated the design and why particular design decisions were made. It should describe alternate designs that were considered and related work, e.g. how the feature is supported in other languages. The rationale may also provide evidence of consensus within the community, and should discuss important objections or concerns raised during discussion.-->

@@ -15,8 +15,8 @@ In dependency order:
 
 Not in dependency order:
 * `R` [Deprecate Deferred](eep-draft_deprecate_deferred.md)
-* `.` [Enhanced Database](eep-draft_enhanced_database.md)
-* `.` [Regions](eep-draft_regions.md)
+* `R` [Enhanced Database](eep-draft_enhanced_database.md)
+* `R` [Regions](eep-draft_regions.md)
 
 Deprecations:
 * `require_recipient`: [Flexible Notifications](eep-draft_flexible_notify.md)
