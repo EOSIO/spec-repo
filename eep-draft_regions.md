@@ -1,6 +1,6 @@
 ---
 eep: <to be assigned>
-title: <EEP title>
+title: Named Regions
 author: <a list of the author's or authors' name(s) and/or username(s), or name(s) and email(s), e.g. (use with the parentheses or triangular brackets): FirstName LastName (@GitHubUsername), FirstName LastName <foo@bar.com>, FirstName (@GitHubUsername) and GitHubUsername (@GitHubUsername)>
 discussions-to: <URL>
 status: Draft
@@ -40,11 +40,11 @@ Some of the potential approaches to parallel scaling include:
     rely on the Merkle roots embedded in block headers.
   * Oracle-based IBC. Contracts may opt in to trusting oracles which attest to events on other
     chains.
-* Named Shards. This EEP uses the term "shards" to mean side chains which share a common block
-  log. The block log keeps the shards synchronized with each other and may help form the
+* Named Regions. This EEP uses the term "regions" to mean side chains which share a common block
+  log. The block log keeps the regions synchronized with each other and may help form the
   communication channel between them.
 
-This EEP discusses named shards.
+This EEP discusses named regions.
 
 ## Discussion
 
@@ -52,49 +52,49 @@ This EEP discusses named shards.
 
 Suppose we have a system with these properties:
 
-* A single block holds the transactions for a set of named shards. This allows the
-  shards to operate in lock-step, even during forks.
-* Shards can't access each others' state; this allows them to execute in parallel.
+* A single block holds the transactions for a set of named regions. This allows the
+  regions to operate in lock-step, even during forks.
+* Regions can't access each others' state; this allows them to execute in parallel.
 
 To reduce load on validating nodes, and to limit network needs for these nodes, let's
 add these properties:
 
-* A node can choose to validate a particular subset of the shards and ignore the rest.
-* Subsets of shards can be extracted from blocks.
-* If a shard doesn't have any transactions for a particular block and it doesn't have
-  any incoming messages to queue (see ISC), then that shard doesn't have to execute.
-  We could exempt a main shard from this to enable bookkeeping activities, such as
+* A node can choose to validate a particular subset of the regions and ignore the rest.
+* Subsets of regions can be extracted from blocks.
+* If a region doesn't have any transactions for a particular block and it doesn't have
+  any incoming messages to queue (see IRC), then that region doesn't have to execute.
+  We could exempt a main region from this to enable bookkeeping activities, such as
   onblock.
 
 This system would create, in effect, a system of side chains under the control of a
-common set of producers. Each shard could have its own system contract for managing
-resources. To simplify implementation, each shard could also have its own set of
+common set of producers. Each region could have its own system contract for managing
+resources. To simplify implementation, each region could also have its own set of
 base-level accounts. Contracts could provide account portability using the
 [Contract Authentication](eep-draft_contract_trx_auth.md) and
 [Forwarding Authorizations](eep-draft_contract_fwd_auth.md) proposals, combined
-with Inter-Shard Communication.
+with Inter-Region Communication.
 
-### Inter-Shard Communication (ISC)
+### Inter-Region Communication (IRC)
 
 IBC protocols need to deal with forking issues. A chain that's listening for the events
 of another chain needs to either wait for that event to become irreversible, or deal
-with it being undone by a fork change. Since shards share a common block history,
+with it being undone by a fork change. Since regions share a common block history,
 they don't have to deal with this issue when communicating with each other. Instead,
-a shard can assume that if an event happened on a prior block, it won't be undone.
+a region can assume that if an event happened on a prior block, it won't be undone.
 It can assume this because a fork change which undoes that event also undoes
-the effects it had on the receiving shard.
+the effects it had on the receiving region.
 
-Here are some potential ISC approaches:
+Here are some potential IRC approaches:
 
-* Trusted off-chain oracles forward events between shards. They use TaPoS to keep
+* Trusted off-chain oracles forward events between regions. They use TaPoS to keep
   an event from one fork affecting another. Contracts need to be careful which
   oracles they trust. If an oracle is compromised, then any contracts that depend
   on it can also be compromised.
 * Untrusted off-chain oracles forward events, along with Merkle proofs. Contracts
   would have to consume resources verifying these proofs.
-* The system could provide message queues. If a contract on shard A posts a message
-  to a contract on shard B, that message would become available to B on the next block.
+* The system could provide message queues. If a contract on region A posts a message
+  to a contract on region B, that message would become available to B on the next block.
   This isn't a form of deferred transactions. Instead, B would have to poll for messages.
-  Messages would be recorded in blocks to enable nodes to validate subsets of shards.
+  Messages would be recorded in blocks to enable nodes to validate subsets of regions.
 
 ## Copyright

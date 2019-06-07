@@ -73,6 +73,7 @@ void get_num_actions(
 
 If a contract is the first one to call `accept_charges` during a transaction, then that contract's account will be billed
 for the transaction, up to the limits specified. If the transaction exceeds these limits, then it will abort.
+It will also abort if the contract's account doesn't have enough resources to cover the transaction.
 The contract may call this intrinsic multiple times, within a single action or across multiple actions; this
 enables the contract to adjust the limits. The original NET and CPU limits in the transaction have no effect
 once a contract accepts the charges.

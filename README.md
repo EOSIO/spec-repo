@@ -14,9 +14,9 @@ In dependency order:
 * `.` [Enhanced Token](eep-draft_enhanced_token.md)
 
 Not in dependency order:
+* `R` [Deprecate Deferred](eep-draft_deprecate_deferred.md)
 * `.` [Enhanced Database](eep-draft_enhanced_database.md)
-* `.` [Deprecate Deferred](eep-draft_deprecate_deferred.md)
-* `.` [Shards](eep-draft_shards.md)
+* `.` [Regions](eep-draft_regions.md)
 
 Deprecations:
 * `require_recipient`: [Flexible Notifications](eep-draft_flexible_notify.md)
