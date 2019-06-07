@@ -63,7 +63,12 @@ void get_accept_charges(
     name*     contract,
     uint32_t* max_net_usage_words,
     uint32_t* max_cpu_usage_ms,
-);    
+);
+
+void get_num_actions(
+    uint32_t* num_actions,
+    uint32_t* num_context_free_actions,
+);
 ```
 
 If a contract is the first one to call `accept_charges` during a transaction, then that contract's account will be billed
@@ -79,6 +84,11 @@ multiple actions, it will return true each time.
 `get_accept_charges` queries whether any contracts have accepted charges. If a contract has accepted charges,
 then this fills the arguments with the details. If no contract has accepted charges, then it fills the arguments
 with 0.
+
+`get_num_actions` returns the number of non-context-free actions and the number of context-free actions in
+the original transaction. This does not include any inline actions. This intrinsic helps contracts protect
+themselves against paying for other contracts' actions; see the example use cases in
+[Contract Authentication](eep-draft_contract_trx_auth.md) for advice on how to do this check.
 
 `accept_charges` has no effect and always returns false during deferred transactions.
 

@@ -53,6 +53,8 @@ There are 3 changes in this consensus upgrade:
 * gamecontract calls `accept_charges` before leeway expires
 * gamecontract uses `require_key` to authenticate the user
 * gamecontract verifies that no other actions are present in the transaction. This prevents it from paying for other contracts.
+  It can do this by verifying `get_sender` returns 0, the number of non-context-free actions returned by `get_num_actions` is
+  1, and the number of context-free actions returned by `get_num_actions` is 0.
 * gamecontract executes the game logic
 
 ## Example Use Case: Authorization Manager
@@ -69,6 +71,8 @@ There are 3 changes in this consensus upgrade:
 * myauthmgr calls `accept_charges` before leeway expires
 * myauthmgr checks the claimed authorizations using `require_key`
 * myauthmgr verifies that no other native actions are present in the transaction. This allows it to accurately track resource consumption.
+  It can do this by verifying `get_sender` returns 0, the number of non-context-free actions returned by `get_num_actions` is
+  1, and the number of context-free actions returned by `get_num_actions` is 0.
 * myauthmgr updates `accept_charges` using the user’s available resources
 * myauthmgr executes inline actions specified by the user. It includes an authorization attestation in each inline action.
   The contracts receiving these actions rely on the attestation. See [Forwarding Authentication](eep-draft_contract_fwd_auth.md)
@@ -89,7 +93,10 @@ This intrinsic verifies that a given public key was recovered from transaction s
 transaction if either the key wasn't recovered, or if it's called from a deferred transaction.
 
 Nodeos normally rejects transactions which have recovered keys not needed by the native authorizations. Nodeos
-will no longer reject these transactions, if all the extra keys were referenced by `require_key`.
+will no longer reject these transactions, if all the extra keys were referenced by `require_key`. It verifies
+all keys are used to prevent a resource attack. If someone intercepted a transaction, added unneeded signatures,
+then delivered that transaction to the scheduled producer before the original, that modified transaction would
+spend more CPU than necessary. Since all recovered keys must be referenced, this attack won't work.
 
 ### Enhancement to accept_charges
 
@@ -103,7 +110,8 @@ bool accept_charges(
 ```
 
 Nodeos normally rejects transactions which have no authorizations. After this consensus upgrade, nodeos
-will no longer reject these transactions if a contract accepts the charges during the leeway. No contract
-may accept charges during a deferred transaction.
+will no longer reject these transactions if a contract accepts the charges during the leeway.
+
+No contract may accept charges during a deferred transaction.
 
 ## Copyright
