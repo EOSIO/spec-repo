@@ -92,6 +92,10 @@ Here are some potential IRC approaches:
   on it can also be compromised.
 * Untrusted off-chain oracles forward events, along with Merkle proofs. Contracts
   would have to consume resources verifying these proofs.
+* A cache of recent actions (identified by hash) can be asserted to exist from
+  other regions without need of Merkle proofs. To validate this, it is critical
+  that producers run all regions, but non-producers can assume that all asserted
+  hashes are valid and therefore run just a subset of the regions.
 * The system could provide message queues. If a contract on region A posts a message
   to a contract on region B, that message would become available to B on the next block.
   This isn't a form of deferred transactions. Instead, B would have to poll for messages.
