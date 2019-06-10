@@ -30,7 +30,7 @@ We would like an updated token standard to include support for the following:
 
 * [Subaccounts](eep-draft_contract_fwd_auth.md). This will aid cross-chain and [named-region](eep-draft_regions.md) use of
   tokens. It will also allow low-overhead contract-defined accounts to hold tokens.
-* Support for `extended_asset` in the interface. Contracts sometimes hold tokens issued by other contracts on behalf of
+* Support for `extended_asset` in the interface. Some contracts hold tokens issued by other contracts on behalf of
   their users. If the token interface uses `extended_asset` instead of `asset`, then these contracts can expose the same
   interface.
 * A replacement for `memo` which supports ABI-defined binary data. This will allow users to attach structured data to transfers
@@ -49,11 +49,15 @@ We expect to cover balance query issues in a future EEP.
 ## Specification
 <!--The technical specification should describe the syntax and semantics of any new feature. The specification should be detailed enough to allow competing, interoperable implementations for any of the current EOSIO platforms.-->
 
-Consider having accounts opt-in to receiving notifications to save resources
+Consider having accounts opt-in to receiving notifications to save resources. Could cause problems for wallets and block explorers.
 
 Reserve variant additions
 
 Reserve binary_extensions of actions and signals
+
+eep value of 0 to support app-specific
+
+require rejection of unknown actions (new cdt feature)
 
 ```c++
 using account = variant<name, subaccount>;
