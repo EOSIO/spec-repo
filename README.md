@@ -5,6 +5,7 @@ Proposals for eventual inclusion in [EEPs](https://github.com/eoscanada/EEPs)
 
 In dependency order:
 * `R` [Flexible Notifications](eep-draft_flexible_notify.md)
+* `.` [Synchronous Calls](eep-draft_synchronous_calls.md)
 * `R` [Query Consumption](eep-draft_query_consumption.md)
 * `R` [Subjective Data](eep-draft_subjective_data.md)
 * `R` [Get Producer](eep-draft_get_producer.md)
@@ -17,7 +18,6 @@ Not in dependency order:
 * `R` [Deprecate Deferred](eep-draft_deprecate_deferred.md)
 * `R` [Enhanced Database](eep-draft_enhanced_database.md)
 * `R` [Regions](eep-draft_regions.md)
-* `.` [Synchronous Calls](eep-draft_synchronous_calls.md)
 
 Deprecations:
 * `require_recipient`: [Flexible Notifications](eep-draft_flexible_notify.md)

@@ -99,6 +99,8 @@ transaction is deferred. It returns the size of the result.
 `get_sync_result` returns the result of the previous synchronous call. It aborts if `call_sync_readonly`
 hasn't been called, or if `get_sync_result` has already been called.
 
+A new consensus parameter will limit the maximum nesting depth of `call_sync_readonly`.
+
 ### Intrinsics and Entry (callee)
 
 Contracts opt in to being called by implementing the following entry point. Contracts shouldn't
@@ -129,13 +131,11 @@ void get_sync_args(
 );
 ```
 
-`handle_sync` should fetch the arguments using `get_sync_args`, dispatch it to the appropriate function,
-then use `return_sync` to return the result. `handle_sync` should assert that `function` is known. The
+`handle_sync_readonly` should fetch the arguments using `get_sync_args`, dispatch it to the appropriate function,
+then use `return_sync` to return the result. `handle_sync_readonly` should assert that `function` is known. The
 transaction aborts if `return_sync` isn't called or if the contract uses any state-modifying intrinsics
 (e.g. database modification). The transaction also aborts if the contract calls `return_sync` while it's
 not handling a synchronous call. `return_sync` stops execution of the callee.
-
-A new consensus parameter will limit the maximum nesting depth of `handle_sync`.
 
 ### ABI
 

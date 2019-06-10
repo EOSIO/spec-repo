@@ -59,6 +59,8 @@ eep value of 0 to support app-specific
 
 require rejection of unknown actions (new cdt feature)
 
+sync functions
+
 ```c++
 using account = variant<name, subaccount>;
 
