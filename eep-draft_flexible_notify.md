@@ -112,7 +112,7 @@ e.g. `"eosio.token::transferin"`. It can use a wildcard for the sender: `"*::tra
 
 class [[eosio::contract]] exchange: public contract {
   public:
-    void [[eosio::slot("eosio.token::transferin"]] transferin(
+    void [[eosio::slot("eosio.token::transferin")]] transferin(
         name sender, name from, name to, asset amount, string memo)
     ) {
         // Handle the notification here

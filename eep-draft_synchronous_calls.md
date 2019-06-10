@@ -29,7 +29,7 @@ Allow contracts to synchronously call into each other (read-only)
 
 ### CDT Support (caller)
 
-To declare a synchronous function, declare a function with an `eosio::synchronous`
+To declare a synchronous function, declare a function with an `eosio::sync_ro_call`
 attribute. The first function argument is the contract to call. The return type allows the
 caller to return values to the callee. The CDT will generate the function's body. e.g.:
 
@@ -37,11 +37,11 @@ caller to return values to the callee. The CDT will generate the function's body
 // These are examples only. A future EEP will define a new token
 // standard which differs from this.
 
-[[eosio::synchronous("get.balance")]] asset get_balance(
+[[eosio::sync_ro_call("get.balance")]] asset get_balance(
     name contract, name account, symbol sym);
 ```
 
-The signal name must follow the rules for eosio names. If the function has a non-compliant
+The function name must follow the rules for eosio names. If the function has a non-compliant
 name, then pass a corrected name to the attribute's argument.
 
 To use the synchronous function, call it.
@@ -53,7 +53,7 @@ auto balance = get_balance("eosio.token"_n, account, symbol("SYS", 4));
 ### CDT Support (callee)
 
 To define a synchronous function which can be called by other contracts, define a member
-function on a contract with the `eosio::synchronous` attribute. The attribute has a string
+function on a contract with the `eosio::sync_ro_func` attribute. The attribute has a string
 argument which specifies the function name. The function's first argument is the caller.
 Synchronous functions may not modify system or database state.
 
@@ -63,7 +63,7 @@ Synchronous functions may not modify system or database state.
 
 class [[eosio::contract]] token: public contract {
   public:
-    [[eosio::synchronous("get.balance")]] asset get_balance(
+    [[eosio::sync_ro_func("get.balance")]] asset get_balance(
         name caller, name account, symbol sym)
     ) {
         ...
@@ -78,7 +78,7 @@ Callers use these intrinsics to make the call and get the result. Callers should
 they should let the CDT handle this task.
 
 ```c++
-size_t call_sync(
+size_t call_sync_readonly(
     name        contract,
     name        function,
     const char* args,
@@ -91,12 +91,12 @@ void get_sync_result(
 );
 ```
 
-`call_sync` calls into another contract. It aborts the transaction if the callee doesn't have
+`call_sync_readonly` calls into another contract. It aborts the transaction if the callee doesn't have
 a synchronous call entry point, if contract is already in the call stack, if the result from a
-previous `call_sync` call hasn't been fetched using `get_sync_result`, or if the current
+previous `call_sync_readonly` call hasn't been fetched using `get_sync_result`, or if the current
 transaction is deferred. It returns the size of the result.
 
-`get_sync_result` returns the result of the previous asynchronous call. It aborts if `call_sync`
+`get_sync_result` returns the result of the previous synchronous call. It aborts if `call_sync_readonly`
 hasn't been called, or if `get_sync_result` has already been called.
 
 ### Intrinsics and Entry (callee)
@@ -105,12 +105,15 @@ Contracts opt in to being called by implementing the following entry point. Cont
 implement this directly; they should let the CDT handle this task.
 
 ```c++
-extern "C" void handle_sync(
+extern "C" void handle_sync_readonly(
     name        caller,
     name        function,
     size_t      args_size
 );
 ```
+
+The system initializes the WASM linear memory before calling this entry point. It does this
+for each call.
 
 The callee has the following intrinsics available:
 
@@ -131,6 +134,8 @@ then use `return_sync` to return the result. `handle_sync` should assert that `f
 transaction aborts if `return_sync` isn't called or if the contract uses any state-modifying intrinsics
 (e.g. database modification). The transaction also aborts if the contract calls `return_sync` while it's
 not handling a synchronous call. `return_sync` stops execution of the callee.
+
+A new consensus parameter will limit the maximum nesting depth of `handle_sync`.
 
 ### ABI
 
