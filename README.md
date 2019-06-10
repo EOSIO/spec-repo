@@ -17,16 +17,13 @@ Not in dependency order:
 * `R` [Deprecate Deferred](eep-draft_deprecate_deferred.md)
 * `R` [Enhanced Database](eep-draft_enhanced_database.md)
 * `R` [Regions](eep-draft_regions.md)
+* `.` [Synchronous Calls](eep-draft_synchronous_calls.md)
 
 Deprecations:
 * `require_recipient`: [Flexible Notifications](eep-draft_flexible_notify.md)
 * Deferred Transactions: [Deprecate Deferred](eep-draft_deprecate_deferred.md)
 
 Todo:
-* Read-only queries: contracts calling other contracts
-  * Consistency issue:
-    * ? Allow either caller or callee to force fresh VM
-    * Potential issue with multi_index caching rows
 * RAM market issues with subaccounts
   * Contracts need a signal from system contract for RAM market ops. Need delta_currency,
     delta_ram, request_id. CDT enhancements to aid tracking requests.
