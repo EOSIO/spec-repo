@@ -29,7 +29,48 @@ Allow contracts to synchronously call into each other (read-only)
 
 ### CDT Support (caller)
 
+To declare a synchronous function, declare a function with an `eosio::synchronous`
+attribute. The first function argument is the contract to call. The return type allows the
+caller to return values to the callee. The CDT will generate the function's body. e.g.:
+
+```c++
+// These are examples only. A future EEP will define a new token
+// standard which differs from this.
+
+[[eosio::synchronous("get.balance")]] asset get_balance(
+    name contract, name account, symbol sym);
+```
+
+The signal name must follow the rules for eosio names. If the function has a non-compliant
+name, then pass a corrected name to the attribute's argument.
+
+To use the synchronous function, call it.
+
+```c++
+auto balance = get_balance("eosio.token"_n, account, symbol("SYS", 4));
+```
+
 ### CDT Support (callee)
+
+To define a synchronous function which can be called by other contracts, define a member
+function on a contract with the `eosio::synchronous` attribute. The attribute has a string
+argument which specifies the function name. The function's first argument is the caller.
+Synchronous functions may not modify system or database state.
+
+```c++
+// This is an example only. A future EEP will define a new token
+// standard which differs from this.
+
+class [[eosio::contract]] token: public contract {
+  public:
+    [[eosio::synchronous("get.balance")]] asset get_balance(
+        name caller, name account, symbol sym)
+    ) {
+        ...
+        return amount;
+    }
+};
+```
 
 ### Intrinsics (caller)
 
@@ -64,7 +105,8 @@ Contracts opt in to being called by implementing the following entry point. Cont
 implement this directly; they should let the CDT handle this task.
 
 ```c++
-void handle_sync(
+extern "C" void handle_sync(
+    name        caller,
     name        function,
     size_t      args_size
 );
@@ -85,10 +127,10 @@ void get_sync_args(
 ```
 
 `handle_sync` should fetch the arguments using `get_sync_args`, dispatch it to the appropriate function,
-then use `return_sync` to return the result. The transaction aborts if `return_sync` isn't called or
-if the contract uses any state-modifying intrinsics (e.g. database modification). The transaction also
-aborts if the contract calls `return_sync` while it's not handling a synchronous call. `return_sync`
-stops execution of the callee.
+then use `return_sync` to return the result. `handle_sync` should assert that `function` is known. The
+transaction aborts if `return_sync` isn't called or if the contract uses any state-modifying intrinsics
+(e.g. database modification). The transaction also aborts if the contract calls `return_sync` while it's
+not handling a synchronous call. `return_sync` stops execution of the callee.
 
 ### ABI
 
