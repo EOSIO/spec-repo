@@ -27,35 +27,13 @@ Allow contracts to synchronously call into each other (read-only)
 ## Specification
 <!--The technical specification should describe the syntax and semantics of any new feature. The specification should be detailed enough to allow competing, interoperable implementations for any of the current EOSIO platforms.-->
 
-### CDT Support (caller)
-
-To declare a synchronous function, declare a function with an `eosio::sync_ro_call`
-attribute. The first function argument is the contract to call. The return type allows the
-caller to return values to the callee. The CDT will generate the function's body. e.g.:
-
-```c++
-// These are examples only. A future EEP will define a new token
-// standard which differs from this.
-
-[[eosio::sync_ro_call("get.balance")]] asset get_balance(
-    name contract, name account, symbol sym);
-```
-
-The function name must follow the rules for eosio names. If the function has a non-compliant
-name, then pass a corrected name to the attribute's argument.
-
-To use the synchronous function, call it.
-
-```c++
-auto balance = get_balance("eosio.token"_n, account, symbol("SYS", 4));
-```
-
 ### CDT Support (callee)
 
 To define a synchronous function which can be called by other contracts, define a member
 function on a contract with the `eosio::sync_ro_func` attribute. The attribute has a string
 argument which specifies the function name. The function's first argument is the caller.
-Synchronous functions may not modify system or database state.
+To aid callers, also define a wrapper. Synchronous functions may not modify system or
+database state.
 
 ```c++
 // This is an example only. A future EEP will define a new token
@@ -69,7 +47,17 @@ class [[eosio::contract]] token: public contract {
         ...
         return amount;
     }
+    using get_balance_ro =
+        eosio::readonly_wrapper<"get.balance"_n, &token::get_balance>;
 };
+```
+
+### CDT Support (caller)
+
+To call a synchronous function, include the callee's header and use its `readonly_wrapper`:
+
+```c++
+auto balance = token::get_balance_ro("eosio.token"_n).call(account, symbol("SYS", 4));
 ```
 
 ### Intrinsics (caller)

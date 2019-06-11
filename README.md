@@ -4,6 +4,7 @@ Proposals for eventual inclusion in [EEPs](https://github.com/eoscanada/EEPs)
 * `R` = Ready for review
 
 In dependency order:
+* `R` [Deprecate Deferred](eep-draft_deprecate_deferred.md)
 * `R` [Flexible Notifications](eep-draft_flexible_notify.md)
 * `.` [Synchronous Calls](eep-draft_synchronous_calls.md)
 * `R` [Query Consumption](eep-draft_query_consumption.md)
@@ -15,7 +16,6 @@ In dependency order:
 * `.` [Enhanced Token](eep-draft_enhanced_token.md)
 
 Not in dependency order:
-* `R` [Deprecate Deferred](eep-draft_deprecate_deferred.md)
 * `R` [Enhanced Database](eep-draft_enhanced_database.md)
 * `R` [Regions](eep-draft_regions.md)
 
