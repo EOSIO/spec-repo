@@ -37,7 +37,8 @@ to simplify implementation.
 template<...>
 struct action_wrapper {
     ...
-    action_wrapper(name receiver, const std::vector<checksum256>& idents);
+    template<typename T>
+    action_wrapper(name receiver, const std::vector<fixed_sized_data<T, 32>>& idents);
     ...
 }
 ```
@@ -55,13 +56,9 @@ token::transfer2("eosio.token"_n, idents).send(from, to, amount, memo);
 This doesn't forward any native authorities to the inline action; this prevents the
 receiver from charging RAM to the sender.
 
-It's up to the sender to define how it encodes identities into checksum256. It may use the CDT's
-new `pack256` function to pack the sender's internal identity format (e.g. name, struct, etc.)
-into 256 bits. It could also hash the identities if they are larger than 256 bits.
-
-```c++
-checksum256 ident = pack256(username);
-```
+The sender may use any type to represent identities, as long as it serializes into 32 bytes
+or less. The `fixed_sized_data` wrapper enforces that limit and 0-pads any unused bytes. See
+[Sized Data](eep-draft_sized_data.md).
 
 ### CDT Support (receiver)
 

@@ -25,7 +25,6 @@ Deprecations:
 * Deferred Transactions: [Deprecate Deferred](eep-draft_deprecate_deferred.md)
 
 Todo:
-* Switch proposals to use `#`. Check if `extendable_variant` still needed.
 * RAM market issues with subaccounts
   * Contracts need a signal from system contract for RAM market ops. Need delta_currency,
     delta_ram, request_id. CDT enhancements to aid tracking requests.
@@ -33,4 +32,3 @@ Todo:
     * alternative: contracts have their own RAM submarkets.
   * Contracts can use `get_ram_usage` to track subaccount RAM usage, but there's a really
     tricky part to account for: table charges.
-* Undecided addition: `extendable_variant`.

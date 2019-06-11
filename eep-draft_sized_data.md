@@ -58,8 +58,8 @@ It adds this suffix to the ABI.
 ## Backwards Compatibility
 <!--All EEPs that introduce backwards incompatibilities must include a section describing these incompatibilities and their severity. The EEP must explain how the author proposes to deal with these incompatibilities. EEP submissions without a sufficient backwards compatibility treatise may be rejected outright.-->
 
-ABI serializers which don't support 1.2 will error out when they encounter `#` in type names. Either because they
-don't recognize the `#`, or because they think it's part of a type name which isn't defined.
+ABI serializers which don't support 1.2 will error out when they encounter `#` in type names. Either they
+won't recognize the `#`, or they'll think it's part of a type name which isn't defined.
 
 It's possible that some contract ABIs included `#` in their type names. ABI 1.2 serializers will malfunction with these.
 

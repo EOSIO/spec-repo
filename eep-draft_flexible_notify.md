@@ -159,7 +159,7 @@ the transaction. The receiving contract must pay for any RAM it uses.
 ### ABI Support
 
 The ABI of the sender includes a struct definition for each notification. The struct name is
-`eosio.notify.name`, where `name` is the name of the notification.
+`eosio.signal.name` or `eosio.event.name`, where `name` is the name of the notification.
 
 ## Backwards Compatibility
 <!--All EEPs that introduce backwards incompatibilities must include a section describing these incompatibilities and their severity. The EEP must explain how the author proposes to deal with these incompatibilities. EEP submissions without a sufficient backwards compatibility treatise may be rejected outright.-->
