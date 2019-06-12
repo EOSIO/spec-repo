@@ -29,6 +29,19 @@ to simplify implementation.
 ## Specification
 <!--The technical specification should describe the syntax and semantics of any new feature. The specification should be detailed enough to allow competing, interoperable implementations for any of the current EOSIO platforms.-->
 
+### Account Existence Check
+
+The sender must define this action:
+
+```c++
+[[eosio::action("eosio.chkact")]] void check_account(checksum256 account);
+```
+
+This action asserts that `account` is valid. It should do nothing if the account
+exists, or abort the transaction if the account doesn't exist. If this check
+isn't possible, e.g. accounts on other chains, then this action should be
+a no-op.
+
 ### CDT Support (sender)
 
 `action_wrapper` will have a new constructor which accepts subaccount identities:

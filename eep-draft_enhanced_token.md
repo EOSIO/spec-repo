@@ -33,7 +33,7 @@ We would like an updated token standard to include support for the following:
 * Support for `extended_asset` in the interface. Some contracts hold tokens issued by other contracts on behalf of
   their users. If the token interface uses `extended_asset` instead of `asset`, then these contracts can expose the same
   interface.
-* A replacement for `memo` which supports ABI-defined binary data. This will allow users to attach structured data to transfers
+* A replacement for `memo` which supports ABI-defined binary data. This will allow users to attach structured data to actions
   that contracts can process in a standard way. It provides an alternative to the deposit-and-spend pattern without the downsides
   of parsing that existing contracts which avoid deposit-and-spend currently use.
 * Ability for non-standard actions to adjust balances without causing wallets and block explorers to break. They will be able
@@ -75,8 +75,8 @@ using token_account = sized_data<token_account_variant>;
   checks the authentication of these.
 * Local accounts are defined by the specific token contract handling the request. The
   token contract:
-  * Defines what `local_account_type` is and publishes it in its ABI; this may differ
-    between token contracts.
+  * Defines what `local_account_type` is and includes its definition in its ABI; this
+    may differ between token contracts.
   * Defines how local types are authenticated.
 * Foreign accounts are accounts defined by other contracts. They handle the
   [Forwarding Authorizations](eep-draft_contract_fwd_auth.md) specification.
@@ -85,18 +85,79 @@ Even though a token contract needs to define all three options in its ABI to be 
 it doesn't need to support all three.
 * If it doesn't support native accounts, then it may assert when native accounts are used.
 * If it doesn't need local accounts, then it may typedef `local_account_type` to `checksum256`
-  and assert when local they are used.
+  and assert when they are used.
 * If it doesn't support foreign accounts, then it may assert when they are used.
 
-If a foreign account's contract field matches the token contract, then it's a local
-account. The token contract should handle it that way.
+If a foreign account's contract field matches the token contract, then the token contract
+should treat it like a local account.
 
 `token_account` has a size prefix to aid future extensions. These extensions are reserved
 for future EEPs.
 
-### extended_asset support
-
 ### Memo replacement
+
+### Token Lifetime Actions (local)
+
+These optional actions manage lifetime of local tokens. Local tokens are ones that originate
+in the current contract.
+
+```c++
+void create2(account authorizer, account issuer, asset maximum_supply);
+void issue2(account authorizer, asset quantity, string memo);
+void retire2(account authorizer, asset quantity, string memo);
+```
+
+Token contracts choose their own policies about who may create, issue, and retire tokens. Here
+is a typical policy:
+
+* The token contract owner authorizes `create2`. Alternatively, the winner of a symbol auction
+  may authorize it.
+* Only the issuer may authorize `issue2`. The newly-issued tokens go to the authorizer.
+* Only the issuer may authorize `retire2`. The tokens are burned from the authorizer's account.
+
+### Token Lifetime Actions (foreign)
+
+This optional action registers a foreign token. A foreign token is a token which
+is managed by another contract.
+
+```c++
+void regforeign(account authorizer, extended_symbol sym, unsigned_int version);
+```
+
+`version` indicates which protocol the other contract uses. This must be `0` for the previous
+token standard or `1` for this one.
+
+### Token Account Actions
+
+These actions manage account lifetimes:
+
+```c++
+void open2(account authorizer, extended_asset max_fee, account owner, extended_symbol symbol);
+void close2(account authorizer, account owner, eosio::extended_symbol symbol);
+```
+
+Token contracts choose their own policies about who may open and close accounts.
+These actions may not be appropriate for some token contracts; those contracts
+may implement the actions as no-ops. 
+
+Token contracts which implement `open2` should take reasonable precautions against
+opening non-existent accounts, e.g. by using `is_account` to check native accounts
+and the `eosio.chkact` action
+([Forwarding Authorizations](eep-draft_contract_fwd_auth.md)) to check foreign accounts.
+`open2` may charge a fee up to `max_fee` to the authorizer to cover the costs of
+opening the account.
+
+Here is a typical policy:
+
+* Any authorizer may open an account for another user. Fees are deducted from the
+  authorizer's account, up to `max_fee`.
+* Only the account owner may authorize closing the account.
+
+### Token Transfer Action
+
+```c++
+void transfer2(account authorizer, account from, account to, extended_asset quantity, string memo);
+```
 
 ### Notifications
 
@@ -183,29 +244,6 @@ using balchg_data = eep_variant<
 [[eosio::signal]] void eosio.balchg(
     name receiver,
     account acc, extended_asset delta, int64_t new_bal, balchg_data data);
-
-
-
-
-
-
-void create(name issuer, asset maximum_supply);                                 notifies
-void create2(account issuer, extended_asset maximum_supply);                    extended? some other way to init foreign?
-
-void issue(name to, asset quantity, string memo);                               to==issuer
-void issue2(extended_asset quantity, string memo);
-
-void retire(asset quantity, string memo);
-void retire2(extended_asset quantity, string memo);
-
-void transfer(name from, name to, asset quantity, string memo);                 is_account; should move check to open
-void transfer2(account from, account to, extended_asset quantity, string memo);
-
-void open(name owner, eosio::symbol symbol, name ram_payer);                    should probably check is_account
-void open2(account owner, extended_symbol symbol, name ram_payer);              require owner's auth if subaccount, else is_account; prevents accidental token burn.
-
-void close(name owner, eosio::symbol symbol);
-void close2(account owner, eosio::extended_symbol symbol);
 ```
 
 ## Rationale
