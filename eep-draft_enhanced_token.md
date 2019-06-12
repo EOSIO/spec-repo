@@ -96,15 +96,41 @@ for future EEPs.
 
 ### Memo replacement
 
+Contracts need a way to pass structured data through token actions. Actions and
+notifications in this token standard include the `data` field:
+
+```c++
+optional<eosio_scoped_data> data
+```
+
+`data` contains structured data for contracts and off-chain apps to process, e.g. purchase
+details or an exchange account name. `memo` contains free-form text; contracts and off-chain
+applications shouldn't expect it to contain meaningful data.
+
 ### Token Lifetime Actions (local)
 
 These optional actions manage lifetime of local tokens. Local tokens are ones that originate
 in the current contract.
 
 ```c++
-void create2(account authorizer, account issuer, asset maximum_supply);
-void issue2(account authorizer, asset quantity, string memo);
-void retire2(account authorizer, asset quantity, string memo);
+void create2(
+    account authorizer,
+    account issuer,
+    asset maximum_supply,
+    string memo,
+    optional<eosio_scoped_data> data);
+
+void issue2(
+    account authorizer,
+    asset quantity,
+    string memo,
+    optional<eosio_scoped_data> data);
+
+void retire2(
+    account authorizer,
+    asset quantity,
+    string memo,
+    optional<eosio_scoped_data> data);
 ```
 
 Token contracts choose their own policies about who may create, issue, and retire tokens. Here
@@ -132,8 +158,16 @@ token standard or `1` for this one.
 These actions manage account lifetimes:
 
 ```c++
-void open2(account authorizer, extended_asset max_fee, account owner, extended_symbol symbol);
-void close2(account authorizer, account owner, eosio::extended_symbol symbol);
+void open2(
+    account authorizer,
+    extended_asset max_fee,
+    account owner,
+    extended_symbol symbol);
+
+void close2(
+    account authorizer,
+    account owner,
+    eosio::extended_symbol symbol);
 ```
 
 Token contracts choose their own policies about who may open and close accounts.
@@ -158,7 +192,13 @@ Here is a typical policy:
 This action transfers tokens:
 
 ```c++
-void transfer2(account authorizer, account from, account to, extended_asset quantity, string memo);
+void transfer2(
+    account authorizer,
+    account from,
+    account to,
+    extended_asset quantity,
+    string memo,
+    optional<eosio_scoped_data> data);
 ```
 
 Token contracts choose their own policies about who may transfer tokens. Here is a typical policy:

@@ -5,7 +5,8 @@ Proposals for eventual inclusion in [EEPs](https://github.com/eoscanada/EEPs)
 
 In dependency order:
 * `R` [Deprecate Deferred](eep-draft_deprecate_deferred.md)
-* `R` [Sized Data](eep-draft_sized_data.md)
+* `R` [Sized Data](eep-draft_sized_data.md) (ABI 1.2)
+* `.` [Scoped Data](eep-draft_scoped_data.md)
 * `R` [Flexible Notifications](eep-draft_flexible_notify.md)
 * `.` [Synchronous Calls](eep-draft_synchronous_calls.md)
 * `R` [Query Consumption](eep-draft_query_consumption.md)
@@ -25,6 +26,7 @@ Deprecations:
 * Deferred Transactions: [Deprecate Deferred](eep-draft_deprecate_deferred.md)
 
 Todo:
+* Use `eosio_scoped_data`
 * RAM market issues with subaccounts
   * Contracts need a signal from system contract for RAM market ops. Need delta_currency,
     delta_ram, request_id. CDT enhancements to aid tracking requests.
