@@ -155,11 +155,20 @@ Here is a typical policy:
 
 ### Token Transfer Action
 
+This action transfers tokens:
+
 ```c++
 void transfer2(account authorizer, account from, account to, extended_asset quantity, string memo);
 ```
 
+Token contracts choose their own policies about who may transfer tokens. Here is a typical policy:
+
+* `authorizer` must be `from`.
+* `to` must already have an open account that can hold the tokens.
+
 ### Notifications
+
+Token contracts choose their own policies about when to send signals; they always send events.
 
 ## Specification
 <!--The technical specification should describe the syntax and semantics of any new feature. The specification should be detailed enough to allow competing, interoperable implementations for any of the current EOSIO platforms.-->
