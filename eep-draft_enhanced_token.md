@@ -43,8 +43,62 @@ We would like an updated token standard to include support for the following:
 
 We expect to cover balance query issues in a future EEP.
 
-## Motivation
-<!--The motivation is critical for EEPs that want to change the EOSIO protocol. It should clearly explain why the existing protocol specification is inadequate to address the problem that the eep solves. EEP submissions without sufficient motivation may be rejected outright.-->
+## Specification
+
+### Accounts
+
+`token_account` represents accounts in actions and in notifications:
+
+```c++
+struct native_account {
+    name account;
+};
+
+struct local_account {
+    fixed_sized_data<local_account_type, 32> account;
+};
+
+struct foreign_account {
+    name        contract;
+    checksum256 ident;
+};
+
+using token_account_variant = variant<
+    native_account, local_account, foreign_account>;
+
+using token_account = sized_data<token_account_variant>;
+```
+
+`token_account` supports 3 different types of accounts:
+
+* Native accounts are the original type of eosio account. `has_auth` and `require_auth`
+  checks the authentication of these.
+* Local accounts are defined by the specific token contract handling the request. The
+  token contract:
+  * Defines what `local_account_type` is and publishes it in its ABI; this may differ
+    between token contracts.
+  * Defines how local types are authenticated.
+* Foreign accounts are accounts defined by other contracts. They handle the
+  [Forwarding Authorizations](eep-draft_contract_fwd_auth.md) specification.
+
+Even though a token contract needs to define all three options in its ABI to be compatible,
+it doesn't need to support all three.
+* If it doesn't support native accounts, then it may assert when native accounts are used.
+* If it doesn't need local accounts, then it may typedef `local_account_type` to `checksum256`
+  and assert when local they are used.
+* If it doesn't support foreign accounts, then it may assert when they are used.
+
+If a foreign account's contract field matches the token contract, then it's a local
+account. The token contract should handle it that way.
+
+`token_account` has a size prefix to aid future extensions. These extensions are reserved
+for future EEPs.
+
+### extended_asset support
+
+### Memo replacement
+
+### Notifications
 
 ## Specification
 <!--The technical specification should describe the syntax and semantics of any new feature. The specification should be detailed enough to allow competing, interoperable implementations for any of the current EOSIO platforms.-->
@@ -159,6 +213,22 @@ void close2(account owner, eosio::extended_symbol symbol);
 
 ## Backwards Compatibility
 <!--All EEPs that introduce backwards incompatibilities must include a section describing these incompatibilities and their severity. The EEP must explain how the author proposes to deal with these incompatibilities. EEP submissions without a sufficient backwards compatibility treatise may be rejected outright.-->
+
+There doesn't appear to be a way to upgrade existing token contracts to a new standard without breaking the world:
+* There isn't a safe and efficient way for an updated token contract to notify older contracts about transfers
+  to them:
+  * The existing notification can't represent subaccounts.
+  * The existing notification can't reference tokens in another token contract's namespace
+    (extended_asset support).
+  * The existing notification can only be sent from the original `transfer` action, not any other actions.
+* Wallets, block explorers, and even some non-token contracts make assumptions about the table structures
+  of existing tokens. If a token contract migrated its table structures to support new features, the existing
+  users would break.
+
+Instead, we propose that:
+* Only new token contracts implement a new token protocol
+* New token contracts can hold tokens from the older standard on behalf of their users. This will allow existing
+  tokens to flow through the new protocol.
 
 ## Test Cases
 <!--Test cases for an implementation are mandatory for EEPs that are affecting consensus changes. Other EEPs can choose to include links to test cases if applicable.-->
