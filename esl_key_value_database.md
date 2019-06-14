@@ -25,7 +25,6 @@ Nodeos offers contracts a flexible database structure, but we see some areas for
 * RAM billing for tables, separate from rows, is not obvious to contract developers. Many don't even know it's there.
 * Both nodeos and the CDT's multi_index have considerable overhead to maintain C++'s iterator abstraction. This overhead
   exists even when contracts don't use multi_index's iterators directly.
-* Contracts can freely read other contracts' rows, creating compatibility headaches during upgrades.
 * Contract developers struggle to write code which wipes tables correctly when schemas change, especially when secondary
   indexes are present or when scope values aren't fixed.
 
@@ -45,24 +44,23 @@ void db_set_kv(bytes key, bytes value);
 void db_remove(bytes key);
 
 // Get value for a specific key, if it exists
-optional<bytes> db_get_v(bytes key);
+optional<bytes> db_get_v(name code, bytes key);
 
 // Returns a key. End is represented by an empty optional.
-optional<bytes> db_lower_bound(bytes key);
+optional<bytes> db_lower_bound(name code, bytes key);
 
 // Returns a key. End is represented by an empty optional.
-optional<bytes> db_upper_bound(bytes key);
+optional<bytes> db_upper_bound(name code, bytes key);
 
 // Returns a key. End is represented by an empty optional.
-optional<bytes> db_next_key(bytes key);
+optional<bytes> db_next_key(name code, bytes key);
 
 // Returns a key. End is represented by an empty optional.
-optional<bytes> db_prev_key(bytes key);
+optional<bytes> db_prev_key(name code, bytes key);
 ```
 
 Some potential ideas we could apply to the above:
 * Only charge resources to the contract, not to users. e.g. don't provide a `payer` argument.
-* Prevent contracts from reading other contracts' data. e.g. don't provide a `code` argument.
 * No scopes or tables at this level of abstraction
 
 This model gives contracts the ability to build higher-level abstractions on top:
