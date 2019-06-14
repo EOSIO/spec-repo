@@ -1,13 +1,11 @@
 # Contracts Paying Transaction Costs
 
 ## Simple Summary
-<!--"If you can't explain it simply, you don't understand it well enough." Provide a simplified and layman-accessible explanation of the EEP.-->
 
 Contracts can pay transaction costs (NET and CPU). This allows users with little or no resources to use
 applications without requiring those applications to cosign the original transaction.
 
 ## Abstract
-<!--A short (~200 word) description of the technical issue being addressed.-->
 
 EOSIO blockchains charge users NET and CPU costs on transactions. These costs
 are transient; CPU and NET replenish over a 24-hour period. A user can spend
@@ -36,7 +34,6 @@ This proposal has the advantages of ONLY_BILL_FIRST_AUTHORIZER without
 the hassle of cosigning.
 
 ## Specification
-<!--The technical specification should describe the syntax and semantics of any new feature. The specification should be detailed enough to allow competing, interoperable implementations for any of the current EOSIO platforms.-->
 
 This consensus upgrade adds these intrinsics:
 

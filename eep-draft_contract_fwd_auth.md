@@ -1,12 +1,10 @@
 # Forwarding Authorizations Between Contracts
 
 ## Simple Summary
-<!--"If you can't explain it simply, you don't understand it well enough." Provide a simplified and layman-accessible explanation of the EEP.-->
 
 Contracts can attest user authentication to other contracts. This enables contract-defined accounts to use other contracts.
 
 ## Abstract
-<!--A short (~200 word) description of the technical issue being addressed.-->
 
 The [Contract Authentication](eep-draft_contract_trx_auth.md) proposal allows contracts to define their own account
 structures and authorize transactions from those accounts. It mentions that contracts may attest authorizations
@@ -14,7 +12,6 @@ to other contracts, but doesn't indicate how. This EEP proposes a protocol to su
 to simplify implementation.
 
 ## Specification
-<!--The technical specification should describe the syntax and semantics of any new feature. The specification should be detailed enough to allow competing, interoperable implementations for any of the current EOSIO platforms.-->
 
 ### Account Existence Check
 

@@ -1,13 +1,11 @@
 # Enhanced Token
 
 ## Simple Summary
-<!--"If you can't explain it simply, you don't understand it well enough." Provide a simplified and layman-accessible explanation of the EEP.-->
 
 This discussion piece covers some of the ideas we have for a new token standard.
 This idea may or may not be implemented.
 
 ## Abstract
-<!--A short (~200 word) description of the technical issue being addressed.-->
 
 `eosio.token` is the defacto token standard on eosio blockchains. There are many deployments of this contract on
 different accounts handling a variety of tokens. There are also customized versions of this contract, and
@@ -198,7 +196,6 @@ Token contracts choose their own policies about who may transfer tokens. Here is
 Token contracts choose their own policies about when to send signals; they always send events.
 
 ## Specification
-<!--The technical specification should describe the syntax and semantics of any new feature. The specification should be detailed enough to allow competing, interoperable implementations for any of the current EOSIO platforms.-->
 
 Consider having accounts opt-in to receiving notifications to save resources. Could cause problems for wallets and block explorers.
 
@@ -282,11 +279,7 @@ using balchg_data = eep_variant<
     account acc, extended_asset delta, int64_t new_bal, balchg_data data);
 ```
 
-## Rationale
-<!--The rationale fleshes out the specification by describing what motivated the design and why particular design decisions were made. It should describe alternate designs that were considered and related work, e.g. how the feature is supported in other languages. The rationale may also provide evidence of consensus within the community, and should discuss important objections or concerns raised during discussion.-->
-
 ## Backwards Compatibility
-<!--All EEPs that introduce backwards incompatibilities must include a section describing these incompatibilities and their severity. The EEP must explain how the author proposes to deal with these incompatibilities. EEP submissions without a sufficient backwards compatibility treatise may be rejected outright.-->
 
 There doesn't appear to be a way to upgrade existing token contracts to a new standard without breaking the world:
 * There isn't a safe and efficient way for an updated token contract to notify older contracts about transfers
@@ -303,11 +296,5 @@ Instead, we propose that:
 * Only new token contracts implement a new token protocol
 * New token contracts can hold tokens from the older standard on behalf of their users. This will allow existing
   tokens to flow through the new protocol.
-
-## Test Cases
-<!--Test cases for an implementation are mandatory for EEPs that are affecting consensus changes. Other EEPs can choose to include links to test cases if applicable.-->
-
-## Implementation
-<!--The implementations must be completed before any EEP is given status "Final", but it need not be completed before the EEP is accepted. While there is merit to the approach of reaching consensus on the specification and rationale before writing code, the principle of "rough consensus and running code" is still useful when it comes to resolving many discussions of API details.-->
 
 ## Copyright

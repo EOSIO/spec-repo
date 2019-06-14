@@ -1,5 +1,3 @@
-Proposals for eventual inclusion in [EEPs](https://github.com/eoscanada/EEPs)
-
 * `.` = In progress
 * `R` = Ready for review
 
@@ -18,7 +16,7 @@ In dependency order:
 * `.` [Enhanced Token](eep-draft_enhanced_token.md)
 
 Not in dependency order:
-* `R` [Enhanced Database](eep-draft_enhanced_database.md)
+* `R` [Key-Value Database](eep-draft_key_value_database.md)
 * `R` [Regions](eep-draft_regions.md)
 
 Deprecations:

@@ -1,13 +1,11 @@
 # Contract Access To Subjective Data
 
 ## Simple Summary
-<!--"If you can't explain it simply, you don't understand it well enough." Provide a simplified and layman-accessible explanation of the EEP.-->
 
 Give contracts access to subjective data. This includes CPU charges for the current
 transaction, wall-clock time, and a random number generator.
 
 ## Abstract
-<!--A short (~200 word) description of the technical issue being addressed.-->
 
 Contracts don't have access to subjective data. e.g. they can't examine CPU costs. They
 don't have access to wall-clock time. They don't have access to an unpredictable entropy
@@ -29,7 +27,6 @@ transaction), but this doesn't propose a way to prevent producers from manipulat
 advantage (e.g. `get_random`).
 
 ## Specification
-<!--The technical specification should describe the syntax and semantics of any new feature. The specification should be detailed enough to allow competing, interoperable implementations for any of the current EOSIO platforms.-->
 
 ### Block extension
 

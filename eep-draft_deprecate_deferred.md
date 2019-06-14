@@ -1,19 +1,16 @@
 # Deprecate Deferred Transactions
 
 ## Simple Summary
-<!--"If you can't explain it simply, you don't understand it well enough." Provide a simplified and layman-accessible explanation of the EEP.-->
 
 Deferred transactions are now deprecated.
 
 ## Abstract
-<!--A short (~200 word) description of the technical issue being addressed.-->
 
 Deferred transactions are now deprecated. Likewise, wait weights in account
 authorities are also deprecated. This EEP explains some of the motivation
 behind this, and presents some potential replacements for existing use cases.
 
 ## Motivation
-<!--The motivation is critical for EEPs that want to change the EOSIO protocol. It should clearly explain why the existing protocol specification is inadequate to address the problem that the eep solves. EEP submissions without sufficient motivation may be rejected outright.-->
 
 Deferred transactions have been a major source of bugs and have hindered potential
 enhancements. Here are some of the issues:

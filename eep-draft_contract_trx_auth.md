@@ -1,12 +1,10 @@
 # Contract-Defined Transaction Authentication
 
 ## Simple Summary
-<!--"If you can't explain it simply, you don't understand it well enough." Provide a simplified and layman-accessible explanation of the EEP.-->
 
 Contracts can define their own accounts and authenticate transactions for those accounts. This makes lightweight accounts more useful, enables more-flexible account structures, and helps accounts from other chains interact with eosio-based chains.
 
 ## Abstract
-<!--A short (~200 word) description of the technical issue being addressed.-->
 
 EOSIO blockchains have a flexible and powerful account structure, but we see some areas to improve:
 * Developers desire a way to onboard users at a much smaller individual cost (RAM, net, and cpu per user). 
@@ -68,7 +66,6 @@ There are 3 changes in this consensus upgrade:
   resource consumption. This inline action executes last.
 
 ## Specification
-<!--The technical specification should describe the syntax and semantics of any new feature. The specification should be detailed enough to allow competing, interoperable implementations for any of the current EOSIO platforms.-->
 
 ### New Intrinsic
 

@@ -1,13 +1,11 @@
 # Named Regions
 
 ## Simple Summary
-<!--"If you can't explain it simply, you don't understand it well enough." Provide a simplified and layman-accessible explanation of the EEP.-->
 
 This discussion piece covers one of the ideas we have for running contracts in parallel.
 This idea may or may not be implemented.
 
 ## Abstract
-<!--A short (~200 word) description of the technical issue being addressed.-->
 
 eosio blockchains have a much higher transaction throughput than other public blockchains which
 execute smart contracts. Performance has improved greatly since the initial release and continues

@@ -1,13 +1,11 @@
 # Flexible Notifications
 
 ## Simple Summary
-<!--"If you can't explain it simply, you don't understand it well enough." Provide a simplified and layman-accessible explanation of the EEP.-->
 
 This notification protocol is more flexible than `require_recipient`. It supports both
 contract-to-contract signals and contract-to-outside events.
 
 ## Abstract
-<!--A short (~200 word) description of the technical issue being addressed.-->
 
 The `require_recipient` notification protocol has these limitations:
 * A notification is identical to the original action
@@ -32,7 +30,6 @@ The sending contract chooses which contracts may opt into receiving, and the rec
 Once this system is implemented, `require_recipient` will be deprecated.
 
 ## Specification
-<!--The technical specification should describe the syntax and semantics of any new feature. The specification should be detailed enough to allow competing, interoperable implementations for any of the current EOSIO platforms.-->
 
 ### CDT Support: Sender
 
@@ -149,7 +146,6 @@ The ABI of the sender includes a struct definition for each notification. The st
 `eosio.signal.name` or `eosio.event.name`, where `name` is the name of the notification.
 
 ## Backwards Compatibility
-<!--All EEPs that introduce backwards incompatibilities must include a section describing these incompatibilities and their severity. The EEP must explain how the author proposes to deal with these incompatibilities. EEP submissions without a sufficient backwards compatibility treatise may be rejected outright.-->
 
 CDT versions 1.7 - yyy produce automatic dispatchers which assert on unknown actions, including `eosio.notify`.
 If a contract sends a notification to a receiver built with those CDT versions, and that receiver uses the

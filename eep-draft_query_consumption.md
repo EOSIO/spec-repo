@@ -1,12 +1,10 @@
 # Query Resource Consumption
 
 ## Simple Summary
-<!--"If you can't explain it simply, you don't understand it well enough." Provide a simplified and layman-accessible explanation of the EEP.-->
 
 Allow contracts to query non-subjective resource consumption (NET and RAM).
 
 ## Abstract
-<!--A short (~200 word) description of the technical issue being addressed.-->
 
 Contracts don't have access to resource consumption data. e.g. they can't examine
 transaction NET and CPU costs and they can't easily track their own RAM consumption.
@@ -24,7 +22,6 @@ This consensus upgrade adds the following intrinsics:
   resource consumption
 
 ## Specification
-<!--The technical specification should describe the syntax and semantics of any new feature. The specification should be detailed enough to allow competing, interoperable implementations for any of the current EOSIO platforms.-->
 
 This consensus upgrade adds these intrinsics:
 

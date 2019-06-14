@@ -1,12 +1,10 @@
 # Tagged Data
 
 ## Simple Summary
-<!--"If you can't explain it simply, you don't understand it well enough." Provide a simplified and layman-accessible explanation of the EEP.-->
 
 Contracts may tag serialized data with custom types to identify it and aid decoding.
 
 ## Abstract
-<!--A short (~200 word) description of the technical issue being addressed.-->
 
 Contracts may pack arbitrary data in the `bytes` type when communicating with each other
 and with the outside, but `bytes` doesn't indicate what the type of the encoded data is.
@@ -14,10 +12,8 @@ This EEP proposes a new `eosio_tagged_data` struct which pairs the raw data with
 This type references contract ABIs to enable customization.
 
 ## Motivation
-<!--The motivation is critical for EEPs that want to change the EOSIO protocol. It should clearly explain why the existing protocol specification is inadequate to address the problem that the eep solves. EEP submissions without sufficient motivation may be rejected outright.-->
 
 ## Specification
-<!--The technical specification should describe the syntax and semantics of any new feature. The specification should be detailed enough to allow competing, interoperable implementations for any of the current EOSIO platforms.-->
 
 ### Definition
 
