@@ -24,7 +24,7 @@ We would like an updated token standard to include support for the following:
 * Ability for non-standard actions to adjust balances without causing wallets and block explorers to break. They will be able
   to notify affected accounts via [Flexible Notifications](esl_flexible_notify.md).
 * No requirements on table structures. This will improve flexibility in developing custom token contracts. It will also allow
-  token contracts to freely move to [Enhanced Database Support](esl_enhanced_database.md) in the future.
+  token contracts to freely move to an [Alternative Database](esl_key_value_database.md) in the future.
 
 We expect to cover balance query issues in a future ESL.
 
