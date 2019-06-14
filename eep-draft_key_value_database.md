@@ -1,4 +1,4 @@
-# Enhanced Database
+# Key-Value Store
 
 ## Simple Summary
 

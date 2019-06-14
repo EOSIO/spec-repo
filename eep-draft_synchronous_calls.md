@@ -6,15 +6,25 @@ Allow contracts to synchronously call into each other (read-only)
 
 ## Abstract
 
+Contracts currently communicate by sending inline actions and by reading each others'
+tables. Inline actions are asynchronous; if contract A sends an inline action to
+contract B, then B will receive it after A terminates. This complicates two-way
+communications, especially for queries. Contracts may work around this by reading
+each others' tables. This creates a compatibility problem; if a contract updates
+its table format, then the existing contracts which rely on it will break.
+This proposal defines a mechanism that allows contracts to synchronously call into
+each other to for read-only queries. It doesn't support mutating operations or
+recursion; we may address those in the future.
+
 ## Specification
 
 ### CDT Support (callee)
 
 To define a synchronous function which can be called by other contracts, define a member
 function on a contract with the `eosio::sync_ro_func` attribute. The attribute has a string
-argument which specifies the function name. The function's first argument is the caller.
-To aid callers, also define a wrapper. Synchronous functions may not modify system or
-database state.
+argument which specifies the function name. The function may get the calling contract using
+the contract's `get_caller` member function. To aid callers, also define a wrapper.
+Synchronous functions may not modify system or database state.
 
 ```c++
 // This is an example only. A future EEP will define a new token
@@ -23,7 +33,7 @@ database state.
 class [[eosio::contract]] token: public contract {
   public:
     [[eosio::sync_ro_func("get.balance")]] asset get_balance(
-        name caller, name account, symbol sym)
+        name account, symbol sym)
     ) {
         ...
         return amount;

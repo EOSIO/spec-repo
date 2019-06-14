@@ -6,7 +6,7 @@ In dependency order:
 * `R` [Sized Data](eep-draft_sized_data.md) (ABI 1.2)
 * `.` [Tagged Data](eep-draft_tagged_data.md)
 * `R` [Flexible Notifications](eep-draft_flexible_notify.md)
-* `.` [Synchronous Calls](eep-draft_synchronous_calls.md)
+* `R` [Synchronous Calls](eep-draft_synchronous_calls.md)
 * `R` [Query Consumption](eep-draft_query_consumption.md)
 * `R` [Subjective Data](eep-draft_subjective_data.md)
 * `R` [Get Producer](eep-draft_get_producer.md)
