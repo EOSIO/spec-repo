@@ -25,8 +25,6 @@ Nodeos offers contracts a flexible database structure, but we see some areas for
 * RAM billing for tables, separate from rows, is not obvious to contract developers. Many don't even know it's there.
 * Both nodeos and the CDT's multi_index have considerable overhead to maintain C++'s iterator abstraction. This overhead
   exists even when contracts don't use multi_index's iterators directly.
-* The current RAM billing model is based on an implementation detail: well-behaved nodes use physical RAM to back
-  contracts' database rows. This partly explains the current RAM prices.
 * Contracts can freely read other contracts' rows, creating compatibility headaches during upgrades.
 * Contract developers struggle to write code which wipes tables correctly when schemas change, especially when secondary
   indexes are present or when scope values aren't fixed.
@@ -63,10 +61,8 @@ optional<bytes> db_prev_key(bytes key);
 ```
 
 Some potential ideas we could apply to the above:
-* Only charge RAM to the contract, not to users.
-* Maybe allow this model to go to SSD. In this case, there could be a new resource type to charge,
-  instead of RAM.
-* Prevent contracts from reading other contracts' data
+* Only charge resources to the contract, not to users. e.g. don't provide a `payer` argument.
+* Prevent contracts from reading other contracts' data. e.g. don't provide a `code` argument.
 * No scopes or tables at this level of abstraction
 
 This model gives contracts the ability to build higher-level abstractions on top:
