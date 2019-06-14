@@ -8,7 +8,7 @@ Contracts may tag serialized data with custom types to identify it and aid decod
 
 Contracts may pack arbitrary data in the `bytes` type when communicating with each other
 and with the outside, but `bytes` doesn't indicate what the type of the encoded data is.
-This EEP proposes a new `eosio_tagged_data` struct which pairs the raw data with a type.
+This ESL proposes a new `eosio_tagged_data` struct which pairs the raw data with a type.
 This type references contract ABIs to enable customization.
 
 ## Specification

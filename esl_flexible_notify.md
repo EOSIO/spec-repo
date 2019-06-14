@@ -27,7 +27,7 @@ This new notification protocol builds on [get_sender](https://github.com/EOSIO/e
 * Off-chain processes may get the sender by looking at receiver of the action referred to by `creator_action_ordinal` in the
   notification's action trace.
 
-This EEP is a variation on signals and slots, similar to boost::signal2 or Qt. A major difference is that both sides must opt in to a pairing.
+This ESL is a variation on signals and slots, similar to boost::signal2 or Qt. A major difference is that both sides must opt in to a pairing.
 The sending contract chooses which contracts may opt into receiving, and the receiving contracts opt in to which contracts they listen to.
 Once this system is implemented, `require_recipient` will be deprecated.
 
@@ -39,7 +39,7 @@ To define a signal, declare a function with an `eosio::signal` attribute. The fi
 The CDT will generate the function's body. e.g.:
 
 ```c++
-// These are examples only. A future EEP will define a new token
+// These are examples only. A future ESL will define a new token
 // standard which differs from this.
 
 [[eosio::signal]] void transferout(
@@ -55,7 +55,7 @@ name, then pass a corrected name to the signal attribute's argument.
 To send a signal, call its function.
 
 ```c++
-// This is an example only. A future EEP will define a new token
+// This is an example only. A future ESL will define a new token
 // standard which differs from this.
 
 class token: public contract {
@@ -93,7 +93,7 @@ The slot attribute has a string argument which specifies the sender and the send
 e.g. `"eosio.token::transferin"`. It can use a wildcard for the sender: `"*::transferin"`.
 
 ```c++
-// This is an example only. A future EEP will define a new token
+// This is an example only. A future ESL will define a new token
 // standard which differs from this.
 
 class [[eosio::contract]] exchange: public contract {

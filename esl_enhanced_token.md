@@ -26,7 +26,7 @@ We would like an updated token standard to include support for the following:
 * No requirements on table structures. This will improve flexibility in developing custom token contracts. It will also allow
   token contracts to freely move to [Enhanced Database Support](esl_enhanced_database.md) in the future.
 
-We expect to cover balance query issues in a future EEP.
+We expect to cover balance query issues in a future ESL.
 
 ## Specification
 
@@ -77,7 +77,7 @@ If a foreign account's contract field matches the token contract, then the token
 should treat it like a local account.
 
 `token_account` has a size prefix to aid future extensions. These extensions are reserved
-for future EEPs.
+for future ESLs.
 
 ### Memo replacement
 

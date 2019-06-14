@@ -10,7 +10,7 @@ This idea may or may not be implemented.
 eosio blockchains have a much higher transaction throughput than other public blockchains which
 execute smart contracts. Performance has improved greatly since the initial release and continues
 to advance, even though the transactions have a serial execution model. This serial model will
-eventually limit further improvement; eosio needs a parallel model to move forward. This EEP
+eventually limit further improvement; eosio needs a parallel model to move forward. This ESL
 covers one of the ideas we're considering.
 
 ## Alternatives
@@ -25,11 +25,11 @@ Some of the potential approaches to parallel scaling include:
     rely on the Merkle roots embedded in block headers.
   * Oracle-based IBC. Contracts may opt in to trusting oracles which attest to events on other
     chains.
-* Named Regions. This EEP uses the term "regions" to mean side chains which share a common block
+* Named Regions. This ESL uses the term "regions" to mean side chains which share a common block
   log. The block log keeps the regions synchronized with each other and may help form the
   communication channel between them.
 
-This EEP discusses named regions.
+This ESL discusses named regions.
 
 ## Discussion
 

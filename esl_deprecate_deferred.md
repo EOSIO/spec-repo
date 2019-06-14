@@ -7,7 +7,7 @@ Deferred transactions are now deprecated.
 ## Abstract
 
 Deferred transactions are now deprecated. Likewise, wait weights in account
-authorities are also deprecated. This EEP explains some of the motivation
+authorities are also deprecated. This ESL explains some of the motivation
 behind this, and presents some potential replacements for existing use cases.
 
 ## Motivation
