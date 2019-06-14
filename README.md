@@ -17,7 +17,7 @@ with us on the technical design details of how we are thinking about
 implementing various pieces of functionality.
 
 Repo mechanics and feedback: Each spec will be a separate markdown file
-similar to [this one](https://github.com/EOSIO/eep-proposal-staging/blob/d79edc748696daa8b9bc8cacc5281c144cbd4ec9/eep-draft_enhanced_token.md).
+similar to [this one](esl_enhanced_token.md).
 Community members can create issues to provide feedback on the various
 specifications. Issues can be created using the provided issue template.
 
@@ -28,23 +28,23 @@ Key:
 * `R` = Ready for feedback
 
 In dependency order:
-* `R` [Deprecate Deferred](eep-draft_deprecate_deferred.md)
-* `R` [Sized Data](eep-draft_sized_data.md) (ABI 1.2)
-* `R` [Tagged Data](eep-draft_tagged_data.md)
-* `.` [Flexible Notifications](eep-draft_flexible_notify.md)
-* `R` [Synchronous Calls](eep-draft_synchronous_calls.md)
-* `R` [Query Consumption](eep-draft_query_consumption.md)
-* `R` [Subjective Data](eep-draft_subjective_data.md)
-* `R` [Get Producer](eep-draft_get_producer.md)
-* `R` [Contract Pays](eep-draft_contract_pays.md)
-* `R` [Contract Authentication](eep-draft_contract_trx_auth.md)
-* `R` [Forwarding Authorizations](eep-draft_contract_fwd_auth.md)
-* `.` [Enhanced Token](eep-draft_enhanced_token.md)
+* `R` [Deprecate Deferred](esl_deprecate_deferred.md)
+* `R` [Sized Data](esl_sized_data.md) (ABI 1.2)
+* `R` [Tagged Data](esl_tagged_data.md)
+* `.` [Flexible Notifications](esl_flexible_notify.md)
+* `R` [Synchronous Calls](esl_synchronous_calls.md)
+* `R` [Query Consumption](esl_query_consumption.md)
+* `R` [Subjective Data](esl_subjective_data.md)
+* `R` [Get Producer](esl_get_producer.md)
+* `R` [Contract Pays](esl_contract_pays.md)
+* `R` [Contract Authentication](esl_contract_trx_auth.md)
+* `R` [Forwarding Authorizations](esl_contract_fwd_auth.md)
+* `.` [Enhanced Token](esl_enhanced_token.md)
 
 Not in dependency order:
-* `R` [Key-Value Database](eep-draft_key_value_database.md)
-* `R` [Regions](eep-draft_regions.md)
+* `R` [Key-Value Database](esl_key_value_database.md)
+* `R` [Regions](esl_regions.md)
 
 Deprecations:
-* `require_recipient`: [Flexible Notifications](eep-draft_flexible_notify.md)
-* Deferred Transactions: [Deprecate Deferred](eep-draft_deprecate_deferred.md)
+* `require_recipient`: [Flexible Notifications](esl_flexible_notify.md)
+* Deferred Transactions: [Deprecate Deferred](esl_deprecate_deferred.md)

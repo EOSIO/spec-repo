@@ -13,7 +13,7 @@ alternative implementations of its interface.
 
 We would like an updated token standard to include support for the following:
 
-* [Subaccounts](eep-draft_contract_fwd_auth.md). This will aid cross-chain and [named-region](eep-draft_regions.md) use of
+* [Subaccounts](esl_contract_fwd_auth.md). This will aid cross-chain and [named-region](esl_regions.md) use of
   tokens. It will also allow low-overhead contract-defined accounts to hold tokens.
 * Support for `extended_asset` in the interface. Some contracts hold tokens issued by other contracts on behalf of
   their users. If the token interface uses `extended_asset` instead of `asset`, then these contracts can expose the same
@@ -22,9 +22,9 @@ We would like an updated token standard to include support for the following:
   that contracts can process in a standard way. It provides an alternative to the deposit-and-spend pattern without the downsides
   of parsing that existing contracts which avoid deposit-and-spend currently use.
 * Ability for non-standard actions to adjust balances without causing wallets and block explorers to break. They will be able
-  to notify affected accounts via [Flexible Notifications](eep-draft_flexible_notify.md).
+  to notify affected accounts via [Flexible Notifications](esl_flexible_notify.md).
 * No requirements on table structures. This will improve flexibility in developing custom token contracts. It will also allow
-  token contracts to freely move to [Enhanced Database Support](eep-draft_enhanced_database.md) in the future.
+  token contracts to freely move to [Enhanced Database Support](esl_enhanced_database.md) in the future.
 
 We expect to cover balance query issues in a future EEP.
 
@@ -64,7 +64,7 @@ using token_account = sized_data<token_account_variant>;
     may differ between token contracts.
   * Defines how local types are authenticated.
 * Foreign accounts are accounts defined by other contracts. They handle the
-  [Forwarding Authorizations](eep-draft_contract_fwd_auth.md) specification.
+  [Forwarding Authorizations](esl_contract_fwd_auth.md) specification.
 
 Even though a token contract needs to define all three options in its ABI to be compatible,
 it doesn't need to support all three.
@@ -162,7 +162,7 @@ may implement the actions as no-ops.
 Token contracts which implement `open2` should take reasonable precautions against
 opening non-existent accounts, e.g. by using `is_account` to check native accounts
 and the `eosio.chkact` action
-([Forwarding Authorizations](eep-draft_contract_fwd_auth.md)) to check foreign accounts.
+([Forwarding Authorizations](esl_contract_fwd_auth.md)) to check foreign accounts.
 `open2` may charge a fee up to `max_fee` to the authorizer to cover the costs of
 opening the account.
 

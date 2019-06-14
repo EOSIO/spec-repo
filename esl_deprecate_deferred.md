@@ -51,8 +51,8 @@ enhancements. Here are some of the issues:
 * `eosio.wrap` also uses deferred transactions. It could switch to inline actions instead.
 * Some users use wait weights in combination with deferred transactions to protect their accounts.
   They could switch to contract-based protection instead. Contracts which provide protection
-  services could use the [Contract Authentication](eep-draft_contract_trx_auth.md) and
-  [Forwarding Authorizations](eep-draft_contract_fwd_auth.md) proposals to implement their
+  services could use the [Contract Authentication](esl_contract_trx_auth.md) and
+  [Forwarding Authorizations](esl_contract_fwd_auth.md) proposals to implement their
   own authorization requirements.
 * Contracts sometimes use deferred transactions to resume long-running calculations, to do
   regularly-scheduled maintenance tasks, or to add a delay to an action. These contracts

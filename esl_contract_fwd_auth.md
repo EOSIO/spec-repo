@@ -6,7 +6,7 @@ Contracts can attest user authentication to other contracts. This enables contra
 
 ## Abstract
 
-The [Contract Authentication](eep-draft_contract_trx_auth.md) proposal allows contracts to define their own account
+The [Contract Authentication](esl_contract_trx_auth.md) proposal allows contracts to define their own account
 structures and authorize transactions from those accounts. It mentions that contracts may attest authorizations
 to other contracts, but doesn't indicate how. This EEP proposes a protocol to support this, along with CDT enhancements
 to simplify implementation.
@@ -55,7 +55,7 @@ receiver from charging RAM to the sender.
 
 The sender may use any type to represent identities, as long as it serializes into 32 bytes
 or less. The `fixed_sized_data` wrapper enforces that limit and 0-pads any unused bytes. See
-[Sized Data](eep-draft_sized_data.md).
+[Sized Data](esl_sized_data.md).
 
 ### CDT Support (receiver)
 

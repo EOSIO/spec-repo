@@ -55,8 +55,8 @@ This system would create, in effect, a system of side chains under the control o
 common set of producers. Each region could have its own system contract for managing
 resources. To simplify implementation, each region could also have its own set of
 base-level accounts. Contracts could provide account portability using the
-[Contract Authentication](eep-draft_contract_trx_auth.md) and
-[Forwarding Authorizations](eep-draft_contract_fwd_auth.md) proposals, combined
+[Contract Authentication](esl_contract_trx_auth.md) and
+[Forwarding Authorizations](esl_contract_fwd_auth.md) proposals, combined
 with Inter-Region Communication.
 
 ### Inter-Region Communication (IRC)

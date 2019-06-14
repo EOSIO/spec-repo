@@ -14,8 +14,8 @@ EOSIO blockchains have a flexible and powerful account structure, but we see som
 What if contracts could define their own account structures? What if these contracts could authenticate 
 transactions from those accounts? What if they could do their own resource billing? What if these 
 contracts didn’t have to be privileged? This proposal, which builds on
-the [Query Consumption](eep-draft_query_consumption.md), [Subjective Data](eep-draft_subjective_data.md),
-and [Contract Pays](eep-draft_contract_pays.md) proposals, grants contracts this capability.
+the [Query Consumption](esl_query_consumption.md), [Subjective Data](esl_subjective_data.md),
+and [Contract Pays](esl_contract_pays.md) proposals, grants contracts this capability.
 
 ## Overview
 
@@ -23,7 +23,7 @@ There are 3 changes in this consensus upgrade:
 * A new intrinsic `require_key` asserts that a given public key was recovered from transaction signatures.
 * Nodeos will no longer reject transactions with signatures not used by the native authorizations, if those keys are checked by `require_key`.
 * Nodeos will allow transactions to omit native authorizations, if a contract accepts the charges using `accept_charges`.
-  This builds on the [Contract Pays](eep-draft_contract_pays.md) proposal.
+  This builds on the [Contract Pays](esl_contract_pays.md) proposal.
 
 ## Example Use Case: Basic
 * A user without a native account creates a transaction with this action:
@@ -60,7 +60,7 @@ There are 3 changes in this consensus upgrade:
   1, and the number of context-free actions returned by `get_num_actions` is 0.
 * myauthmgr updates `accept_charges` using the user’s available resources
 * myauthmgr executes inline actions specified by the user. It includes an authorization attestation in each inline action.
-  The contracts receiving these actions rely on the attestation. See [Forwarding Authentication](eep-draft_contract_fwd_auth.md)
+  The contracts receiving these actions rely on the attestation. See [Forwarding Authentication](esl_contract_fwd_auth.md)
   for details on this step.
 * Inside an inline action, myauthmgr calls `sync_context_free`, checks `get_trx_net_bill` and `get_trx_cpu_bill`, then updates the user’s
   resource consumption. This inline action executes last.
@@ -84,7 +84,7 @@ spend more CPU than necessary. Since all recovered keys must be referenced, this
 
 ### Enhancement to accept_charges
 
-[Contract Pays](eep-draft_contract_pays.md) adds this intrinsic:
+[Contract Pays](esl_contract_pays.md) adds this intrinsic:
 
 ```c++
 bool accept_charges(

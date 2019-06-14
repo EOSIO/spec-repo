@@ -57,7 +57,7 @@ verifies the following:
 
 `get_random` fills a buffer with random data. Even though the reference implementation of nodeos
 fills this with random data, there are no guarantees that individual producers can not change this.
-[Get Producer](eep-draft_get_producer.md) proposes a potential counter-measure against producers manipulating
+[Get Producer](esl_get_producer.md) proposes a potential counter-measure against producers manipulating
 subjective data.
 
 ## Copyright
