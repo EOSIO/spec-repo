@@ -4,7 +4,7 @@
 In dependency order:
 * `R` [Deprecate Deferred](eep-draft_deprecate_deferred.md)
 * `R` [Sized Data](eep-draft_sized_data.md) (ABI 1.2)
-* `.` [Tagged Data](eep-draft_tagged_data.md)
+* `R` [Tagged Data](eep-draft_tagged_data.md)
 * `R` [Flexible Notifications](eep-draft_flexible_notify.md)
 * `R` [Synchronous Calls](eep-draft_synchronous_calls.md)
 * `R` [Query Consumption](eep-draft_query_consumption.md)

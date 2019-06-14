@@ -11,8 +11,6 @@ and with the outside, but `bytes` doesn't indicate what the type of the encoded 
 This EEP proposes a new `eosio_tagged_data` struct which pairs the raw data with a type.
 This type references contract ABIs to enable customization.
 
-## Motivation
-
 ## Specification
 
 ### Definition
