@@ -2,8 +2,8 @@
 
 ## Simple Summary
 
-This discussion piece covers some of the ideas we have for a new token standard.
-This idea may or may not be implemented.
+This is a potential definition of a new token standard. This idea may or may not be implemented, and may
+change substantially.
 
 ## Abstract
 
@@ -245,13 +245,14 @@ struct transfer_data: tagged_base<"e.xfer.dat"_n> {
 };
 ```
 
-## Todo
+## Future Compatibility
 
-Reserve binary_extensions of actions and signals
+To maintain compatibility with future versions of this spec, implementations should not extend any actions,
+notifications, or notification data. Instead, they should define their own actions and notification data
+types.
 
-Require rejection of unknown actions (new cdt feature)
-
-Sync functions
+To prevent false positives of future or unknown actions, implementations should assert when sent unknown
+actions. An upcoming CDT release does this automatically.
 
 ## Backwards Compatibility
 

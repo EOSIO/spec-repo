@@ -50,7 +50,7 @@ In dependency order:
 * `R` [Contract Pays](esl_contract_pays.md)
 * `R` [Contract Authentication](esl_contract_trx_auth.md)
 * `R` [Forwarding Authorizations](esl_contract_fwd_auth.md)
-* `.` [Enhanced Token](esl_enhanced_token.md)
+* `R` [Enhanced Token](esl_enhanced_token.md)
 
 Not in dependency order:
 * `R` [Key-Value Database](esl_key_value_database.md)
