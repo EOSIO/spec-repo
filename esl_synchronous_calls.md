@@ -57,11 +57,12 @@ Callers use these intrinsics to make the call and get the result. Callers should
 they should let the CDT handle this task.
 
 ```c++
-size_t call_sync_readonly(
+bool call_sync_readonly(
     name        contract,
     name        function,
     const char* args,
-    size_t      args_size
+    size_t      args_size,
+    size_t*     result_size
 );
 
 void get_sync_result(
@@ -70,13 +71,10 @@ void get_sync_result(
 );
 ```
 
-`call_sync_readonly` calls into another contract. It aborts the transaction if the callee doesn't have
-a synchronous call entry point, if the result from a
-previous `call_sync_readonly` call hasn't been fetched using `get_sync_result`, or if the current
-transaction is deferred. It returns the size of the result.
-
-`get_sync_result` returns the result of the previous synchronous call. It aborts if `call_sync_readonly`
-hasn't been called, or if `get_sync_result` has already been called.
+`call_sync_readonly` calls into another contract. It returns false if a maximum call depth was
+reached, if the callee doesn't have a synchronous call entry point, if the callee didn't call
+`return_sync`, or if the callee did anything which would have aborted the transaction. If
+it returns true, then it fills `result_size`.
 
 A new consensus parameter will limit the maximum nesting depth of `call_sync_readonly`.
 
@@ -112,8 +110,8 @@ void get_sync_args(
 
 `handle_sync_readonly` should fetch the arguments using `get_sync_args`, dispatch it to the appropriate function,
 then use `return_sync` to return the result. `handle_sync_readonly` should assert that `function` is known. The
-transaction aborts if `return_sync` isn't called or if the contract uses any state-modifying intrinsics
-(e.g. database modification). The transaction also aborts if the contract calls `return_sync` while it's
+synchronous call aborts if `return_sync` isn't called or if the contract uses any state-modifying intrinsics
+(e.g. database modification). The transaction aborts if the contract calls `return_sync` while it's
 not handling a synchronous call. `return_sync` stops execution of the callee.
 
 ### ABI
