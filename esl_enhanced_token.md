@@ -35,13 +35,8 @@ We expect to cover balance query issues in a future ESL.
 `token_account` represents accounts in actions and in notifications:
 
 ```c++
-struct native_account {
-    name account;
-};
-
-struct local_account {
-    fixed_sized_data<local_account_type, 32> account;
-};
+using native_account = name;
+using local_account  = fixed_sized_data<local_account_type, 32>;
 
 struct foreign_account {
     name        contract;
