@@ -85,5 +85,13 @@ Here are some potential IRC approaches:
   to a contract on region B, that message would become available to B on the next block.
   This isn't a form of deferred transactions. Instead, B would have to poll for messages.
   Messages would be recorded in blocks to enable nodes to validate subsets of regions.
+* A single transaction could have multiple actions, where each action specifies which
+  region it operates on. If an action on any region fails, the whole transaction would
+  be rejected. The content of the whole transaction would be available to each action,
+  allowing actions on one region to verify the appropriate action on another is taking
+  place. A downside is that each transaction forms a synchronization point between
+  regions, probably limiting performance. A potential way to counter this is to have
+  multiple speculative transactions executing in parallel within each region, which
+  are committed only if they don't have conflicting state access.
 
 ## Copyright
