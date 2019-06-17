@@ -1,8 +1,8 @@
-# Welcome to the EOSIO Specifications Lab
+# Welcome to the EOSIO Specifications Repository
 
 ![EOSIO Labs](https://img.shields.io/badge/EOSIO-Labs-5cb3ff.svg)
 
-Scope: The  EOSIO Specifications Lab aims to provide high level design details
+Scope: The  EOSIO Specifications Repository aims to provide high level design details
 for many of the ideas discussed in the
 [Strategic Vision Document](https://eos.io/strategic-vision/)
 
@@ -25,7 +25,12 @@ specifications. Issues can be created using the provided issue template.
 
 # About EOSIO Labs
 
-EOSIO Labs repositories are experimental.  Developers in the community are encouraged to use EOSIO Labs repositories as the basis for code and concepts to incorporate into their applications. Community members are also welcome to contribute and further develop these repositories. Since these repositories are not supported by Block.one, we may not provide responses to issue reports, pull requests, updates to functionality, or other requests from the community, and we encourage the community to take responsibility for these.
+EOSIO Labs repositories are experimental.  Developers in the community are 
+encouraged to use EOSIO Labs repositories as the basis for code and concepts
+to incorporate into their applications. Community members are also welcome
+to contribute and further develop these repositories. Since these repositories
+are not supported by Block.one, we may not provide responses to issue reports,
+pull requests, updates to functionality, or other requests from the community.
 
 # Documents
 
