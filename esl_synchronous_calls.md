@@ -13,8 +13,8 @@ communications, especially for queries. Contracts may work around this by readin
 each others' tables. This creates a compatibility problem; if a contract updates
 its table format, then the existing contracts which rely on it will break.
 This proposal defines a mechanism that allows contracts to synchronously call into
-each other to for read-only queries. It doesn't support mutating operations or
-recursion; we may address those in the future.
+each other to for read-only queries. It doesn't support mutating operations;
+we may address that in the future.
 
 ## Specification
 
@@ -71,7 +71,7 @@ void get_sync_result(
 ```
 
 `call_sync_readonly` calls into another contract. It aborts the transaction if the callee doesn't have
-a synchronous call entry point, if contract is already in the call stack, if the result from a
+a synchronous call entry point, if the result from a
 previous `call_sync_readonly` call hasn't been fetched using `get_sync_result`, or if the current
 transaction is deferred. It returns the size of the result.
 
