@@ -50,7 +50,8 @@ The CDT will generate the function's body. e.g.:
 ```
 
 The signal name must follow the rules for eosio names. If the function has a non-compliant
-name, then pass a corrected name to the signal attribute's argument.
+name, then pass a corrected name to the signal attribute's argument. Signal names which begin
+with "e." are reserved.
 
 To send a signal, call its function.
 
@@ -70,7 +71,8 @@ class token: public contract {
 ```
 
 To define an event, declare a function with an `eosio::event` attribute. There is no receiver argument;
-events always go to `eosio.null`. The CDT will generate the function's body. e.g.:
+events always go to `eosio.null`. The CDT will generate the function's body. Event names which begin
+with "e." are reserved.
 
 ```c++
 [[eosio::event]] void gamestatus(name game, map<name, uint32_t> current_positions);
@@ -128,6 +130,8 @@ they should let the CDT handle this task (above). The typical implementation:
 * For signals, sends an inline action `eosio.signal` to the receiver.
 * For events, sends a context-free inline action `eosio.event` to `eosio.null`.
 * Doesn't include any authorizations. This prevents the receiver from charging RAM to the sender.
+
+Signal and event names which begin with "e." are reserved.
 
 ### Protocol: Receiver
 

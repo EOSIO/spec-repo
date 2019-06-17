@@ -76,8 +76,8 @@ it doesn't need to support all three.
 If a foreign account's contract field matches the token contract, then the token contract
 should treat it like a local account.
 
-`token_account` has a size prefix to aid future extensions. These extensions are reserved
-for future ESLs.
+`token_account` has a size prefix to aid future extensions of `token_account_variant`.
+Extensions to `token_account_variant` are reserved for future ESLs.
 
 ### Memo replacement
 
@@ -99,22 +99,22 @@ in the current contract.
 
 ```c++
 void create2(
-    account authorizer,
-    account issuer,
-    asset maximum_supply,
-    string memo,
+    token_account               authorizer,
+    token_account               issuer,
+    asset                       maximum_supply,
+    string                      memo,
     optional<eosio_scoped_data> data);
 
 void issue2(
-    account authorizer,
-    asset quantity,
-    string memo,
+    token_account               authorizer,
+    asset                       quantity,
+    string                      memo,
     optional<eosio_scoped_data> data);
 
 void retire2(
-    account authorizer,
-    asset quantity,
-    string memo,
+    token_account               authorizer,
+    asset                       quantity,
+    string                      memo,
     optional<eosio_scoped_data> data);
 ```
 
@@ -144,15 +144,15 @@ These actions manage account lifetimes:
 
 ```c++
 void open2(
-    account authorizer,
-    extended_asset max_fee,
-    account owner,
+    account         authorizer,
+    extended_asset  max_fee,
+    account         owner,
     extended_symbol symbol);
 
 void close2(
-    account authorizer,
-    account owner,
-    eosio::extended_symbol symbol);
+    account         authorizer,
+    account         owner,
+    extended_symbol symbol);
 ```
 
 Token contracts choose their own policies about who may open and close accounts.
@@ -178,11 +178,11 @@ This action transfers tokens:
 
 ```c++
 void transfer2(
-    account authorizer,
-    account from,
-    account to,
-    extended_asset quantity,
-    string memo,
+    account                     authorizer,
+    account                     from,
+    account                     to,
+    extended_asset              quantity,
+    string                      memo,
     optional<eosio_scoped_data> data);
 ```
 
@@ -193,91 +193,70 @@ Token contracts choose their own policies about who may transfer tokens. Here is
 
 ### Notifications
 
-Token contracts choose their own policies about when to send signals; they always send events.
+There is a single event type that off-chain processes can watch for:
 
-## Specification
+```c++
+[[eosio::event("e.balchng")]] void balance_changed_event(
+    token_account account, extended_asset delta, int64_t new_bal, eosio_tagged_data data);
+```
 
-Consider having accounts opt-in to receiving notifications to save resources. Could cause problems for wallets and block explorers.
+This indicates `account`'s balance changed by `delta` and has `new_bal`. It includes
+additional `data` about the action; see below. Token contracts send this event whenever
+they modify an account's balance.
 
-Reserve variant additions
+There's a single signal that contracts can listen to for notifications:
+
+```c++
+[[eosio::signal("e.balchng")]] void balance_changed_signal(
+    name receiver, token_account account, extended_asset delta, int64_t new_bal, eosio_tagged_data data);
+```
+
+Token contracts choose their own policies about when to send signals. Here is the recommended policy:
+* Notify the "to" account on transfers. If "to" is a foreign account, then notify the contract that
+  authorizes for it.
+
+## Notification Data
+
+Here are definitions for the `data` field for notifications about the actions in this spec. Token
+contracts may define additional structs for the `data` field for notifications about other actions.
+The `e.` prefix is reserved for future specifications; custom structs should not use that prefix.
+
+```c++
+struct create_data: tagged_base<"e.create.dat"_n> {
+    token_account               issuer;
+    asset                       maximum_supply;
+    string                      memo;
+    optional<eosio_scoped_data> data;
+};
+
+struct issue_data: tagged_base<"e.issue.dat"_n> {
+    asset                       quantity;
+    string                      memo;
+    optional<eosio_scoped_data> data;
+};
+
+struct retire_data: tagged_base<"e.retire.dat"_n> {
+    asset                       quantity;
+    string                      memo;
+    optional<eosio_scoped_data> data;
+};
+
+struct transfer_data: tagged_base<"e.xfer.dat"_n> {
+    account                     from;
+    account                     to;
+    extended_asset              quantity;
+    string                      memo;
+    optional<eosio_scoped_data> data;
+};
+```
+
+## Todo
 
 Reserve binary_extensions of actions and signals
 
-eep value of 0 to support app-specific
+Require rejection of unknown actions (new cdt feature)
 
-require rejection of unknown actions (new cdt feature)
-
-sync functions
-
-```c++
-using account = variant<name, subaccount>;
-
-struct create_data {
-    string  memo;
-};
-
-struct issue_data {
-};
-
-struct transfer_data {
-    account from;
-    account to;
-    string  memo;
-};
-
-template<auto eep, name::raw reason>
-struct eep_reason {
-    // returns array<char, ?>
-    static constexpr auto abi_name() {
-    }
-
-    static constexpr int get_eep() {return eep;}
-    static constexpr name get_reason() {return reason;}
-};
-
-
-[[eosio::include_in_abi]]
-struct not_icky: eep_reason<34, "foo"_n> {
-    // static constexpr int eep = 34;
-    // static constexpr name reason = "foo";
-    // static constexpr auto abi_name = f(epp, reason);
-
-
-    name from;
-    name to;
-};
-
-...
-T::get_eep()
-
-struct custom_data {
-    unsigned_int    eep_number;
-    name            reason;         // identifies struct in sender ABI: data_<eep>_<reason>
-    bytes           payload;
-};
-
-
-struct transfer_in_data: transfer_data {};
-struct transfer_out_data: transfer_data {};
-
-// using balchg_data = extendable_variant<
-//     create_data,
-//     transfer_in_data,
-//     transfer_out_data,
-//     issue_data,
-//     custom_data,
-//     >;
-
-using balchg_data = eep_variant<
-    create_data,
-    transfer_in_data,
-    issue_data,
->;
-
-[[eosio::signal]] void eosio.balchg(
-    name receiver,
-    account acc, extended_asset delta, int64_t new_bal, balchg_data data);
-```
+Sync functions
 
 ## Backwards Compatibility
 
