@@ -6,9 +6,9 @@ Contracts can attest user authentication to other contracts. This enables contra
 
 ## Abstract
 
-The [Contract Authentication](esl_contract_trx_auth.md) proposal allows contracts to define their own account
+The [Contract Authentication](esr_contract_trx_auth.md) proposal allows contracts to define their own account
 structures and authorize transactions from those accounts. It mentions that contracts may attest authorizations
-to other contracts, but doesn't indicate how. This ESL proposes a protocol to support this, along with CDT enhancements
+to other contracts, but doesn't indicate how. This ESR proposes a protocol to support this, along with CDT enhancements
 to simplify implementation.
 
 ## Specification
@@ -44,7 +44,7 @@ This lets the receiving contract know which identities this contract is attestin
 when executing the inline action. Example use:
 
 ```c++
-// This is an example only. A future ESL will define a new token
+// This is an example only. A future ESR will define a new token
 // standard which may differ from this.
 
 token::transfer2("eosio.token"_n, idents).send(from, to, amount, memo);
@@ -55,7 +55,7 @@ receiver from charging RAM to the sender.
 
 The sender may use any type to represent identities, as long as it serializes into 32 bytes
 or less. The `fixed_sized_data` wrapper enforces that limit and 0-pads any unused bytes. See
-[Sized Data](esl_sized_data.md).
+[Sized Data](esr_sized_data.md).
 
 ### CDT Support (receiver)
 

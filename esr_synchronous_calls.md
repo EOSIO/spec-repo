@@ -27,7 +27,7 @@ the contract's `get_caller` member function. To aid callers, also define a wrapp
 Synchronous functions may not modify system or database state.
 
 ```c++
-// This is an example only. A future ESL will define a new token
+// This is an example only. A future ESR will define a new token
 // standard which differs from this.
 
 class [[eosio::contract]] token: public contract {
@@ -116,6 +116,6 @@ not handling a synchronous call. `return_sync` stops execution of the callee.
 
 ### ABI
 
-This ESL does not define ABI support for synchronous calls. A future ESL may address this.
+This ESR does not define ABI support for synchronous calls. A future ESR may address this.
 
 ## Copyright

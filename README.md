@@ -19,7 +19,7 @@ with us on the technical design details of how we are thinking about
 implementing various pieces of functionality.
 
 Repo mechanics and feedback: Each spec will be a separate markdown file
-similar to [this one](esl_enhanced_token.md).
+similar to [this one](esr_enhanced_token.md).
 Community members can create issues to provide feedback on the various
 specifications. Issues can be created using the provided issue template.
 
@@ -39,26 +39,26 @@ Key:
 * `R` = Ready for feedback
 
 In dependency order:
-* `R` [Deprecate Deferred](esl_deprecate_deferred.md)
-* `R` [Sized Data](esl_sized_data.md) (ABI 1.2)
-* `R` [Tagged Data](esl_tagged_data.md)
-* `.` [Flexible Notifications](esl_flexible_notify.md)
-* `R` [Synchronous Calls](esl_synchronous_calls.md)
-* `R` [Query Consumption](esl_query_consumption.md)
-* `R` [Subjective Data](esl_subjective_data.md)
-* `R` [Get Producer](esl_get_producer.md)
-* `R` [Contract Pays](esl_contract_pays.md)
-* `R` [Contract Authentication](esl_contract_trx_auth.md)
-* `R` [Forwarding Authorizations](esl_contract_fwd_auth.md)
-* `R` [Enhanced Token](esl_enhanced_token.md)
+* `R` [Deprecate Deferred](esr_deprecate_deferred.md)
+* `R` [Sized Data](esr_sized_data.md) (ABI 1.2)
+* `R` [Tagged Data](esr_tagged_data.md)
+* `.` [Flexible Notifications](esr_flexible_notify.md)
+* `R` [Synchronous Calls](esr_synchronous_calls.md)
+* `R` [Query Consumption](esr_query_consumption.md)
+* `R` [Subjective Data](esr_subjective_data.md)
+* `R` [Get Producer](esr_get_producer.md)
+* `R` [Contract Pays](esr_contract_pays.md)
+* `R` [Contract Authentication](esr_contract_trx_auth.md)
+* `R` [Forwarding Authorizations](esr_contract_fwd_auth.md)
+* `R` [Enhanced Token](esr_enhanced_token.md)
 
 Not in dependency order:
-* `R` [Key-Value Database](esl_key_value_database.md)
-* `R` [Regions](esl_regions.md)
+* `R` [Key-Value Database](esr_key_value_database.md)
+* `R` [Regions](esr_regions.md)
 
 Deprecations:
-* `require_recipient`: [Flexible Notifications](esl_flexible_notify.md)
-* Deferred Transactions: [Deprecate Deferred](esl_deprecate_deferred.md)
+* `require_recipient`: [Flexible Notifications](esr_flexible_notify.md)
+* Deferred Transactions: [Deprecate Deferred](esr_deprecate_deferred.md)
 
 ## Contributing
 

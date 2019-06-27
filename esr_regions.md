@@ -10,7 +10,7 @@ This idea may or may not be implemented.
 eosio blockchains have a much higher transaction throughput than other public blockchains which
 execute smart contracts. Performance has improved greatly since the initial release and continues
 to advance, even though the transactions have a serial execution model. This serial model will
-eventually limit further improvement; eosio needs a parallel model to move forward. This ESL
+eventually limit further improvement; eosio needs a parallel model to move forward. This ESR
 covers one of the ideas we're considering.
 
 ## Alternatives
@@ -25,11 +25,11 @@ Some of the potential approaches to parallel scaling include:
     rely on the Merkle roots embedded in block headers.
   * Oracle-based IBC. Contracts may opt in to trusting oracles which attest to events on other
     chains.
-* Named Regions. This ESL uses the term "regions" to mean side chains which share a common block
+* Named Regions. This ESR uses the term "regions" to mean side chains which share a common block
   log. The block log keeps the regions synchronized with each other and may help form the
   communication channel between them.
 
-This ESL discusses named regions.
+This ESR discusses named regions.
 
 ## Discussion
 
@@ -55,8 +55,8 @@ This system would create, in effect, a system of side chains under the control o
 common set of producers. Each region could have its own system contract for managing
 resources. To simplify implementation, each region could also have its own set of
 base-level accounts. Contracts could provide account portability using the
-[Contract Authentication](esl_contract_trx_auth.md) and
-[Forwarding Authorizations](esl_contract_fwd_auth.md) proposals, combined
+[Contract Authentication](esr_contract_trx_auth.md) and
+[Forwarding Authorizations](esr_contract_fwd_auth.md) proposals, combined
 with Inter-Region Communication.
 
 ### Inter-Region Communication (IRC)

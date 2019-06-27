@@ -27,8 +27,8 @@ issues and security issues.
 
 This proposal adds a new capability: contracts can cover transaction
 costs without cosigning. They can also limit resource consumption to 
-prevent abuse. Thanks to the [Query Consumption](esl_query_consumption.md)
-and [Subjective Data](esl_subjective_data.md)
+prevent abuse. Thanks to the [Query Consumption](esr_query_consumption.md)
+and [Subjective Data](esr_subjective_data.md)
 proposals, contracts also can track resource consumption on transactions.
 This proposal has the advantages of ONLY_BILL_FIRST_AUTHORIZER without
 the hassle of cosigning.
@@ -73,11 +73,11 @@ with 0.
 `get_num_actions` returns the number of non-context-free actions and the number of context-free actions in
 the original transaction. This does not include any inline actions. This intrinsic helps contracts protect
 themselves against paying for other contracts' actions; see the example use cases in
-[Contract Authentication](esl_contract_trx_auth.md) for advice on how to do this check.
+[Contract Authentication](esr_contract_trx_auth.md) for advice on how to do this check.
 
 `accept_charges` has no effect and always returns false during deferred transactions.
 
-[Contract Authentication](esl_contract_trx_auth.md) builds on this proposal to add an additional
+[Contract Authentication](esr_contract_trx_auth.md) builds on this proposal to add an additional
 capability to `accept_charges`.
 
 ## Copyright

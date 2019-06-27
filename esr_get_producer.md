@@ -6,11 +6,11 @@ Provide the current producer to contracts
 
 ## Abstract
 
-The [Subjective Data](esl_subjective_data.md) proposal gives contracts a way
+The [Subjective Data](esr_subjective_data.md) proposal gives contracts a way
 to obtain subjective data, but doesn't provide a way for contracts to check its
 integrity. Contract authors could watch the behavior of their contracts over time for
 malicious producer behavior, but they don't have a reliable way to restrict their contracts
-from relying on data from bad producers. This ESL gives contracts this ability.
+from relying on data from bad producers. This ESR gives contracts this ability.
 
 ## Specification
 
