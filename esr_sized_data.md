@@ -45,5 +45,3 @@ ABI serializers which don't support 1.2 will error out when they encounter `#` i
 won't recognize the `#`, or they'll think it's part of a type name which isn't defined.
 
 It's possible that some contract ABIs included `#` in their type names. ABI 1.2 serializers will malfunction with these.
-
-## Copyright

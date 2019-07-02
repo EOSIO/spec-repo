@@ -44,5 +44,3 @@ The transaction aborts if:
 * The caller hasn't accepted charges. Only the first contract to call [accept_charges](esr_contract_pays.md) may
   use `sync_context_free`.
 * The transaction is deferred.
-
-## Copyright

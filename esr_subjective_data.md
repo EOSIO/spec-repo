@@ -59,5 +59,3 @@ verifies the following:
 fills this with random data, there are no guarantees that individual producers can not change this.
 [Get Producer](esr_get_producer.md) proposes a potential counter-measure against producers manipulating
 subjective data.
-
-## Copyright

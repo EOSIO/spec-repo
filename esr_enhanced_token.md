@@ -271,5 +271,3 @@ Instead, we propose that:
 * Only new token contracts implement a new token protocol
 * New token contracts can hold tokens from the older standard on behalf of their users. This will allow existing
   tokens to flow through the new protocol.
-
-## Copyright

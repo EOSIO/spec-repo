@@ -91,5 +91,3 @@ embedded in JSON so they can transform the content between the two forms.
     "eosio_tag_json":   data in JSON form
 }
 ```
-
-## Copyright

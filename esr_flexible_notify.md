@@ -156,5 +156,3 @@ The ABI of the sender includes a struct definition for each notification. The st
 CDT versions 1.7 - yyy produce automatic dispatchers which assert on unknown actions, including `eosio.notify`.
 If a contract sends a notification to a receiver built with those CDT versions, and that receiver uses the
 automatic dispatcher, the whole transaction will abort.
-
-## Copyright

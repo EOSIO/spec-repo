@@ -119,5 +119,3 @@ matches the value returned by `get_sender` and `y` is in `idents`. This check re
 
 The contract shouldn't use `require_auth` and `has_auth` when processing `eosio.action`.
 The receiving contract must pay for any RAM it uses.
-
-## Copyright

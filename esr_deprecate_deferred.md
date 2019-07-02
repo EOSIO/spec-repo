@@ -63,5 +63,3 @@ enhancements. Here are some of the issues:
 The `eosio.msig` and `eosio.wrap` changes require increasing the `max_inline_action_size`
 and `max_inline_action_depth` consensus parameters. These need to be large enough to allow
 `setcode` and `setabi` inline actions.
-
-## Copyright

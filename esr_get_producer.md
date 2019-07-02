@@ -24,5 +24,3 @@ name get_current_producer();
   is scheduled to produce at the current position.
 * When a block is being produced, this returns the producer that is producing it.
 * What a block is being validated, this returns the producer that produced the block.
-
-## Copyright

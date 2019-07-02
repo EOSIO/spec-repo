@@ -13,5 +13,3 @@
 
 ## Backwards Compatibility
 <!--Only need this section when there are compatiblity issues. Not needed for hardforks; the hardfork mechanism itself addresses incompatibility-->
-
-## Copyright

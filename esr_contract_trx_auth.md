@@ -97,5 +97,3 @@ Nodeos normally rejects transactions which have no authorizations. After this co
 will no longer reject these transactions if a contract accepts the charges during the leeway.
 
 No contract may accept charges during a deferred transaction.
-
-## Copyright

@@ -117,5 +117,3 @@ not handling a synchronous call. `return_sync` stops execution of the callee.
 ### ABI
 
 This ESR does not define ABI support for synchronous calls. A future ESR may address this.
-
-## Copyright

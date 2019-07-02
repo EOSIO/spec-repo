@@ -105,5 +105,3 @@ create an ordering on top by transforming its keys. Example transforms:
 * struct or tuple: transform each field in order. Concatenate results.
 
 The CDT would provide functions to handle this conversion.
-
-## Copyright

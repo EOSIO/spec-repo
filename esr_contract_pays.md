@@ -79,5 +79,3 @@ themselves against paying for other contracts' actions; see the example use case
 
 [Contract Authentication](esr_contract_trx_auth.md) builds on this proposal to add an additional
 capability to `accept_charges`.
-
-## Copyright

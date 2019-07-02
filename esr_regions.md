@@ -93,5 +93,3 @@ Here are some potential IRC approaches:
   regions, probably limiting performance. A potential way to counter this is to have
   multiple speculative transactions executing in parallel within each region, which
   are committed only if they don't have conflicting state access.
-
-## Copyright
