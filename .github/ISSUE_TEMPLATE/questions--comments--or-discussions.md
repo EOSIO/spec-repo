@@ -1,6 +1,6 @@
 ---
 name: Questions, Comments, or Discussions
-about: Use this template to discuss specific a specific ESR
+about: Use this template to discuss a specific ESR
 title: ''
 labels: ''
 assignees: ''
