@@ -51,7 +51,7 @@ verifies the following:
 
 `get_wall_time` returns the wall-clock time with microsecond accuracy. During validation, nodeos
 verifies the following:
-* The result is non-decreasing across a block.
+* The result is non-decreasing across a transaction.
 * The result is >= (the block time of the current block - 0.5s)
 * The result is <= (the block time of the current block + 0.5s)
 
