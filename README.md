@@ -60,6 +60,9 @@ Deprecations:
 * `require_recipient`: [Flexible Notifications](esr_flexible_notify.md)
 * Deferred Transactions: [Deprecate Deferred](esr_deprecate_deferred.md)
 
+Practices to Consider (PTC):
+* `.` [Alternative Uses for WebAuthN Signatures](ptc_webauthn_alt_use.md)
+
 ## Contributing
 
 [Contributing Guide](./CONTRIBUTING.md)
