@@ -1,4 +1,4 @@
-# Key-Value Store
+# Key-Value Store Intrinsics
 
 ## Simple Summary
 
@@ -18,6 +18,10 @@ All intrinsics which have a `db` argument assert if it's out of range.
 ## Temporary Data Buffer
 
 Some intrinsics use a temporary data buffer. `kv_get_data` reads this buffer. The buffer is initially empty.
+
+## Ordering
+
+Keys are ordered lexicographically by `uint8_t`.
 
 ## Non-Iterator Intrinsics
 
@@ -67,12 +71,10 @@ void     kv_it_destroy(uint32_t itr);
 it_stat  kv_it_status(uint32_t itr);
 int      kv_it_compare(uint32_t itr_a, uint32_t itr_b);
 int      kv_it_key_compare(uint32_t itr, const char* key, uint32_t size);
-it_stat  kv_it_move_to_begin(uint32_t itr);
-it_stat  kv_it_move_to_end(uint32_t itr);
-it_stat  kv_it_lower_bound(uint32_t itr, const char* key, uint32_t size);
-it_stat  kv_it_upper_bound(uint32_t itr, const char* key, uint32_t size);
+it_stat  kv_it_move_to_oob(uint32_t itr);
 it_stat  kv_it_increment(uint32_t itr);
 it_stat  kv_it_decrement(uint32_t itr);
+it_stat  kv_it_lower_bound(uint32_t itr, const char* key, uint32_t size);
 it_stat  kv_it_key(uint32_t itr, uint32_t offset, char* dest, uint32_t size, uint32_t& copied);
 it_stat  kv_it_value(uint32_t itr, uint32_t offset, char* dest, uint32_t size, uint32_t& copied);
 ```
@@ -85,11 +87,11 @@ These intrinsics support iterating over ranges of key-value pairs. An iterator, 
 
 An iterator has a status (`it_stat`), which is one of the following:
 
-| Name           | Value | Description |
-|----------------|-------|-------------|
-|iterator_ok     | 0     | Iterator is positioned at a key-value pair |
-|iterator_erased | -1    | The key-value pair that the iterator used to be positioned at was erased |
-|iterator_oob    | -2    | Iterator is out-of-bounds |
+| Name             | Value | Description |
+|------------------|-------|-------------|
+|`iterator_ok`     | 0     | Iterator is positioned at a key-value pair |
+|`iterator_erased` | -1    | The key-value pair that the iterator used to be positioned at was erased |
+|`iterator_oob`    | -2    | Iterator is out-of-bounds |
 
 ### kv_it_create
 
@@ -167,6 +169,96 @@ returned by `kv_it_create` or was destroyed.
 | 0            | `itr`'s key is the same as `key` |
 | 1            | `itr`'s key is greater than `key` |
 
-If `itr` `iterator_erased`, then `kv_it_key_compare` uses the value of the erased key
+If `itr` has status `iterator_erased`, then `kv_it_key_compare` uses the value of the erased key
 during comparison. If `itr` has status `iterator_oob`, then it compares greater than 
 `key`, no matter what value `key` has.
+
+### kv_it_move_to_oob
+
+```c++
+it_stat  kv_it_move_to_oob(uint32_t itr);
+```
+
+Move `itr` to out-of-bounds and return the new status (`iterator_oob`). It aborts the
+transaction if `itr` wasn't returned by `kv_it_create` or was destroyed.
+
+### kv_it_increment
+
+```c++
+it_stat  kv_it_increment(uint32_t itr);
+```
+
+Increment an iterator and return its new status. It aborts the
+transaction if `itr` wasn't returned by `kv_it_create` or was destroyed.
+
+If `itr`'s status is `iterator_ok` or `iterator_erased`, then this finds the
+next non-deleted key in range. If found, the new status is `iterator_ok`. If
+not found, the new status is `iterator_oob`.
+
+If `itr`'s status is `iterator_oob` then this finds the first non-deleted key
+in range. If found, the new status is `iterator_ok`. If not found, the new
+status is `iterator_oob`.
+
+`kv_it_increment` never returns `iterator_erased`.
+
+### kv_it_decrement
+
+```c++
+it_stat  kv_it_decrement(uint32_t itr);
+```
+
+Decrement an iterator and return its new status. It aborts the
+transaction if `itr` wasn't returned by `kv_it_create` or was destroyed.
+
+If `itr`'s status is `iterator_ok` or `iterator_erased`, then this finds the
+previous non-deleted key in range. If found, the new status is `iterator_ok`. If
+not found, the new status is `iterator_oob`.
+
+If `itr`'s status is `iterator_oob` then this finds the last non-deleted key
+in range. If found, the new status is `iterator_ok`. If not found, the new
+status is `iterator_oob`.
+
+`kv_it_decrement` never returns `iterator_erased`.
+
+### kv_it_lower_bound
+
+```c++
+it_stat  kv_it_lower_bound(uint32_t itr, const char* key, uint32_t size);
+```
+
+Find the first non-deleted key >= the provided key and return the new iterator status.
+It aborts the transaction if `itr` wasn't returned by `kv_it_create` or was destroyed.
+
+If a key is found, the new status is `iterator_ok`. If not found, the new
+status is `iterator_oob`. `kv_it_lower_bound` never returns `iterator_erased`.
+
+### kv_it_key
+
+```c++
+it_stat  kv_it_key(uint32_t itr, uint32_t offset, char* dest, uint32_t size, uint32_t& copied);
+```
+
+Fetch the key from the iterator and return the iterator's status. It aborts the transaction if
+`itr` wasn't returned by `kv_it_create` or was destroyed.
+
+If `size == 0`, then this sets `copied` to the size of the key, but does not fill `dest`. If
+`size > 0`, then this copies up to `size` bytes into `dest` and sets `copied` to the number of
+bytes copied, which is `min(size, size of key)`.
+
+If `itr`'s status is `iterator_erased`, then this function behaves as if the key was never erased.
+If `itr`'s status is `iterator_oob`, then this function behaves as if the key is empty.
+
+### kv_it_value
+
+```c++
+it_stat  kv_it_value(uint32_t itr, uint32_t offset, char* dest, uint32_t size, uint32_t& copied);
+```
+
+Fetch the value from the iterator and return the iterator's status. It aborts the transaction if
+`itr` wasn't returned by `kv_it_create` or was destroyed.
+
+If `size == 0`, then this sets `copied` to the size of the value, but does not fill `dest`. If
+`size > 0`, then this copies up to `size` bytes into `dest` and sets `copied` to the number of
+bytes copied, which is `min(size, size of value)`.
+
+If `itr`'s status is `iterator_erased` or `iterator_oob`, then this function behaves as if the key is empty.
