@@ -54,6 +54,7 @@ In dependency order:
 
 Not in dependency order:
 * `R` [Key-Value Database](esr_key_value_database.md)
+  * `R` [Key-Value Database Intrinsics](esr_key_value_database_intrinsics.md)
 * `R` [Regions](esr_regions.md)
 
 Deprecations:
