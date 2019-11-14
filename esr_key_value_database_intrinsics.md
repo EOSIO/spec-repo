@@ -103,7 +103,7 @@ uint32_t kv_it_create(uint64_t db, uint64_t contract, const char* prefix, uint32
 
 * Starts at 1.
 * Counts up by 1 at each call, assuming no destroyed iterators are available.
-* If destroyed iterators are available, the lowest-numbered one is reinitialized and returned.
+* If destroyed iterators are available, the most-recently-destroyed one is reinitialized and returned.
 
 The prefix limits the range of keys that the iterator covers. If the prefix is empty, the iterator
 covers the entire range of keys belonging to a contract within the database ID.
