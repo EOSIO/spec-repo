@@ -29,7 +29,7 @@ Keys are ordered lexicographically by `uint8_t`.
 void     kv_erase(uint64_t db, uint64_t contract, const char* key, uint32_t key_size);
 void     kv_set(uint64_t db, uint64_t contract, const char* key, uint32_t key_size, const char* value, uint32_t value_size);
 bool     kv_get(uint64_t db, uint64_t contract, const char* key, uint32_t key_size, uint32_t& value_size);
-uint32_t kv_get_data(uint32_t offset, char* value, uint32_t value_size);
+uint32_t kv_get_data(uint32_t offset, char* data, uint32_t data_size);
 ```
 
 These intrinsics modify the database and support point lookups. Point lookups may use less CPU than iterator operations.
@@ -63,6 +63,17 @@ the contract exceeds these limits.
 and sets `value_size` to 0. If the key does exist, it returns `true`, stores the value into the temporary data buffer,
 and sets `value_size` to the value size. Use `kv_get_data` to retrieve the value.
 
+If the contract doesn't exist, then this behaves as if the key doesn't exist.
+
+### kv_get_data
+
+```c++
+uint32_t kv_get_data(uint32_t offset, char* data, uint32_t data_size);
+```
+
+Fetches data from temporary buffer starting at offset. Copies up to `data_size` bytes into `data`.
+Returns amount of data in temporary buffer.
+
 ## Iterator Intrinsics
 
 ```c++
@@ -83,7 +94,7 @@ These intrinsics support iterating over ranges of key-value pairs. An iterator, 
 
 * Stays within a single database ID
 * Stays within a single contract's data
-* Stays within the subset of keys defined by the prefix passed to `kv_it_create`
+* Stays within the subset of keys that start with the prefix passed to `kv_it_create`
 
 An iterator has a status (`it_stat`), which is one of the following:
 
@@ -235,15 +246,13 @@ status is `iterator_oob`. `kv_it_lower_bound` never returns `iterator_erased`.
 ### kv_it_key
 
 ```c++
-it_stat  kv_it_key(uint32_t itr, uint32_t offset, char* dest, uint32_t size, uint32_t& copied);
+it_stat  kv_it_key(uint32_t itr, uint32_t offset, char* dest, uint32_t size, uint32_t& actual_size);
 ```
 
 Fetch the key from the iterator and return the iterator's status. It aborts the transaction if
 `itr` wasn't returned by `kv_it_create` or was destroyed.
 
-If `size == 0`, then this sets `copied` to the size of the key, but does not fill `dest`. If
-`size > 0`, then this copies up to `size` bytes into `dest` and sets `copied` to the number of
-bytes copied, which is `min(size, size of key)`.
+This sets `actual_size` to the size of the key and copies up to `size` bytes into `dest`.
 
 If `itr`'s status is `iterator_erased`, then this function behaves as if the key was never erased.
 If `itr`'s status is `iterator_oob`, then this function behaves as if the key is empty.
@@ -251,14 +260,12 @@ If `itr`'s status is `iterator_oob`, then this function behaves as if the key is
 ### kv_it_value
 
 ```c++
-it_stat  kv_it_value(uint32_t itr, uint32_t offset, char* dest, uint32_t size, uint32_t& copied);
+it_stat  kv_it_value(uint32_t itr, uint32_t offset, char* dest, uint32_t size, uint32_t& actual_size);
 ```
 
 Fetch the value from the iterator and return the iterator's status. It aborts the transaction if
 `itr` wasn't returned by `kv_it_create` or was destroyed.
 
-If `size == 0`, then this sets `copied` to the size of the value, but does not fill `dest`. If
-`size > 0`, then this copies up to `size` bytes into `dest` and sets `copied` to the number of
-bytes copied, which is `min(size, size of value)`.
+This sets `actual_size` to the size of the value and copies up to `size` bytes into `dest`.
 
 If `itr`'s status is `iterator_erased` or `iterator_oob`, then this function behaves as if the key is empty.
