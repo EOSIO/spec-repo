@@ -29,7 +29,7 @@ Keys are ordered lexicographically by `uint8_t`.
 void     kv_erase(uint64_t db, uint64_t contract, const char* key, uint32_t key_size);
 void     kv_set(uint64_t db, uint64_t contract, const char* key, uint32_t key_size, const char* value, uint32_t value_size);
 bool     kv_get(uint64_t db, uint64_t contract, const char* key, uint32_t key_size, uint32_t& value_size);
-uint32_t kv_get_data(uint32_t offset, char* data, uint32_t data_size);
+uint32_t kv_get_data(uint64_t db, uint32_t offset, char* data, uint32_t data_size);
 ```
 
 These intrinsics modify the database and support point lookups. Point lookups may use less CPU than iterator operations.
@@ -68,7 +68,7 @@ If the contract doesn't exist, then this behaves as if the key doesn't exist.
 ### kv_get_data
 
 ```c++
-uint32_t kv_get_data(uint32_t offset, char* data, uint32_t data_size);
+uint32_t kv_get_data(uint64_t db, uint32_t offset, char* data, uint32_t data_size);
 ```
 
 Fetches data from temporary buffer starting at offset. Copies up to `data_size` bytes into `data`.
@@ -96,7 +96,7 @@ These intrinsics support iterating over ranges of key-value pairs. An iterator, 
 * Stays within a single contract's data
 * Stays within the subset of keys that start with the prefix passed to `kv_it_create`
 
-An iterator has a status (`it_stat`), which is one of the following:
+An iterator has a status (`it_stat`, 32 bits), which is one of the following:
 
 | Name             | Value | Description |
 |------------------|-------|-------------|
