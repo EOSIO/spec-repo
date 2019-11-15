@@ -119,6 +119,8 @@ uint32_t kv_it_create(uint64_t db, uint64_t contract, const char* prefix, uint32
 The prefix limits the range of keys that the iterator covers. If the prefix is empty, the iterator
 covers the entire range of keys belonging to a contract within the database ID.
 
+If the contract doesn't exist, then the iterator covers an empty range.
+
 The newly-created iterator has `iterator_oob` status.
 
 A consensus parameter limits the number of available iterators. `kv_it_create` aborts the
