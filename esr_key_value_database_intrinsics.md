@@ -86,8 +86,8 @@ it_stat  kv_it_move_to_oob(uint32_t itr);
 it_stat  kv_it_increment(uint32_t itr);
 it_stat  kv_it_decrement(uint32_t itr);
 it_stat  kv_it_lower_bound(uint32_t itr, const char* key, uint32_t size);
-it_stat  kv_it_key(uint32_t itr, uint32_t offset, char* dest, uint32_t size, uint32_t& copied);
-it_stat  kv_it_value(uint32_t itr, uint32_t offset, char* dest, uint32_t size, uint32_t& copied);
+it_stat  kv_it_key(uint32_t itr, uint32_t offset, char* dest, uint32_t size, uint32_t& actual_size);
+it_stat  kv_it_value(uint32_t itr, uint32_t offset, char* dest, uint32_t size, uint32_t& actual_size);
 ```
 
 These intrinsics support iterating over ranges of key-value pairs. An iterator, during its lifetime:
