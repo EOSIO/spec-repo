@@ -9,9 +9,9 @@ It doesn't cover CDT enhancements.
 
 The `db` argument indicates which database to operate on. There are initially 2 values for this:
 
-* `0`: This database has low latency and consumes `RAM` resources.
-* `1`: This database consumes a new `DISK` resource. It may have a higher capacity, but may also consume higher
-       CPU to access than database `0`.
+* `"eosio.kvram"`: This database has low latency and consumes `RAM` resources.
+* `"eosio.kvdisk"`: This database consumes a new `DISK` resource. It may have a higher capacity, but may also consume higher
+       CPU to access than database `"eosio.kvram"`.
 
 All intrinsics which have a `db` argument assert if it's out of range.
 
@@ -82,9 +82,9 @@ void     kv_it_destroy(uint32_t itr);
 it_stat  kv_it_status(uint32_t itr);
 int      kv_it_compare(uint32_t itr_a, uint32_t itr_b);
 int      kv_it_key_compare(uint32_t itr, const char* key, uint32_t size);
-it_stat  kv_it_move_to_oob(uint32_t itr);
-it_stat  kv_it_increment(uint32_t itr);
-it_stat  kv_it_decrement(uint32_t itr);
+it_stat  kv_it_move_to_end(uint32_t itr);
+it_stat  kv_it_next(uint32_t itr);
+it_stat  kv_it_prev(uint32_t itr);
 it_stat  kv_it_lower_bound(uint32_t itr, const char* key, uint32_t size);
 it_stat  kv_it_key(uint32_t itr, uint32_t offset, char* dest, uint32_t size, uint32_t& actual_size);
 it_stat  kv_it_value(uint32_t itr, uint32_t offset, char* dest, uint32_t size, uint32_t& actual_size);
@@ -102,7 +102,7 @@ An iterator has a status (`it_stat`, 32 bits), which is one of the following:
 |------------------|-------|-------------|
 |`iterator_ok`     | 0     | Iterator is positioned at a key-value pair |
 |`iterator_erased` | -1    | The key-value pair that the iterator used to be positioned at was erased |
-|`iterator_oob`    | -2    | Iterator is out-of-bounds |
+|`iterator_end`    | -2    | Iterator is out-of-bounds |
 
 ### kv_it_create
 
@@ -121,7 +121,7 @@ covers the entire range of keys belonging to a contract within the database ID.
 
 If the contract doesn't exist, then the iterator covers an empty range.
 
-The newly-created iterator has `iterator_oob` status.
+The newly-created iterator has `iterator_end` status.
 
 A consensus parameter limits the number of available iterators. `kv_it_create` aborts the
 transaction if the contract exceeds this.
@@ -163,8 +163,8 @@ databases or from different contracts.
 If an iterator has status `iterator_erased`, then `kv_it_compare` uses the value of the erased key
 during comparison.
 
-If an iterator has status `iterator_oob`, then it compares greater than iterators with status
-`iterator_ok` or `iterator_erased`. Two iterators with status `iterator_oob` compare equal
+If an iterator has status `iterator_end`, then it compares greater than iterators with status
+`iterator_ok` or `iterator_erased`. Two iterators with status `iterator_end` compare equal
 (0 return value).
 
 ### kv_it_key_compare
@@ -183,55 +183,55 @@ returned by `kv_it_create` or was destroyed.
 | 1            | `itr`'s key is greater than `key` |
 
 If `itr` has status `iterator_erased`, then `kv_it_key_compare` uses the value of the erased key
-during comparison. If `itr` has status `iterator_oob`, then it compares greater than 
+during comparison. If `itr` has status `iterator_end`, then it compares greater than 
 `key`, no matter what value `key` has.
 
-### kv_it_move_to_oob
+### kv_it_move_to_end
 
 ```c++
-it_stat  kv_it_move_to_oob(uint32_t itr);
+it_stat  kv_it_move_to_end(uint32_t itr);
 ```
 
-Move `itr` to out-of-bounds and return the new status (`iterator_oob`). It aborts the
+Move `itr` to out-of-bounds and return the new status (`iterator_end`). It aborts the
 transaction if `itr` wasn't returned by `kv_it_create` or was destroyed.
 
-### kv_it_increment
+### kv_it_next
 
 ```c++
-it_stat  kv_it_increment(uint32_t itr);
+it_stat  kv_it_next(uint32_t itr);
 ```
 
-Increment an iterator and return its new status. It aborts the
+Move iterator to next position and return its new status. It aborts the
 transaction if `itr` wasn't returned by `kv_it_create` or was destroyed.
 
 If `itr`'s status is `iterator_ok` or `iterator_erased`, then this finds the
 next non-deleted key in range. If found, the new status is `iterator_ok`. If
-not found, the new status is `iterator_oob`.
+not found, the new status is `iterator_end`.
 
-If `itr`'s status is `iterator_oob` then this finds the first non-deleted key
+If `itr`'s status is `iterator_end` then this finds the first non-deleted key
 in range. If found, the new status is `iterator_ok`. If not found, the new
-status is `iterator_oob`.
+status is `iterator_end`.
 
-`kv_it_increment` never returns `iterator_erased`.
+`kv_it_next` never returns `iterator_erased`.
 
-### kv_it_decrement
+### kv_it_prev
 
 ```c++
-it_stat  kv_it_decrement(uint32_t itr);
+it_stat  kv_it_prev(uint32_t itr);
 ```
 
-Decrement an iterator and return its new status. It aborts the
+Move iterator to previous position and return its new status. It aborts the
 transaction if `itr` wasn't returned by `kv_it_create` or was destroyed.
 
 If `itr`'s status is `iterator_ok` or `iterator_erased`, then this finds the
 previous non-deleted key in range. If found, the new status is `iterator_ok`. If
-not found, the new status is `iterator_oob`.
+not found, the new status is `iterator_end`.
 
-If `itr`'s status is `iterator_oob` then this finds the last non-deleted key
+If `itr`'s status is `iterator_end` then this finds the last non-deleted key
 in range. If found, the new status is `iterator_ok`. If not found, the new
-status is `iterator_oob`.
+status is `iterator_end`.
 
-`kv_it_decrement` never returns `iterator_erased`.
+`kv_it_prev` never returns `iterator_erased`.
 
 ### kv_it_lower_bound
 
@@ -243,7 +243,7 @@ Find the first non-deleted key >= the provided key and return the new iterator s
 It aborts the transaction if `itr` wasn't returned by `kv_it_create` or was destroyed.
 
 If a key is found, the new status is `iterator_ok`. If not found, the new
-status is `iterator_oob`. `kv_it_lower_bound` never returns `iterator_erased`.
+status is `iterator_end`. `kv_it_lower_bound` never returns `iterator_erased`.
 
 ### kv_it_key
 
@@ -257,7 +257,7 @@ Fetch the key from the iterator and return the iterator's status. It aborts the 
 This sets `actual_size` to the size of the key and copies up to `size` bytes into `dest`.
 
 If `itr`'s status is `iterator_erased`, then this function behaves as if the key was never erased.
-If `itr`'s status is `iterator_oob`, then this function behaves as if the key is empty.
+If `itr`'s status is `iterator_end`, then this function behaves as if the key is empty.
 
 ### kv_it_value
 
@@ -270,4 +270,4 @@ Fetch the value from the iterator and return the iterator's status. It aborts th
 
 This sets `actual_size` to the size of the value and copies up to `size` bytes into `dest`.
 
-If `itr`'s status is `iterator_erased` or `iterator_oob`, then this function behaves as if the key is empty.
+If `itr`'s status is `iterator_erased` or `iterator_end`, then this function behaves as if the key is empty.
