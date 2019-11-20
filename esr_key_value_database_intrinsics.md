@@ -73,8 +73,12 @@ WASM memory order: `kv_get` writes to `value_size` after it finishes reading fro
 uint32_t kv_get_data(uint64_t db, uint32_t offset, char* data, uint32_t data_size);
 ```
 
-Fetches data from temporary buffer starting at offset. Copies up to `data_size` bytes into `data`.
+Fetches data from temporary buffer starting at `offset`. Copies up to `data_size` bytes into `data`.
 Returns amount of data in temporary buffer.
+
+`kv_get_data` doesn't modify `data` if `offset` is greater than the temporary buffer size.
+It still aborts the transaction if `[data, data + data_size)` is out of the WASM's linear
+memory range.
 
 ## Iterator Intrinsics
 
@@ -261,6 +265,10 @@ This sets `actual_size` to the size of the key and copies up to `size` bytes int
 If `itr`'s status is `iterator_erased`, then this function behaves as if the key was never erased.
 If `itr`'s status is `iterator_end`, then this function behaves as if the key is empty.
 
+`kv_it_key` doesn't modify `dest` if `offset` is greater than the iterator's key size.
+It still aborts the transaction if `[dest, dest + size)` is out of the WASM's linear
+memory range.
+
 WASM memory order: `kv_it_key` writes to `actual_size` after it finishes writing to `dest`.
 
 ### kv_it_value
@@ -275,5 +283,9 @@ Fetch the value from the iterator and return the iterator's status. It aborts th
 This sets `actual_size` to the size of the value and copies up to `size` bytes into `dest`.
 
 If `itr`'s status is `iterator_erased` or `iterator_end`, then this function behaves as if the key is empty.
+
+`kv_it_value` doesn't modify `dest` if `offset` is greater than the iterator's value size.
+It still aborts the transaction if `[dest, dest + size)` is out of the WASM's linear
+memory range.
 
 WASM memory order: `kv_it_value` writes to `actual_size` after it finishes writing to `dest`.
