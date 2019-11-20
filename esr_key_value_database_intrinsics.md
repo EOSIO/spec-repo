@@ -65,6 +65,8 @@ and sets `value_size` to the value size. Use `kv_get_data` to retrieve the value
 
 If the contract doesn't exist, then this behaves as if the key doesn't exist.
 
+WASM memory order: `kv_get` writes to `value_size` after it finishes reading from `key`.
+
 ### kv_get_data
 
 ```c++
@@ -259,6 +261,8 @@ This sets `actual_size` to the size of the key and copies up to `size` bytes int
 If `itr`'s status is `iterator_erased`, then this function behaves as if the key was never erased.
 If `itr`'s status is `iterator_end`, then this function behaves as if the key is empty.
 
+WASM memory order: `kv_it_key` writes to `actual_size` after it finishes writing to `dest`.
+
 ### kv_it_value
 
 ```c++
@@ -271,3 +275,5 @@ Fetch the value from the iterator and return the iterator's status. It aborts th
 This sets `actual_size` to the size of the value and copies up to `size` bytes into `dest`.
 
 If `itr`'s status is `iterator_erased` or `iterator_end`, then this function behaves as if the key is empty.
+
+WASM memory order: `kv_it_value` writes to `actual_size` after it finishes writing to `dest`.
