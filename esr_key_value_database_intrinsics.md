@@ -282,7 +282,7 @@ Fetch the value from the iterator and return the iterator's status. It aborts th
 
 This sets `actual_size` to the size of the value and copies up to `size` bytes into `dest`.
 
-If `itr`'s status is `iterator_erased` or `iterator_end`, then this function behaves as if the key is empty.
+If `itr`'s status is `iterator_erased` or `iterator_end`, then this function behaves as if the value is empty.
 
 `kv_it_value` doesn't modify `dest` if `offset` is greater than the iterator's value size.
 It still aborts the transaction if `[dest, dest + size)` is out of the WASM's linear
