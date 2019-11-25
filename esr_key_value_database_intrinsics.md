@@ -150,15 +150,17 @@ it_stat  kv_it_status(uint32_t itr);
 This returns the status of an iterator. It aborts the transaction if `itr` wasn't returned
 by a call to `kv_it_create`, or if `itr` has been destroyed.
 
+`kv_it_status` returns `iterator_ok`, `iterator_erased`, or `iterator_end`.
+
 ### kv_it_compare
 
 ```c++
 int      kv_it_compare(uint32_t itr_a, uint32_t itr_b);
 ```
 
-Compare the position of two iterators. It aborts the transaction if either iterator wasn't
-returned by `kv_it_create` or was destroyed. It also aborts if the iterators are from different
-databases or from different contracts.
+Compare the position of two iterators. It aborts the transaction if either iterator
+wasn't returned by `kv_it_create`, was destroyed, or has status `iterator_erased`.
+It also aborts if the iterators are from different databases or from different contracts.
 
 | Return Value | Description |
 |--------------|-------------|
@@ -166,12 +168,8 @@ databases or from different contracts.
 | 0            | `itr_a`'s key is the same as `itr_b`'s key |
 | 1            | `itr_a`'s key is greater than `itr_b`'s key |
 
-If an iterator has status `iterator_erased`, then `kv_it_compare` uses the value of the erased key
-during comparison.
-
 If an iterator has status `iterator_end`, then it compares greater than iterators with status
-`iterator_ok` or `iterator_erased`. Two iterators with status `iterator_end` compare equal
-(0 return value).
+`iterator_ok`. Two iterators with status `iterator_end` compare equal (0 return value).
 
 ### kv_it_key_compare
 
@@ -179,8 +177,9 @@ If an iterator has status `iterator_end`, then it compares greater than iterator
 int      kv_it_key_compare(uint32_t itr, const char* key, uint32_t size);
 ```
 
-Compare the position of an iterator to a provided key. It aborts the transaction if `itr` wasn't
-returned by `kv_it_create` or was destroyed.
+Compare the position of an iterator to a provided key. It aborts the
+transaction if `itr` wasn't returned by `kv_it_create`, was destroyed,
+or has status `iterator_erased`.
 
 | Return Value | Description |
 |--------------|-------------|
@@ -188,9 +187,8 @@ returned by `kv_it_create` or was destroyed.
 | 0            | `itr`'s key is the same as `key` |
 | 1            | `itr`'s key is greater than `key` |
 
-If `itr` has status `iterator_erased`, then `kv_it_key_compare` uses the value of the erased key
-during comparison. If `itr` has status `iterator_end`, then it compares greater than 
-`key`, no matter what value `key` has.
+If `itr` has status `iterator_end`, then it compares greater than `key`, no matter
+what value `key` has.
 
 ### kv_it_move_to_end
 
@@ -208,9 +206,10 @@ it_stat  kv_it_next(uint32_t itr);
 ```
 
 Move iterator to next position and return its new status. It aborts the
-transaction if `itr` wasn't returned by `kv_it_create` or was destroyed.
+transaction if `itr` wasn't returned by `kv_it_create`, was destroyed,
+or has status `iterator_erased`.
 
-If `itr`'s status is `iterator_ok` or `iterator_erased`, then this finds the
+If `itr`'s status is `iterator_ok`, then this finds the
 next non-deleted key in range. If found, the new status is `iterator_ok`. If
 not found, the new status is `iterator_end`.
 
@@ -227,11 +226,12 @@ it_stat  kv_it_prev(uint32_t itr);
 ```
 
 Move iterator to previous position and return its new status. It aborts the
-transaction if `itr` wasn't returned by `kv_it_create` or was destroyed.
+transaction if `itr` wasn't returned by `kv_it_create`, was destroyed,
+or has status `iterator_erased`.
 
-If `itr`'s status is `iterator_ok` or `iterator_erased`, then this finds the
-previous non-deleted key in range. If found, the new status is `iterator_ok`. If
-not found, the new status is `iterator_end`.
+If `itr`'s status is `iterator_ok`, then this finds the previous non-deleted
+key in range. If found, the new status is `iterator_ok`. If not found, the
+new status is `iterator_end`.
 
 If `itr`'s status is `iterator_end` then this finds the last non-deleted key
 in range. If found, the new status is `iterator_ok`. If not found, the new
@@ -258,11 +258,9 @@ it_stat  kv_it_key(uint32_t itr, uint32_t offset, char* dest, uint32_t size, uin
 ```
 
 Fetch the key from the iterator and return the iterator's status. It aborts the transaction if
-`itr` wasn't returned by `kv_it_create` or was destroyed.
+`itr` wasn't returned by `kv_it_create`, was destroyed, or has status `iterator_erased`.
 
 This sets `actual_size` to the size of the key and copies up to `size` bytes into `dest`.
-
-If `itr`'s status is `iterator_erased`, then this function behaves as if the key was never erased.
 If `itr`'s status is `iterator_end`, then this function behaves as if the key is empty.
 
 `kv_it_key` doesn't modify `dest` if `offset` is greater than the iterator's key size.
@@ -278,11 +276,11 @@ it_stat  kv_it_value(uint32_t itr, uint32_t offset, char* dest, uint32_t size, u
 ```
 
 Fetch the value from the iterator and return the iterator's status. It aborts the transaction if
-`itr` wasn't returned by `kv_it_create` or was destroyed.
+`itr` wasn't returned by `kv_it_create`, was destroyed, or has status `iterator_erased`.
 
 This sets `actual_size` to the size of the value and copies up to `size` bytes into `dest`.
 
-If `itr`'s status is `iterator_erased` or `iterator_end`, then this function behaves as if the value is empty.
+If `itr`'s status is `iterator_end`, then this function behaves as if the value is empty.
 
 `kv_it_value` doesn't modify `dest` if `offset` is greater than the iterator's value size.
 It still aborts the transaction if `[dest, dest + size)` is out of the WASM's linear
