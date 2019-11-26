@@ -245,8 +245,10 @@ it_stat  kv_it_lower_bound(uint32_t itr, const char* key, uint32_t size);
 Find the first non-deleted key >= the provided key and return the new iterator status.
 It aborts the transaction if `itr` wasn't returned by `kv_it_create` or was destroyed.
 
-If a key is found, the new status is `iterator_ok`. If not found, the new
-status is `iterator_end`. `kv_it_lower_bound` never returns `iterator_erased`.
+If `key` is before the prefix, then this behaves as if `key` was the prefix.
+If a key is found, the new status is `iterator_ok`. If not found, or if the result is
+past the prefix, the new status is `iterator_end`. `kv_it_lower_bound` never returns
+`iterator_erased`.
 
 ### kv_it_key
 
