@@ -49,9 +49,6 @@ If any iterators are positioned at the erased key, then `kv_erase` switches thei
 If the contract exceeds available resources, it will fail at the appropriate time, similar to existing database
 primitives.
 
-If any iterators are positioned at the key, then `kv_set` switches their status to `iterator_ok`. This allows
-iterators to live through `kv_erase` followed by `kv_set` unharmed.
-
 `kv_set` clears the temporary data buffer.
 
 Consensus parameters limit the maximum key size and the maximum value size. `kv_set` aborts the transaction if
