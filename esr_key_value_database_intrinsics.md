@@ -246,9 +246,8 @@ Find the least non-deleted key which is >= the provided key and has the correct 
 Returns the new iterator status. It aborts the transaction if `itr` wasn't returned by
 `kv_it_create` or was destroyed.
 
-If a key is found, the new status is `iterator_ok`. If not found, or if the result is
-past the prefix, the new status is `iterator_end`. `kv_it_lower_bound` never returns
-`iterator_erased`.
+If a key is found, the new status is `iterator_ok`. If not found, the new status is
+`iterator_end`. `kv_it_lower_bound` never returns `iterator_erased`.
 
 ### kv_it_key
 
