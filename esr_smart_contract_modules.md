@@ -27,7 +27,7 @@ and table declarations to "attach" them to a specific smart contract module.
 struct [[eosio::table, eosio::contract("test")]] sometable { ... }; 
 ```
 This can be a bit too much syntax for what should be a valid normal use case.  This ESR proposes changing the name 
-of the attribute`eosio::contract` to `eosio::app`, this helps eliminate the confusion of users because of the use of `contract` in too
+of the attribute `eosio::contract` to `eosio::app`, this helps eliminate the confusion of users because of the use of `contract` in too
 many contexts. In addition to this the set of EOSIO.CDT attributes will supply the attributes with and without 
 the `eosio` namespacing.
 To help with good structuring, the `eosio::app` and `app` attributes will be allowed to be attached to a namespace,
