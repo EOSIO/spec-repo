@@ -73,3 +73,22 @@ class [[app("overridden_app")]] test : public eosio::contract {
 ```
 
 This allows for backward compatibility with the existing system until the deprecated `[[eosio::contract]]` attribute is removed. 
+
+If the same namespace is used in multiple places and is declared with multiple "app" names, then the compiler will generate an error.
+
+```c++
+namespace [[app("test")]] eosio {
+}
+namespace [[app("foo")]] eosio {
+}
+```
+This will generate a compiler error for conflicting app declarations.
+
+But,
+```c++
+namespace [[app("test")]] eosio {
+}
+namespace eosio {
+}
+```
+is perfectly valid and will use the app name from the single use of the attribute.
