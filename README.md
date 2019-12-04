@@ -39,6 +39,7 @@ Key:
 * `R` = Ready for feedback
 
 In dependency order:
+* `R` [Smart Contract Modules](esr_smart_contract_modules.md)
 * `R` [Deprecate Deferred](esr_deprecate_deferred.md)
 * `R` [Sized Data](esr_sized_data.md) (ABI 1.2)
 * `R` [Tagged Data](esr_tagged_data.md)
