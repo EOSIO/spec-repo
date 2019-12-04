@@ -45,7 +45,7 @@ The `eosio::contract` attribute will be deprecated.
 
 The developer can define their smart contract "module" by tagging the namespace with the `app` or `eosio::app` attributes.
 ```c++
-namespace [[app("test")]] eosio {
+namespace [[app("test")]] test_app {
 
 class test : public eosio::contract {
    [[action]]
@@ -65,7 +65,7 @@ The same rules for attaching the attribute to classes for smart contracts can be
 too (if still needed).
 
 ```c++
-namespace [[app("test")]] eosio {
+namespace [[app("test")]] test_app {
 class [[app("overridden_app")]] test : public eosio::contract {
    ...
 };
@@ -77,18 +77,18 @@ This allows for backward compatibility with the existing system until the deprec
 If the same namespace is used in multiple places and is declared with multiple "app" names, then the compiler will generate an error.
 
 ```c++
-namespace [[app("test")]] eosio {
+namespace [[app("test")]] test_app {
 }
-namespace [[app("foo")]] eosio {
+namespace [[app("foo")]] test_app {
 }
 ```
 This will generate a compiler error for conflicting app declarations.
 
 But,
 ```c++
-namespace [[app("test")]] eosio {
+namespace [[app("test")]] test_app {
 }
-namespace eosio {
+namespace test_app {
 }
 ```
 is perfectly valid and will use the app name from the single use of the attribute.
