@@ -126,8 +126,9 @@ If the contract doesn't exist, then the iterator covers an empty range.
 
 The newly-created iterator has `iterator_end` status.
 
-A consensus parameter limits the number of available iterators. `kv_it_create` aborts the
-transaction if the contract exceeds this.
+A consensus parameter limits the number of available iterators for each database.
+`kv_it_create` aborts the transaction if the contract exceeds this or if the iterator
+handle is not representable as a uint32_t.
 
 ### kv_it_destroy
 
@@ -321,20 +322,20 @@ The default for `"disk"` is 0.
 uint32_t get_kv_parameters_packed( name db, void * parameters, uint32_t buffer_size );
 ```
 
-Gets the maximum key size and maximum value size of a kv database and returns the number of
+Gets the maximum key size, maximum value size, and maximum iterators of a kv database and returns the number of
 bytes written.  If `buffer_size` is 0, does not write to `parameters` and instead
 returns the required size.  If `buffer_size` is too small to fit the parameters, returns 0.
 
-The kv parameters are encoded as 8 bytes, representing two 32-bit little-endian values.
+The kv parameters are encoded as 12 bytes, representing three 32-bit little-endian values.
 
 ```
-+-------+---------------+---------------+
-| byte  | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 |
-+-------+---------------+---------------+
-| field |   key limit   |  value limit  |
-+-------+---------------+---------------+
-| type  |   32-bits LE  |  32-bits LE   |
-+-------+---------------+---------------+
++-------+---------------+---------------+---------------+
+| byte  | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |10 |11 |
++-------+---------------+---------------+---------------+
+| field |   key limit   |  value limit  | max iterators |
++-------+---------------+---------------+---------------+
+| type  |   32-bits LE  |  32-bits LE   |  32-bits LE   |
++-------+---------------+---------------+---------------+
 ```
 
 ### set_kv_parameters_packed
@@ -343,9 +344,9 @@ The kv parameters are encoded as 8 bytes, representing two 32-bit little-endian 
 void set_kv_parameters_packed( name db, const void * parameters, uint32_t buffer_size );
 ```
 
-Sets the maximum key size and maximum value size of a kv database.  Each database has
-independent limits.  These limits only apply to new items.  They do not apply to keys
-and values written before they were applied.  If the database is invalid or if `buffer_size`
-is less than 8, aborts the transaction.
+Sets the maximum key size, and maximum value size, and maximum iterators of a kv database.  Each database has
+independent limits.  The key and value limits only apply to new items.  They do not apply to
+items written before they were applied.  If the database is invalid or if `buffer_size`
+is less than 12, aborts the transaction.
 
-The default limits on a new chain are 1KiB for the key and 256KiB for the value.
+The default limits on a new chain are 1KiB for the key, 256KiB for the value, and 1024 iterators.
