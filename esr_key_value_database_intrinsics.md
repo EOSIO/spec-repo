@@ -285,3 +285,67 @@ It still aborts the transaction if `[dest, dest + size)` is out of the WASM's li
 memory range.
 
 WASM memory order: `kv_it_value` writes to `actual_size` after it finishes writing to `dest`.
+
+
+## Privileged intrinsics
+
+```c++
+int64_t  get_resource_limit( name account, name resource );
+void     set_resource_limit( name account, name resource, int64_t limit );
+uint32_t get_kv_parameters_packed( name db, void * packed_parameters, uint32_t buffer_size );
+void     set_kv_parameters_packed( name db, const void * packed_parameters, uint32_t buffer_size );
+```
+
+These intrinsics control per-account resource limits and kv specific limits.
+Attempting to call them from a non-privileged contract aborts the transaction.
+
+### set_resource_limit, get_resource_limit
+
+```c++
+void set_resource_limit( name account, name resource, int64_t limit );
+int64_t get_resource_limit( name account, name resource );
+```
+
+Replacements for `get_resource_limits` and `set_resource_limits`.  Sets or gets the current
+limit of the named resource.  A limit of -1 indicates that the account's use of the
+resource is not constrained.  Valid resources are currently `"ram"`, `"disk"`, `"net"`, `"cpu"`.
+If the account does not exist aborts the transaction.  Attempting to set the limit to a
+negative value other that -1 aborts the transaction.
+
+The default limit for `"ram"`, `"cpu"`, and `"net"` for new accounts is -1.
+The default for `"disk"` is 0.
+
+### get_kv_parameters_packed
+
+```c++
+uint32_t get_kv_parameters_packed( name db, void * parameters, uint32_t buffer_size );
+```
+
+Gets the maximum key size and maximum value size of a kv database and returns the number of
+bytes written.  If `buffer_size` is 0, does not write to `parameters` and instead
+returns the required size.  If `buffer_size` is too small to fit the parameters, returns 0.
+
+The kv parameters are encoded as 8 bytes, representing two 32-bit little-endian values.
+
+```
++-------+---------------+---------------+
+| byte  | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 |
++-------+---------------+---------------+
+| field |   key limit   |  value limit  |
++-------+---------------+---------------+
+| type  |   32-bits LE  |  32-bits LE   |
++-------+---------------+---------------+
+```
+
+### set_kv_parameters_packed
+
+```c++
+void set_kv_parameters_packed( name db, const void * parameters, uint32_t buffer_size );
+```
+
+Sets the maximum key size and maximum value size of a kv database.  Each database has
+independent limits.  These limits only apply to new items.  They do not apply to keys
+and values written before they were applied.  If the database is invalid or if `buffer_size`
+is less than 8, aborts the transaction.
+
+The default limits on a new chain are 1KiB for the key and 256KiB for the value.
