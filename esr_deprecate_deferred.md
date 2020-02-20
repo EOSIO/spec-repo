@@ -2,7 +2,7 @@
 
 ## Simple Summary
 
-Motivation behind deprecating deferred transactions
+Motivation behind deprecating deferred transactions.
 
 ## Abstract
 
@@ -15,7 +15,7 @@ replacements for existing use cases.
 Deferred transactions have been a major source of bugs and have hindered potential
 enhancements. Here are some of the issues:
 
-* They complicate nodeos. Deferred transactions have a non-obvious set of rules which define their
+* They complicate `nodeos`. Deferred transactions have a non-obvious set of rules which define their
   lifespan. They complicate consensus because of the large number of ways they could fail,
   compared to normal transactions. Contract-generated deferred transactions complicate this even
   further with their onerror notifications. Deferred transactions have many exemptions to the normal
@@ -43,12 +43,12 @@ enhancements. Here are some of the issues:
 
 ## Alternatives
 
-* `eosio.msig` currently uses deferred transactions. It could switch to inline actions instead.
+* `eosio.msig` currently uses deferred transactions. It shall switch to inline actions instead.
    This has some advantages:
   * If `exec` fails, the status of the failure will be in the receipt of the transaction
     which used `exec`, simplifying diagnosis.
   * If `exec` fails, it can be retried after fixing the problem. e.g. by increasing resources.
-* `eosio.wrap` also uses deferred transactions. It could switch to inline actions instead.
+* `eosio.wrap` also uses deferred transactions. It shall switch to inline actions instead.
 * Some users use wait weights in combination with deferred transactions to protect their accounts.
   They could switch to contract-based protection instead. Contracts which provide protection
   services could use the [Contract Authentication](esr_contract_trx_auth.md) and
@@ -57,7 +57,7 @@ enhancements. Here are some of the issues:
 * Contracts sometimes use deferred transactions to resume long-running calculations, to do
   regularly-scheduled maintenance tasks, or to add a delay to an action. These contracts
   already need a backup mechanism since deferred transactions are unreliable. e.g. 
-  eosio.system allows users to use `refund` action if a deferred transaction fails.
+  `eosio.system` allows users to use `refund` action if a deferred transaction fails.
   Contracts' backup solutions could become their primary solutions.
 
 The `eosio.msig` and `eosio.wrap` changes require increasing the `max_inline_action_size`
