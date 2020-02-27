@@ -15,6 +15,11 @@ The `db` argument indicates which database to operate on. There are initially 2 
 
 All intrinsics which have a `db` argument assert if it's out of range.
 
+## Billing
+
+For each entry in a contract's table, the kv database bills 112 bytes + the size of the key + the size
+of the value to the contract.
+
 ## Temporary Data Buffer
 
 Some intrinsics use a temporary data buffer. `kv_get_data` reads this buffer. The buffer is initially empty.
@@ -26,8 +31,8 @@ Keys are ordered lexicographically by `uint8_t`.
 ## Non-Iterator Intrinsics
 
 ```c++
-void     kv_erase(uint64_t db, uint64_t contract, const char* key, uint32_t key_size);
-void     kv_set(uint64_t db, uint64_t contract, const char* key, uint32_t key_size, const char* value, uint32_t value_size);
+int64_t  kv_erase(uint64_t db, uint64_t contract, const char* key, uint32_t key_size);
+int64_t  kv_set(uint64_t db, uint64_t contract, const char* key, uint32_t key_size, const char* value, uint32_t value_size);
 bool     kv_get(uint64_t db, uint64_t contract, const char* key, uint32_t key_size, uint32_t& value_size);
 uint32_t kv_get_data(uint64_t db, uint32_t offset, char* data, uint32_t data_size);
 ```
@@ -43,6 +48,9 @@ If any iterators are positioned at the erased key, then `kv_erase` switches thei
 
 `kv_erase` clears the temporary data buffer.
 
+Returns the change in resource billing caused by the erase.  If the key existed,
+this will always be negative.
+
 ### kv_set
 
 `kv_set` sets a key-value pair. If `contract` doesn't match the executing contract then it aborts the transaction.
@@ -50,6 +58,8 @@ If the contract exceeds available resources, it will fail at the appropriate tim
 primitives.
 
 `kv_set` clears the temporary data buffer.
+
+Returns the change in resource usage.
 
 Consensus parameters limit the maximum key size and the maximum value size. `kv_set` aborts the transaction if
 the contract exceeds these limits.
