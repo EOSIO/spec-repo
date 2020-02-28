@@ -140,6 +140,9 @@ A consensus parameter limits the number of available iterators for each database
 `kv_it_create` aborts the transaction if the contract exceeds this or if the iterator
 handle is not representable as a uint32_t.
 
+The size of the prefix is limited by the same consensus parameter that limits
+the key size.  `kv_it_create` aborts the transaction if size exceeds this.
+
 ### kv_it_destroy
 
 ```c++
