@@ -96,9 +96,9 @@ it_stat  kv_it_status(uint32_t itr);
 int      kv_it_compare(uint32_t itr_a, uint32_t itr_b);
 int      kv_it_key_compare(uint32_t itr, const char* key, uint32_t size);
 it_stat  kv_it_move_to_end(uint32_t itr);
-it_stat  kv_it_next(uint32_t itr);
-it_stat  kv_it_prev(uint32_t itr);
-it_stat  kv_it_lower_bound(uint32_t itr, const char* key, uint32_t size);
+it_stat  kv_it_next(uint32_t itr, uint32_t* found_key_size, uint32_t* found_value_size);
+it_stat  kv_it_prev(uint32_t itr, uint32_t* found_key_size, uint32_t* found_value_size);
+it_stat  kv_it_lower_bound(uint32_t itr, const char* key, uint32_t size, uint32_t* found_key_size, uint32_t* found_value_size);
 it_stat  kv_it_key(uint32_t itr, uint32_t offset, char* dest, uint32_t size, uint32_t& actual_size);
 it_stat  kv_it_value(uint32_t itr, uint32_t offset, char* dest, uint32_t size, uint32_t& actual_size);
 ```
@@ -213,7 +213,7 @@ transaction if `itr` wasn't returned by `kv_it_create` or was destroyed.
 ### kv_it_next
 
 ```c++
-it_stat  kv_it_next(uint32_t itr);
+it_stat  kv_it_next(uint32_t itr, uint32_t* found_key_size, uint32_t* found_value_size);
 ```
 
 Move iterator to next position and return its new status. It aborts the
@@ -227,6 +227,11 @@ not found, the new status is `iterator_end`.
 If `itr`'s status is `iterator_end` then this finds the first non-deleted key
 in range. If found, the new status is `iterator_ok`. If not found, the new
 status is `iterator_end`.
+
+The size of the key and the size of the value at the iterator's new
+position, or zero if the iterator is at end, will be written to
+found_key_size and found_value_size. If found_key_size overlaps
+found_value_size, aborts the transaction.
 
 `kv_it_next` never returns `iterator_erased`.
 
@@ -248,6 +253,11 @@ If `itr`'s status is `iterator_end` then this finds the last non-deleted key
 in range. If found, the new status is `iterator_ok`. If not found, the new
 status is `iterator_end`.
 
+The size of the key and the size of the value at the iterator's new
+position, or zero if the iterator is at end, will be written to
+found_key_size and found_value_size. If found_key_size overlaps
+found_value_size, aborts the transaction.
+
 `kv_it_prev` never returns `iterator_erased`.
 
 ### kv_it_lower_bound
@@ -262,6 +272,11 @@ Returns the new iterator status. It aborts the transaction if `itr` wasn't retur
 
 If a key is found, the new status is `iterator_ok`. If not found, the new status is
 `iterator_end`. `kv_it_lower_bound` never returns `iterator_erased`.
+
+The size of the key and the size of the value at the iterator's new
+position, or zero if the iterator is at end, will be written to
+found_key_size and found_value_size. If found_key_size overlaps
+found_value_size, aborts the transaction.
 
 ### kv_it_key
 
