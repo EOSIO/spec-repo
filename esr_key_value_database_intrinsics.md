@@ -28,6 +28,13 @@ Some intrinsics use a temporary data buffer. `kv_get_data` reads this buffer. Th
 
 Keys are ordered lexicographically by `uint8_t`.
 
+## Pointer Aliasing
+
+Pointers are not allowed to alias for any kv intrinsic.
+If two pointer arguments in a call to an intrinsic, refer to two memory ranges,
+M<sub>1</sub> = [B<sub>1</sub>, E<sub>1</sub>) and M<sub>2</sub> = [B<sub>2</sub>, E<sub>2</sub>),
+such that M<sub>1</sub> ∩ M<sub>2</sub> ≠ ∅, the transaction will be aborted.
+
 ## Non-Iterator Intrinsics
 
 ```c++
@@ -71,8 +78,6 @@ and sets `value_size` to 0. If the key does exist, it returns `true`, stores the
 and sets `value_size` to the value size. Use `kv_get_data` to retrieve the value.
 
 If the contract doesn't exist, then this behaves as if the key doesn't exist.
-
-WASM memory order: `kv_get` writes to `value_size` after it finishes reading from `key`.
 
 ### kv_get_data
 
@@ -230,15 +235,14 @@ status is `iterator_end`.
 
 The size of the key and the size of the value at the iterator's new
 position, or zero if the iterator is at end, will be written to
-found_key_size and found_value_size. If found_key_size overlaps
-found_value_size, aborts the transaction.
+found_key_size and found_value_size.
 
 `kv_it_next` never returns `iterator_erased`.
 
 ### kv_it_prev
 
 ```c++
-it_stat  kv_it_prev(uint32_t itr);
+it_stat  kv_it_prev(uint32_t itr, uint32_t* found_key_size, uint32_t* found_value_size);
 ```
 
 Move iterator to previous position and return its new status. It aborts the
@@ -255,8 +259,7 @@ status is `iterator_end`.
 
 The size of the key and the size of the value at the iterator's new
 position, or zero if the iterator is at end, will be written to
-found_key_size and found_value_size. If found_key_size overlaps
-found_value_size, aborts the transaction.
+found_key_size and found_value_size.
 
 `kv_it_prev` never returns `iterator_erased`.
 
@@ -275,8 +278,7 @@ If a key is found, the new status is `iterator_ok`. If not found, the new status
 
 The size of the key and the size of the value at the iterator's new
 position, or zero if the iterator is at end, will be written to
-found_key_size and found_value_size. If found_key_size overlaps
-found_value_size, aborts the transaction.
+found_key_size and found_value_size.
 
 ### kv_it_key
 
@@ -294,8 +296,6 @@ If `itr`'s status is `iterator_end`, then this function behaves as if the key is
 It still aborts the transaction if `[dest, dest + size)` is out of the WASM's linear
 memory range.
 
-WASM memory order: `kv_it_key` writes to `actual_size` after it finishes writing to `dest`.
-
 ### kv_it_value
 
 ```c++
@@ -312,8 +312,6 @@ If `itr`'s status is `iterator_end`, then this function behaves as if the value 
 `kv_it_value` doesn't modify `dest` if `offset` is greater than the iterator's value size.
 It still aborts the transaction if `[dest, dest + size)` is out of the WASM's linear
 memory range.
-
-WASM memory order: `kv_it_value` writes to `actual_size` after it finishes writing to `dest`.
 
 
 ## Privileged intrinsics
