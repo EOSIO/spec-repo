@@ -40,7 +40,7 @@ such that M<sub>1</sub> ∩ M<sub>2</sub> ≠ ∅, the transaction will be abort
 ```c++
 int64_t  kv_erase(uint64_t db, uint64_t contract, const char* key, uint32_t key_size);
 int64_t  kv_set(uint64_t db, uint64_t contract, const char* key, uint32_t key_size, const char* value, uint32_t value_size);
-bool     kv_get(uint64_t db, uint64_t contract, const char* key, uint32_t key_size, uint32_t& value_size);
+bool     kv_get(uint64_t db, uint64_t contract, const char* key, uint32_t key_size, uint32_t* value_size);
 uint32_t kv_get_data(uint64_t db, uint32_t offset, char* data, uint32_t data_size);
 ```
 
@@ -74,8 +74,8 @@ the contract exceeds these limits.
 ### kv_get
 
 `kv_get` checks the existence of a key. If the key doesn't exist, it returns `false`, clears the temporary data buffer,
-and sets `value_size` to 0. If the key does exist, it returns `true`, stores the value into the temporary data buffer,
-and sets `value_size` to the value size. Use `kv_get_data` to retrieve the value.
+and sets `*value_size` to 0. If the key does exist, it returns `true`, stores the value into the temporary data buffer,
+and sets `*value_size` to the value size. Use `kv_get_data` to retrieve the value.
 
 If the contract doesn't exist, then this behaves as if the key doesn't exist.
 
@@ -104,8 +104,8 @@ it_stat  kv_it_move_to_end(uint32_t itr);
 it_stat  kv_it_next(uint32_t itr, uint32_t* found_key_size, uint32_t* found_value_size);
 it_stat  kv_it_prev(uint32_t itr, uint32_t* found_key_size, uint32_t* found_value_size);
 it_stat  kv_it_lower_bound(uint32_t itr, const char* key, uint32_t size, uint32_t* found_key_size, uint32_t* found_value_size);
-it_stat  kv_it_key(uint32_t itr, uint32_t offset, char* dest, uint32_t size, uint32_t& actual_size);
-it_stat  kv_it_value(uint32_t itr, uint32_t offset, char* dest, uint32_t size, uint32_t& actual_size);
+it_stat  kv_it_key(uint32_t itr, uint32_t offset, char* dest, uint32_t size, uint32_t* actual_size);
+it_stat  kv_it_value(uint32_t itr, uint32_t offset, char* dest, uint32_t size, uint32_t* actual_size);
 ```
 
 These intrinsics support iterating over ranges of key-value pairs. An iterator, during its lifetime:
@@ -283,13 +283,13 @@ found_key_size and found_value_size.
 ### kv_it_key
 
 ```c++
-it_stat  kv_it_key(uint32_t itr, uint32_t offset, char* dest, uint32_t size, uint32_t& actual_size);
+it_stat  kv_it_key(uint32_t itr, uint32_t offset, char* dest, uint32_t size, uint32_t* actual_size);
 ```
 
 Fetch the key from the iterator and return the iterator's status. It aborts the transaction if
 `itr` wasn't returned by `kv_it_create`, was destroyed, or has status `iterator_erased`.
 
-This sets `actual_size` to the size of the key and copies up to `size` bytes into `dest`.
+This sets `*actual_size` to the size of the key and copies up to `size` bytes into `dest`.
 If `itr`'s status is `iterator_end`, then this function behaves as if the key is empty.
 
 `kv_it_key` doesn't modify `dest` if `offset` is greater than the iterator's key size.
@@ -299,13 +299,13 @@ memory range.
 ### kv_it_value
 
 ```c++
-it_stat  kv_it_value(uint32_t itr, uint32_t offset, char* dest, uint32_t size, uint32_t& actual_size);
+it_stat  kv_it_value(uint32_t itr, uint32_t offset, char* dest, uint32_t size, uint32_t* actual_size);
 ```
 
 Fetch the value from the iterator and return the iterator's status. It aborts the transaction if
 `itr` wasn't returned by `kv_it_create`, was destroyed, or has status `iterator_erased`.
 
-This sets `actual_size` to the size of the value and copies up to `size` bytes into `dest`.
+This sets `*actual_size` to the size of the value and copies up to `size` bytes into `dest`.
 
 If `itr`'s status is `iterator_end`, then this function behaves as if the value is empty.
 
