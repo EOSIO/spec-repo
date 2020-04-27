@@ -8,13 +8,19 @@ It also changes the default constraints to be more consistent.
 ## Intrinsics
 
 ```c++
-uint32_t get_wasm_parameters_packed( void* buffer, uint32_t buffer_size);
+uint32_t get_wasm_parameters_packed( void* buffer, uint32_t buffer_size, uint32_t max_version);
 void set_wasm_parameters_packed( const void* buffer, uint32_t buffer_size);
 ```
 
-These intrinsics may be used by a privileged contract only.
+These intrinsics may be used by a privileged contract only.  `max_version` has
+no effect, but should be 0.  Future protocol features should preserve the current
+behavior of `get_wasm_parameters_packed` when `max_version == 0`.
 
 ## Fields
+
+### version
+
+Must be 0.
 
 ### max_mutable_global_bytes
 
@@ -82,26 +88,26 @@ will have no effect.
 +-------+---------------------------+---------------------------+
 | byte  |   0  |   1  |   2  |   3  |   4  |   5  |   6  |   7  |
 +-------+---------------------------+---------------------------+
-| field |  max_mutable_global_bytes |     max_table_elements    |
+| field |          version          | max_mutable_global_bytes  |
 +-------+---------------------------+---------------------------+
 | byte  |   8  |   9  |  10  |  11  |  12  |  13  |  14  |  15  |
 +-------+---------------------------+---------------------------+
-| field |   max_section_elements    |   max_linear_memory_init  |
+| field |     max_table_elements    |   max_section_elements    |
 +-------+---------------------------+---------------------------+
 | byte  |  16  |  17  |  18  |  19  |  20  |  21  |  22  |  23  |
 +-------+---------------------------+---------------------------+
-| field |   max_func_local_bytes    |   max_nested_structures   |
+| field |   max_linear_memory_init  |   max_func_local_bytes    |
 +-------+---------------------------+---------------------------+
 | byte  |  24  |  25  |  26  |  27  |  28  |  29  |  30  |  31  |
 +-------+---------------------------+---------------------------+
-| field |     max_symbol_bytes      |      max_code_bytes       |
+| field |   max_nested_structures   |     max_symbol_bytes      |
 +-------+---------------------------+---------------------------+
 | byte  |  32  |  33  |  34  |  35  |  36  |  37  |  38  |  39  |
 +-------+---------------------------+---------------------------+
-| field |     max_module_bytes      |         max_pages         |
+| field |      max_code_bytes       |     max_module_bytes      |
 +-------+---------------------------+---------------------------+
-| byte  |  40  |  41  |  42  |  43  |
-+-------+---------------------------+
-| field |       max_call_depth      |
-+-------+---------------------------+
+| byte  |  40  |  41  |  42  |  43  |  44  |  45  |  46  |  47  |
++-------+---------------------------+---------------------------+
+| field |         max_pages         |       max_call_depth      |
++-------+---------------------------+---------------------------+
 ```
