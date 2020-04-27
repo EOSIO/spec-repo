@@ -60,7 +60,8 @@ The maximum size of each function body.  The default is 20MiB.  The minimum valu
 ### max_pages
 
 The maximum number of 64KiB pages of linear memory that a contract can use.
-Enforced when an action is executed.  The default is 528, or 33 MiB.
+Enforced when an action is executed.  The initial size of linear memory is
+also checked at setcode.  The default is 528, or 33 MiB.
 Increasing this may cause degraded performance.  The minimum value is 1.
 
 ### max_call_depth
