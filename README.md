@@ -52,6 +52,7 @@ In dependency order:
 * `R` [Contract Authentication](esr_contract_trx_auth.md)
 * `R` [Forwarding Authorizations](esr_contract_fwd_auth.md)
 * `R` [Enhanced Token](esr_enhanced_token.md)
+* `R` [Configurable WASM Limits](esr_configurable_wasm_limits.md)
 
 Not in dependency order:
 * `R` [Key-Value Database](esr_key_value_database.md)
