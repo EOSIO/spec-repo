@@ -3,7 +3,7 @@
 ## Simple Summary
 
 This notification protocol is more flexible than `require_recipient`. It supports both
-contract-to-contract signals and contract-to-outside events.
+contract-to-contract signals (via eosio.signal inline actions) and contract-to-outside events (via nodeos/state-history plugin websocket).
 
 **Potential incompatible change may come; see #5**
 
